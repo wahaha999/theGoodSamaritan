@@ -93,7 +93,7 @@ class LayoutSetup {
     bodyAttributes.forEach((attr) => document.body.removeAttribute(attr))
     document.body.setAttribute('style', '')
     document.body.setAttribute('id', 'kt_app_body')
-    document.body.setAttribute('data-kt-app-layout', updatedConfig.layoutType)
+    document.body.setAttribute('data-kt-app-layout', 'dark-sidebar')
     document.body.classList.add('app-default')
 
     const pageWidth = updatedConfig.app?.general?.pageWidth
