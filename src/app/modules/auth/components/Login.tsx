@@ -41,10 +41,30 @@ export function Login() {
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       setLoading(true)
       try {
-        const {data: auth} = await login(values.email, values.password)
-        saveAuth(auth)
-        const {data: user} = await getUserByToken(auth.api_token)
-        setCurrentUser(user)
+        // const {data: auth} = await login(values.email, values.password)
+        // saveAuth(auth)
+        saveAuth({
+          api_token: "string",
+          refreshToken: "string"
+        })
+        // const {data: user} = await getUserByToken(auth.api_token)
+        // setCurrentUser(user)
+        setCurrentUser({
+          id: 100,
+          username: "tmp user",
+          password: "tmp password",
+          email: "tmp email",
+          first_name: "tmp first name",
+          last_name: "tmp last name",
+          fullname: "tmp fullname",
+          occupation: "tmp occupation",
+          companyName: "tmp companyName",
+          phone: "tmp phone",
+          pic: "tmp pic",
+          language: 'en',
+          timeZone: "tmp timezone",
+          website: 'https://keenthemes.com'
+        })
       } catch (error) {
         console.error(error)
         saveAuth(undefined)

@@ -16,15 +16,61 @@ const SidebarMenuMain = () => {
         title={intl.formatMessage({id: 'MENU.DASHBOARD'})}
         fontIcon='bi-app-indicator'
       />
-      <SidebarMenuItem to='/builder' icon='switch' title='Layout Builder' fontIcon='bi-layers' />
+      {/* <SidebarMenuItem to='/builder' icon='switch' title='Layout Builder' fontIcon='bi-layers' /> */}
       <div className='menu-item'>
         <div className='menu-content pt-8 pb-2'>
-          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Crafted</span>
+          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>View</span>
+        </div>
+      </div>
+      <SidebarMenuItem
+        to='/apps/user-management/users'
+        icon='abstract-28'
+        title='My Posts'
+        fontIcon='bi-layers'
+      />
+      <SidebarMenuItem
+        to='/apps/user-management/users'
+        icon='abstract-28'
+        title="Every one Else's Posts"
+        fontIcon='bi-layers'
+      />
+      <div className='menu-item'>
+        <div className='menu-content pt-8 pb-2'>
+          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Search for Non-Profits</span>
+        </div>
+      </div>
+      <SidebarMenuItem
+        to='/apps/user-management/users'
+        icon='abstract-28'
+        title='Sharing a Message'
+        fontIcon='bi-layers'
+      />
+      <SidebarMenuItem
+        to='/apps/user-management/users'
+        icon='abstract-28'
+        title="With Resources to Share"
+        fontIcon='bi-layers'
+      />
+      <SidebarMenuItem
+        to='/apps/user-management/users'
+        icon='abstract-28'
+        title="In need of Resources"
+        fontIcon='bi-layers'
+      />
+      <SidebarMenuItem
+        to='/apps/user-management/users'
+        icon='abstract-28'
+        title="That have an Event"
+        fontIcon='bi-layers'
+      />
+      <div className='menu-item'>
+        <div className='menu-content pt-8 pb-2'>
+          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Select States to Search</span>
         </div>
       </div>
       <SidebarMenuItemWithSub
         to='/crafted/pages'
-        title='Pages'
+        title='States'
         fontIcon='bi-archive'
         icon='element-plus'
       >
@@ -59,14 +105,14 @@ const SidebarMenuMain = () => {
       </SidebarMenuItemWithSub>
       <SidebarMenuItemWithSub
         to='/crafted/accounts'
-        title='Accounts'
+        title='Regions'
         icon='profile-circle'
         fontIcon='bi-person'
       >
         <SidebarMenuItem to='/crafted/account/overview' title='Overview' hasBullet={true} />
         <SidebarMenuItem to='/crafted/account/settings' title='Settings' hasBullet={true} />
       </SidebarMenuItemWithSub>
-      <SidebarMenuItemWithSub to='/error' title='Errors' fontIcon='bi-sticky' icon='cross-circle'>
+      {/* <SidebarMenuItemWithSub to='/error' title='Errors' fontIcon='bi-sticky' icon='cross-circle'>
         <SidebarMenuItem to='/error/404' title='Error 404' hasBullet={true} />
         <SidebarMenuItem to='/error/500' title='Error 500' hasBullet={true} />
       </SidebarMenuItemWithSub>
@@ -82,15 +128,21 @@ const SidebarMenuMain = () => {
         <SidebarMenuItem to='/crafted/widgets/mixed' title='Mixed' hasBullet={true} />
         <SidebarMenuItem to='/crafted/widgets/tables' title='Tables' hasBullet={true} />
         <SidebarMenuItem to='/crafted/widgets/feeds' title='Feeds' hasBullet={true} />
-      </SidebarMenuItemWithSub>
+      </SidebarMenuItemWithSub> */}
       <div className='menu-item'>
         <div className='menu-content pt-8 pb-2'>
-          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Apps</span>
+          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Select Categories</span>
         </div>
       </div>
+      <SidebarMenuItem
+        to='/apps/user-management/users'
+        icon='abstract-28'
+        title="De-Select All"
+        fontIcon='bi-layers'
+      />
       <SidebarMenuItemWithSub
         to='/apps/chat'
-        title='Chat'
+        title='Category 1'
         fontIcon='bi-chat-left'
         icon='message-text-2'
       >
@@ -101,10 +153,10 @@ const SidebarMenuMain = () => {
       <SidebarMenuItem
         to='/apps/user-management/users'
         icon='abstract-28'
-        title='User management'
+        title='Category 2'
         fontIcon='bi-layers'
       />
-      <div className='menu-item'>
+      {/* <div className='menu-item'>
         <a
           target='_blank'
           className='menu-link'
@@ -115,7 +167,7 @@ const SidebarMenuMain = () => {
           </span>
           <span className='menu-title'>Changelog {process.env.REACT_APP_VERSION}</span>
         </a>
-      </div>
+      </div> */}
     </>
   )
 }
