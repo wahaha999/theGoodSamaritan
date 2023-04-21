@@ -31,6 +31,8 @@ export function MenuInner() {
     <>
       <div style={{padding:'12px'}}>
         <Grid container flexDirection="row">
+          {/* <Button >Dashboard</Button>
+          <Button >Account</Button> */}
           <MenuItem title={intl.formatMessage({id: 'MENU.DASHBOARD'})} to='/dashboard' />
           <MenuItem title='Account' to='/builder' />
         </Grid>

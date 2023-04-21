@@ -139,7 +139,7 @@ export function Login() {
         <span className='w-125px text-gray-500 fw-semibold fs-7'>Or with email</span>
       </div>
       {/* end::Separator */}
-
+{/* 
       {formik.status ? (
         <div className='mb-lg-15 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
@@ -151,7 +151,7 @@ export function Login() {
             continue.
           </div>
         </div>
-      )}
+      )} */}
 
       {/* begin::Form group */}
       <div className='fv-row mb-8'>
