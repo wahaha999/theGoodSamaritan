@@ -13,6 +13,7 @@ export function HeaderWrapper() {
   }
 
   return (
+    <>
     <div id='kt_app_header' className='app-header'>
       <div
         id='kt_app_header_container'
@@ -99,6 +100,8 @@ export function HeaderWrapper() {
           <Navbar />
         </div>
       </div>
+        
     </div>
+    </>
   )
 }

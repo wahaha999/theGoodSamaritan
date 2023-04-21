@@ -14,7 +14,6 @@ const Header: FC = () => {
         menu
         menu-rounded
         menu-column
-        menu-lg-row
         my-5
         my-lg-0
         align-items-stretch

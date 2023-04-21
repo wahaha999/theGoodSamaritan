@@ -13,27 +13,6 @@ const Navbar = () => {
   const {config} = useLayout()
   return (
     <div className='app-navbar flex-shrink-0'>
-      <div className={clsx('app-navbar-item align-items-stretch', itemClass)}>
-        <Search />
-      </div>
-
-       {/*<div className={clsx('app-navbar-item', itemClass)}>
-        <div id='kt_activities_toggle' className={btnClass}>
-          <KTIcon iconName='chart-simple' className={btnIconClass} />
-        </div>
-      </div>
-
-      <div className={clsx('app-navbar-item', itemClass)}>
-        <div
-          data-kt-menu-trigger="{default: 'click'}"
-          data-kt-menu-attach='parent'
-          data-kt-menu-placement='bottom-end'
-          className={btnClass}
-        >
-          <KTIcon iconName='element-plus' className={btnIconClass} />
-        </div>
-        <HeaderNotificationsMenu />
-      </div>*/}
 
       <div className={clsx('app-navbar-item', itemClass)}>
         <div className={clsx('position-relative', btnClass)} id='kt_drawer_chat_toggle'>
@@ -41,10 +20,6 @@ const Navbar = () => {
           <span className='bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink' />
         </div>
       </div> 
-
-      <div className={clsx('app-navbar-item', itemClass)}>
-        <ThemeModeSwitcher toggleBtnClass={clsx('btn-active-light-primary btn-custom')} />
-      </div>
 
       <div className={clsx('app-navbar-item', itemClass)}>
         <div

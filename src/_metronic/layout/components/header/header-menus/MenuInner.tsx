@@ -1,141 +1,72 @@
-import {useIntl} from 'react-intl'
-import {MenuItem} from './MenuItem'
-import {MenuInnerWithSub} from './MenuInnerWithSub'
-import {MegaMenu} from './MegaMenu'
+import { useIntl } from 'react-intl'
+import { MenuItem } from './MenuItem'
+import { Button, FormControl, Grid, InputLabel, Select, TextField, styled, Typography } from '@mui/material'
+import Calendar from '@mui/icons-material/Event';
+import SearchIcon from '@mui/icons-material/Search';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+const SearchText = styled(TextField)({
+   '& .MuiInputBase-root': {
+    backgroundColor: '#F9F9F9',
+    borderRadius: 8,
+    height:50,
+    '&.Mui-focused': {
+      backgroundColor: '#fff',
+      borderColor: 'grey',
+    },
+  },
+  '& .MuiInputBase-input': {
+    fontSize: 16,
+    fontWeight: 500,
+  },
+})
 
 export function MenuInner() {
-  const intl = useIntl()
+  const intl = useIntl();
+  
   return (
     <>
-      {/* <MenuInnerWithSub title='Apps' to='/apps' menuPlacement='bottom-start' menuTrigger='click'> */}
-        {/* PAGES */}
-        {/* <MenuInnerWithSub
-          title='Chat'
-          to='/apps/chat'
-          icon='message-text-2'
-          hasArrow={true}
-          menuPlacement='right-start'
-          menuTrigger={`{default:'click', lg: 'hover'}`}
-        >
-          <MenuItem to='/apps/chat/private-chat' title='Private Chat' hasBullet={true} />
-          <MenuItem to='/apps/chat/group-chat' title='Group Chart' hasBullet={true} />
-          <MenuItem to='/apps/chat/drawer-chat' title='Drawer Chart' hasBullet={true} />
-        </MenuInnerWithSub>
-        <MenuItem icon='abstract-28' to='/apps/user-management/users' title='User management' />
-      </MenuInnerWithSub> */}
-      <MenuItem title={intl.formatMessage({id: 'MENU.DASHBOARD'})} to='/dashboard' />
-      <MenuItem title='Account' to='/builder' />
-      {/* <MenuInnerWithSub
-        title='Crafted'
-        to='/crafted'
-        menuPlacement='bottom-start'
-        menuTrigger='click'
-      >
-        <MenuInnerWithSub
-          title='Pages'
-          to='/crafted/pages'
-          fontIcon='bi-archive'
-          hasArrow={true}
-          menuPlacement='right-start'
-          menuTrigger={`{default:'click', lg: 'hover'}`}
-        >
-          <MenuInnerWithSub
-            title='Profile'
-            to='/crafted/pages/profile'
-            hasArrow={true}
-            hasBullet={true}
-            menuPlacement='right-start'
-            menuTrigger={`{default:'click', lg: 'hover'}`}
-          >
-            <MenuItem to='/crafted/pages/profile/overview' title='Overview' hasBullet={true} />
-            <MenuItem to='/crafted/pages/profile/projects' title='Projects' hasBullet={true} />
-            <MenuItem to='/crafted/pages/profile/campaigns' title='Campaigns' hasBullet={true} />
-            <MenuItem to='/crafted/pages/profile/documents' title='Documents' hasBullet={true} />
-            <MenuItem
-              to='/crafted/pages/profile/connections'
-              title='Connections'
-              hasBullet={true}
-            />
-          </MenuInnerWithSub>
-          <MenuInnerWithSub
-            title='Wizards'
-            to='/crafted/pages/wizards'
-            hasArrow={true}
-            hasBullet={true}
-            menuPlacement='right-start'
-            menuTrigger={`{default:'click', lg: 'hover'}`}
-          >
-            <MenuItem to='/crafted/pages/wizards/horizontal' title='Horizontal' hasBullet={true} />
-            <MenuItem to='/crafted/pages/wizards/vertical' title='Vertical' hasBullet={true} />
-          </MenuInnerWithSub>
-        </MenuInnerWithSub>
-
-        <MenuInnerWithSub
-          title='Accounts'
-          to='/crafted/accounts'
-          fontIcon='bi-person'
-          hasArrow={true}
-          menuPlacement='right-start'
-          menuTrigger={`{default:'click', lg: 'hover'}`}
-        >
-          <MenuItem to='/crafted/account/overview' title='Overview' hasBullet={true} />
-          <MenuItem to='/crafted/account/settings' title='Settings' hasBullet={true} />
-        </MenuInnerWithSub>
-
-        <MenuInnerWithSub
-          title='Errors'
-          to='/error'
-          fontIcon='bi-sticky'
-          hasArrow={true}
-          menuPlacement='right-start'
-          menuTrigger={`{default:'click', lg: 'hover'}`}
-        >
-          <MenuItem to='/error/404' title='Error 404' hasBullet={true} />
-          <MenuItem to='/error/500' title='Error 500' hasBullet={true} />
-        </MenuInnerWithSub>
-
-        <MenuInnerWithSub
-          title='Widgets'
-          to='/crafted/widgets'
-          fontIcon='bi-layers'
-          hasArrow={true}
-          menuPlacement='right-start'
-          menuTrigger={`{default:'click', lg: 'hover'}`}
-        >
-          <MenuItem to='/crafted/widgets/lists' title='Lists' hasBullet={true} />
-          <MenuItem to='/crafted/widgets/statistics' title='Statistics' hasBullet={true} />
-          <MenuItem to='/crafted/widgets/charts' title='Charts' hasBullet={true} />
-          <MenuItem to='/crafted/widgets/mixed' title='Mixed' hasBullet={true} />
-          <MenuItem to='/crafted/widgets/tables' title='Tables' hasBullet={true} />
-          <MenuItem to='/crafted/widgets/feeds' title='Feeds' hasBullet={true} />
-        </MenuInnerWithSub>
-      </MenuInnerWithSub> */}
-
-      {/* <MenuInnerWithSub title='Apps' to='/apps' menuPlacement='bottom-start' menuTrigger='click'>
-        <MenuInnerWithSub
-          title='Chat'
-          to='/apps/chat'
-          icon='message-text-2'
-          hasArrow={true}
-          menuPlacement='right-start'
-          menuTrigger={`{default:'click', lg: 'hover'}`}
-        >
-          <MenuItem to='/apps/chat/private-chat' title='Private Chat' hasBullet={true} />
-          <MenuItem to='/apps/chat/group-chat' title='Group Chart' hasBullet={true} />
-          <MenuItem to='/apps/chat/drawer-chat' title='Drawer Chart' hasBullet={true} />
-        </MenuInnerWithSub>
-        <MenuItem icon='abstract-28' to='/apps/user-management/users' title='User management' />
-      </MenuInnerWithSub> */}
-
-      {/* <MenuInnerWithSub
-        isMega={true}
-        title='Mega menu'
-        to='/mega-menu'
-        menuPlacement='bottom-start'
-        menuTrigger='click'
-      >
-        <MegaMenu />
-      </MenuInnerWithSub> */}
+      <div style={{padding:'12px'}}>
+        <Grid container flexDirection="row">
+          <MenuItem title={intl.formatMessage({id: 'MENU.DASHBOARD'})} to='/dashboard' />
+          <MenuItem title='Account' to='/builder' />
+        </Grid>
+        <Grid container columnSpacing={4}>
+          <Grid item>
+            <SearchText placeholder='Search Posts' InputProps={{startAdornment:<SearchIcon/>}}/>
+          </Grid>
+          <Grid item>
+              <label>Sort By:</label>
+            <Select
+              sx={{ml:1}}
+                labelId="demo-select-small-label"
+                id="demo-select-small"
+                value="latest"
+                // value={age}
+                // label="Age"
+                // onChange={handleChange}
+              >
+                
+                <option value='latest'>Latest</option>
+                <option value={20}>Twenty</option>
+                <option value={30}>Thirty</option>
+              </Select>
+          </Grid>
+          <Grid item>
+            <Grid container alignItems="center">
+            <label>Active Posts between:</label>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              {/* <DemoContainer components={['DatePicker']}> */}
+                <DatePicker sx={{ml:1}} />
+              {/* </DemoContainer> */}
+            </LocalizationProvider>
+            </Grid>
+          </Grid>
+        </Grid>
+      </div>
     </>
   )
 }
