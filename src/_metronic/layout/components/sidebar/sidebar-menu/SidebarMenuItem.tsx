@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom'
 import {useLocation} from 'react-router'
 import {checkIsActive, KTIcon, WithChildren} from '../../../../helpers'
 import {useLayout} from '../../../core'
+import { Typography,Button } from '@mui/material'
 
 type Props = {
   to: string
@@ -43,7 +44,7 @@ const SidebarMenuItem: FC<Props & WithChildren> = ({
         {fontIcon && app?.sidebar?.default?.menu?.iconType === 'font' && (
           <i className={clsx('bi fs-3', fontIcon)}></i>
         )}
-        <span className='menu-title'>{title}</span>
+        <Button color="secondary">{ title}</Button>
       </Link>
       {children}
     </div>

@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import {useLocation} from 'react-router'
 import {checkIsActive, KTIcon, WithChildren} from '../../../../helpers'
 import {useLayout} from '../../../core'
-
+import {Button} from '@mui/material'
 type Props = {
   to: string
   title: string
@@ -44,7 +44,7 @@ const SidebarMenuItemWithSub: React.FC<Props & WithChildren> = ({
         {fontIcon && app?.sidebar?.default?.menu?.iconType === 'font' && (
           <i className={clsx('bi fs-3', fontIcon)}></i>
         )}
-        <span className='menu-title'>{title}</span>
+        <Button color="secondary">{ title}</Button>
         <span className='menu-arrow'></span>
       </span>
       <div className={clsx('menu-sub menu-sub-accordion', {'menu-active-bg': isActive})}>
