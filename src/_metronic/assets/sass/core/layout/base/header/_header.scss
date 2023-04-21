@@ -47,7 +47,7 @@
 
   // States
   .app-header {
-    height: var(--#{$prefix}app-header-height);
+    min-height: var(--#{$prefix}app-header-height);
 
     [data-kt-app-header-fixed='true'] & {
       @include property(z-index, $app-header-fixed-z-index);

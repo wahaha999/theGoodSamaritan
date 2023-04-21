@@ -4,7 +4,7 @@ import {useState} from 'react'
 import {KTIcon} from '../../../../helpers'
 import {CreateAppModal, Dropdown1} from '../../../../partials'
 import {useLayout} from '../../../core'
-
+import {Paper} from '@mui/material'
 const ToolbarClassic = () => {
   const {config} = useLayout()
   const [showCreateAppModal, setShowCreateAppModal] = useState<boolean>(false)
@@ -60,6 +60,9 @@ const ToolbarClassic = () => {
       )}
       <CreateAppModal show={showCreateAppModal} handleClose={() => setShowCreateAppModal(false)} />
     </div>
+    // <Paper sx={{width:'100%',p:'8px 4px'}}>
+      
+    // </Paper>
   )
 }
 

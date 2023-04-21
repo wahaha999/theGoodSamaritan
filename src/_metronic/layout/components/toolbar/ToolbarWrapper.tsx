@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import {ToolbarType, useLayout} from '../../core'
 import {Toolbar} from './Toolbar'
-import {PageTitleWrapper} from './page-title'
+import { PageTitleWrapper } from './page-title'
 
 const ToolbarWrapper = () => {
   const {config, classes} = useLayout()
@@ -17,7 +17,7 @@ const ToolbarWrapper = () => {
   return (
     <div
       id='kt_app_toolbar'
-      className={clsx('app-toolbar', classes.toolbar.join(' '), config?.app?.toolbar?.class)}
+      className={clsx('app-toolbar', '')}
     >
       <div
         id='kt_app_toolbar_container'
@@ -32,6 +32,7 @@ const ToolbarWrapper = () => {
           }
         )}
       >
+        {/* <Toolbar/> */}
         {isPageTitleVisible && <PageTitleWrapper />}
         {/* <Toolbar /> */}
       </div>
