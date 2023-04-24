@@ -15,7 +15,6 @@ const Sidebar = () => {
   if (!config.app?.sidebar?.display) {
     return null
   }
-  console.log('config==',config)
 
   return (
     <>

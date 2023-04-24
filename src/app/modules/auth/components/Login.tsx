@@ -6,7 +6,10 @@ import {Link} from 'react-router-dom'
 import {useFormik} from 'formik'
 import {getUserByToken, login} from '../core/_requests'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
-import {useAuth} from '../core/Auth'
+import { useDispatch } from 'react-redux'
+import { setUser } from '../../../store/userSlice'
+import { showMessage } from 'src/app/store/fuse/messageSlice'
+// import {useAuth} from '../core/Auth'
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
@@ -32,8 +35,9 @@ const initialValues = {
 */
 
 export function Login() {
-  const [loading, setLoading] = useState(false)
-  const {saveAuth, setCurrentUser} = useAuth()
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch<any>()
+  // const {saveAuth, setCurrentUser} = useAuth()
 
   const formik = useFormik({
     initialValues,
@@ -41,33 +45,41 @@ export function Login() {
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       setLoading(true)
       try {
-        // const {data: auth} = await login(values.email, values.password)
+
+        const { data: auth } = await login(values.email, values.password);
+        console.log('auth==', auth);
+        if (auth.access_token) {
+          sessionStorage.setItem('access_token',auth.access_token)
+        }
+        
+        dispatch(setUser(auth));
+        dispatch(showMessage({message:'Successful login',variant:'success'}))
         // saveAuth(auth)
-        saveAuth({
-          api_token: "string",
-          refreshToken: "string"
-        })
+        // saveAuth({
+        //   api_token: "string",
+        //   refreshToken: "string"
+        // })
         // const {data: user} = await getUserByToken(auth.api_token)
         // setCurrentUser(user)
-        setCurrentUser({
-          id: 100,
-          username: "tmp user",
-          password: "tmp password",
-          email: "tmp email",
-          first_name: "tmp first name",
-          last_name: "tmp last name",
-          fullname: "tmp fullname",
-          occupation: "tmp occupation",
-          companyName: "tmp companyName",
-          phone: "tmp phone",
-          pic: "tmp pic",
-          language: 'en',
-          timeZone: "tmp timezone",
-          website: 'https://keenthemes.com'
-        })
+        // setCurrentUser({
+        //   id: 100,
+        //   username: "tmp user",
+        //   password: "tmp password",
+        //   email: "tmp email",
+        //   first_name: "tmp first name",
+        //   last_name: "tmp last name",
+        //   fullname: "tmp fullname",
+        //   occupation: "tmp occupation",
+        //   companyName: "tmp companyName",
+        //   phone: "tmp phone",
+        //   pic: "tmp pic",
+        //   language: 'en',
+        //   timeZone: "tmp timezone",
+        //   website: 'https://keenthemes.com'
+        // })
       } catch (error) {
         console.error(error)
-        saveAuth(undefined)
+        // saveAuth(undefined)
         setStatus('The login details are incorrect')
         setSubmitting(false)
         setLoading(false)
@@ -85,60 +97,8 @@ export function Login() {
       {/* begin::Heading */}
       <div className='text-center mb-11'>
         <h1 className='text-dark fw-bolder mb-3'>Sign In</h1>
-        <div className='text-gray-500 fw-semibold fs-6'>Your Social Campaigns</div>
       </div>
-      {/* begin::Heading */}
-
-      {/* begin::Login options */}
-      <div className='row g-3 mb-9'>
-        {/* begin::Col */}
-        <div className='col-md-6'>
-          {/* begin::Google link */}
-          <a
-            href='#'
-            className='btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100'
-          >
-            <img
-              alt='Logo'
-              src={toAbsoluteUrl('/media/svg/brand-logos/google-icon.svg')}
-              className='h-15px me-3'
-            />
-            Sign in with Google
-          </a>
-          {/* end::Google link */}
-        </div>
-        {/* end::Col */}
-
-        {/* begin::Col */}
-        <div className='col-md-6'>
-          {/* begin::Google link */}
-          <a
-            href='#'
-            className='btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100'
-          >
-            <img
-              alt='Logo'
-              src={toAbsoluteUrl('/media/svg/brand-logos/apple-black.svg')}
-              className='theme-light-show h-15px me-3'
-            />
-            <img
-              alt='Logo'
-              src={toAbsoluteUrl('/media/svg/brand-logos/apple-black-dark.svg')}
-              className='theme-dark-show h-15px me-3'
-            />
-            Sign in with Apple
-          </a>
-          {/* end::Google link */}
-        </div>
-        {/* end::Col */}
-      </div>
-      {/* end::Login options */}
-
-      {/* begin::Separator */}
-      <div className='separator separator-content my-14'>
-        <span className='w-125px text-gray-500 fw-semibold fs-7'>Or with email</span>
-      </div>
-      {/* end::Separator */}
+      
 {/* 
       {formik.status ? (
         <div className='mb-lg-15 alert alert-danger'>
@@ -242,6 +202,11 @@ export function Login() {
           Sign up
         </Link>
       </div>
+      <div className='mb-10 p-8 rounded'>
+          <div className='text-info'>
+            This is an exclusive site for non-profit organizations to share resources and network with others. To ensure the integrity of this site , when you sign in for the first time we will ask you to verify your non-profit status by uploading your non-profit documentation and/or supplying us with your EIN number. this information will never be shared with any one and will only be used to verify your status.
+          </div>
+        </div>
     </form>
   )
 }

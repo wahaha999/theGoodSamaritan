@@ -5,14 +5,15 @@ import {useFormik} from 'formik'
 import * as Yup from 'yup'
 import clsx from 'clsx'
 import {getUserByToken, register} from '../core/_requests'
-import {Link} from 'react-router-dom'
+import {Link,useNavigate } from 'react-router-dom'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {PasswordMeterComponent} from '../../../../_metronic/assets/ts/components'
-import {useAuth} from '../core/Auth'
-
+import { useDispatch } from 'react-redux';
+import { showMessage } from '../../../store/fuse/messageSlice'
 const initialValues = {
-  firstname: '',
-  lastname: '',
+  non_profit_name:'',
+  first_name: '',
+  last_name: '',
   email: '',
   password: '',
   changepassword: '',
@@ -20,7 +21,11 @@ const initialValues = {
 }
 
 const registrationSchema = Yup.object().shape({
-  firstname: Yup.string()
+  non_profit_name: Yup.string()
+    .min(3, 'Minimum 3 symbols')
+    .max(50, 'Maximum 50 symbols')
+    .required('Non Profit Name is required'),
+  first_name: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
     .required('First name is required'),
@@ -29,7 +34,7 @@ const registrationSchema = Yup.object().shape({
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
     .required('Email is required'),
-  lastname: Yup.string()
+  last_name: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
     .required('Last name is required'),
@@ -46,8 +51,10 @@ const registrationSchema = Yup.object().shape({
 })
 
 export function Registration() {
-  const [loading, setLoading] = useState(false)
-  const {saveAuth, setCurrentUser} = useAuth()
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate ()
+  // const { saveAuth, setCurrentUser } = useAuth();
+  const dispatch = useDispatch();
   const formik = useFormik({
     initialValues,
     validationSchema: registrationSchema,
@@ -56,18 +63,30 @@ export function Registration() {
       try {
         const {data: auth} = await register(
           values.email,
-          values.firstname,
-          values.lastname,
+          values.first_name,
+          values.last_name,
           values.password,
-          values.changepassword
+          values.non_profit_name
         )
-        saveAuth(auth)
-        const {data: user} = await getUserByToken(auth.api_token)
-        setCurrentUser(user)
-      } catch (error) {
-        console.error(error)
-        saveAuth(undefined)
-        setStatus('The registration details is incorrect')
+        navigate('/auth/login')
+        dispatch(showMessage({
+          message: 'Successful registered',
+          variant:'success',
+          autoHideDuration: 3000,
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'right',
+          }
+        }))
+        
+        // saveAuth(auth)
+        // const {data: user} = await getUserByToken()
+        
+        // setCurrentUser(user)
+      } catch (error:any) {
+        console.log("error=",error.response.data.message.email[0])
+        // saveAuth(undefined)
+        setStatus(error.response.data.message.email[0])
         setSubmitting(false)
         setLoading(false)
       }
@@ -90,58 +109,6 @@ export function Registration() {
         {/* begin::Title */}
         <h1 className='text-dark fw-bolder mb-3'>Sign Up</h1>
         {/* end::Title */}
-
-        <div className='text-gray-500 fw-semibold fs-6'>Your Social Campaigns</div>
-      </div>
-      {/* end::Heading */}
-
-      {/* begin::Login options */}
-      <div className='row g-3 mb-9'>
-        {/* begin::Col */}
-        <div className='col-md-6'>
-          {/* begin::Google link */}
-          <a
-            href='#'
-            className='btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100'
-          >
-            <img
-              alt='Logo'
-              src={toAbsoluteUrl('/media/svg/brand-logos/google-icon.svg')}
-              className='h-15px me-3'
-            />
-            Sign in with Google
-          </a>
-          {/* end::Google link */}
-        </div>
-        {/* end::Col */}
-
-        {/* begin::Col */}
-        <div className='col-md-6'>
-          {/* begin::Google link */}
-          <a
-            href='#'
-            className='btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100'
-          >
-            <img
-              alt='Logo'
-              src={toAbsoluteUrl('/media/svg/brand-logos/apple-black.svg')}
-              className='theme-light-show h-15px me-3'
-            />
-            <img
-              alt='Logo'
-              src={toAbsoluteUrl('/media/svg/brand-logos/apple-black-dark.svg')}
-              className='theme-dark-show h-15px me-3'
-            />
-            Sign in with Apple
-          </a>
-          {/* end::Google link */}
-        </div>
-        {/* end::Col */}
-      </div>
-      {/* end::Login options */}
-
-      <div className='separator separator-content my-14'>
-        <span className='w-125px text-gray-500 fw-semibold fs-7'>Or with email</span>
       </div>
 
       {formik.status && (
@@ -149,29 +116,52 @@ export function Registration() {
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
       )}
-
+      
       {/* begin::Form group Firstname */}
       <div className='fv-row mb-8'>
-        <label className='form-label fw-bolder text-dark fs-6'>First name</label>
+        <input
+          placeholder='Non Profit Name'
+          type='text'
+          autoComplete='off'
+          {...formik.getFieldProps('non_profit_name')}
+          className={clsx(
+            'form-control bg-transparent',
+            {
+              'is-invalid': formik.touched.non_profit_name && formik.errors.non_profit_name,
+            },
+            {
+              'is-valid': formik.touched.non_profit_name && !formik.errors.non_profit_name,
+            }
+          )}
+        />
+        {formik.touched.non_profit_name && formik.errors.non_profit_name && (
+          <div className='fv-plugins-message-container'>
+            <div className='fv-help-block'>
+              <span role='alert'>{formik.errors.non_profit_name}</span>
+            </div>
+          </div>
+        )}
+      </div>
+      <div className='fv-row mb-8'>
         <input
           placeholder='First name'
           type='text'
           autoComplete='off'
-          {...formik.getFieldProps('firstname')}
+          {...formik.getFieldProps('first_name')}
           className={clsx(
             'form-control bg-transparent',
             {
-              'is-invalid': formik.touched.firstname && formik.errors.firstname,
+              'is-invalid': formik.touched.first_name && formik.errors.first_name,
             },
             {
-              'is-valid': formik.touched.firstname && !formik.errors.firstname,
+              'is-valid': formik.touched.first_name && !formik.errors.first_name,
             }
           )}
         />
-        {formik.touched.firstname && formik.errors.firstname && (
+        {formik.touched.first_name && formik.errors.first_name && (
           <div className='fv-plugins-message-container'>
             <div className='fv-help-block'>
-              <span role='alert'>{formik.errors.firstname}</span>
+              <span role='alert'>{formik.errors.first_name}</span>
             </div>
           </div>
         )}
@@ -179,26 +169,25 @@ export function Registration() {
       {/* end::Form group */}
       <div className='fv-row mb-8'>
         {/* begin::Form group Lastname */}
-        <label className='form-label fw-bolder text-dark fs-6'>Last name</label>
         <input
           placeholder='Last name'
           type='text'
           autoComplete='off'
-          {...formik.getFieldProps('lastname')}
+          {...formik.getFieldProps('last_name')}
           className={clsx(
             'form-control bg-transparent',
             {
-              'is-invalid': formik.touched.lastname && formik.errors.lastname,
+              'is-invalid': formik.touched.last_name && formik.errors.last_name,
             },
             {
-              'is-valid': formik.touched.lastname && !formik.errors.lastname,
+              'is-valid': formik.touched.last_name && !formik.errors.last_name,
             }
           )}
         />
-        {formik.touched.lastname && formik.errors.lastname && (
+        {formik.touched.last_name && formik.errors.last_name && (
           <div className='fv-plugins-message-container'>
             <div className='fv-help-block'>
-              <span role='alert'>{formik.errors.lastname}</span>
+              <span role='alert'>{formik.errors.last_name}</span>
             </div>
           </div>
         )}
@@ -207,7 +196,6 @@ export function Registration() {
 
       {/* begin::Form group Email */}
       <div className='fv-row mb-8'>
-        <label className='form-label fw-bolder text-dark fs-6'>Email</label>
         <input
           placeholder='Email'
           type='email'
@@ -234,7 +222,6 @@ export function Registration() {
       {/* begin::Form group Password */}
       <div className='fv-row mb-8' data-kt-password-meter='true'>
         <div className='mb-1'>
-          <label className='form-label fw-bolder text-dark fs-6'>Password</label>
           <div className='position-relative mb-3'>
             <input
               type='password'
@@ -279,10 +266,9 @@ export function Registration() {
 
       {/* begin::Form group Confirm password */}
       <div className='fv-row mb-5'>
-        <label className='form-label fw-bolder text-dark fs-6'>Confirm Password</label>
         <input
           type='password'
-          placeholder='Password confirmation'
+          placeholder='Repeat Password'
           autoComplete='off'
           {...formik.getFieldProps('changepassword')}
           className={clsx(

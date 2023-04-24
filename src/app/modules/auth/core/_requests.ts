@@ -1,16 +1,17 @@
 import axios from 'axios'
 import {AuthModel, UserModel} from './_models'
+import { UserState } from '../../../store/userSlice'
 
 const API_URL = process.env.REACT_APP_API_URL
 
-export const GET_USER_BY_ACCESSTOKEN_URL = `${API_URL}/verify_token`
-export const LOGIN_URL = `${API_URL}/login`
-export const REGISTER_URL = `${API_URL}/register`
-export const REQUEST_PASSWORD_URL = `${API_URL}/forgot_password`
+export const GET_USER_BY_ACCESSTOKEN_URL = `${API_URL}/users/me`
+export const LOGIN_URL = `${API_URL}/auth/login`
+export const REGISTER_URL = `${API_URL}/auth/register`
+export const REQUEST_PASSWORD_URL = `${API_URL}/auth/forgot_password`
 
 // Server should return AuthModel
 export function login(email: string, password: string) {
-  return axios.post<AuthModel>(LOGIN_URL, {
+  return axios.post<any>(LOGIN_URL, {
     email,
     password,
   })
@@ -19,17 +20,17 @@ export function login(email: string, password: string) {
 // Server should return AuthModel
 export function register(
   email: string,
-  firstname: string,
-  lastname: string,
+  first_name: string,
+  last_name: string,
   password: string,
-  password_confirmation: string
+  non_profit_name: string
 ) {
   return axios.post(REGISTER_URL, {
     email,
-    first_name: firstname,
-    last_name: lastname,
+    first_name: first_name,
+    last_name: last_name,
     password,
-    password_confirmation,
+    non_profit_name,
   })
 }
 
@@ -40,8 +41,11 @@ export function requestPassword(email: string) {
   })
 }
 
-export function getUserByToken(token: string) {
-  return axios.post<UserModel>(GET_USER_BY_ACCESSTOKEN_URL, {
-    api_token: token,
-  })
+export function logout() {
+  sessionStorage.removeItem('access_token');
+  window.location.reload()
+}
+
+export function getUserByToken() {
+  return axios.get<UserState>(GET_USER_BY_ACCESSTOKEN_URL)
 }
