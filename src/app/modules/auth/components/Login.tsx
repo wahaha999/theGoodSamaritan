@@ -2,7 +2,7 @@
 import {useState} from 'react'
 import * as Yup from 'yup'
 import clsx from 'clsx'
-import {Link} from 'react-router-dom'
+import {Link, useParams} from 'react-router-dom'
 import {useFormik} from 'formik'
 import {getUserByToken, login} from '../core/_requests'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
@@ -23,21 +23,22 @@ const loginSchema = Yup.object().shape({
     .required('Password is required'),
 })
 
-const initialValues = {
-  email: '',
-  password: '',
-}
 
 /*
-  Formik+YUP+Typescript:
-  https://jaredpalmer.com/formik/docs/tutorial#getfieldprops
-  https://medium.com/@maurice.de.beijer/yup-validation-and-typescript-and-formik-6c342578a20e
+Formik+YUP+Typescript:
+https://jaredpalmer.com/formik/docs/tutorial#getfieldprops
+https://medium.com/@maurice.de.beijer/yup-validation-and-typescript-and-formik-6c342578a20e
 */
 
 export function Login() {
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch<any>()
+  const dispatch = useDispatch<any>();
+  const { state } = useParams();
   // const {saveAuth, setCurrentUser} = useAuth()
+  const initialValues = {
+    email: state??'',
+    password: '',
+  }
 
   const formik = useFormik({
     initialValues,
@@ -54,29 +55,6 @@ export function Login() {
         
         dispatch(setUser(auth));
         dispatch(showMessage({message:'Successful login',variant:'success'}))
-        // saveAuth(auth)
-        // saveAuth({
-        //   api_token: "string",
-        //   refreshToken: "string"
-        // })
-        // const {data: user} = await getUserByToken(auth.api_token)
-        // setCurrentUser(user)
-        // setCurrentUser({
-        //   id: 100,
-        //   username: "tmp user",
-        //   password: "tmp password",
-        //   email: "tmp email",
-        //   first_name: "tmp first name",
-        //   last_name: "tmp last name",
-        //   fullname: "tmp fullname",
-        //   occupation: "tmp occupation",
-        //   companyName: "tmp companyName",
-        //   phone: "tmp phone",
-        //   pic: "tmp pic",
-        //   language: 'en',
-        //   timeZone: "tmp timezone",
-        //   website: 'https://keenthemes.com'
-        // })
       } catch (error) {
         console.error(error)
         // saveAuth(undefined)
