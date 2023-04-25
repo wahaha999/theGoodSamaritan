@@ -18,14 +18,14 @@ const loginSchema = Yup.object().shape({
     .max(50, 'Maximum 50 symbols')
     .required('Email is required'),
   password: Yup.string()
-    .min(3, 'Minimum 8 symbols')
+    .min(8, 'Use 8 or more characters with a mix of letters, numbers & symbols.')
     .max(50, 'Maximum 50 symbols')
     .required('Password is required'),
 })
 
 const initialValues = {
-  email: 'admin@demo.com',
-  password: 'demo',
+  email: '',
+  password: '',
 }
 
 /*
@@ -80,7 +80,7 @@ export function Login() {
       } catch (error) {
         console.error(error)
         // saveAuth(undefined)
-        setStatus('The login details are incorrect')
+        setStatus('The provided combination of email and password is invalid.')
         setSubmitting(false)
         setLoading(false)
       }
@@ -99,19 +99,12 @@ export function Login() {
         <h1 className='text-dark fw-bolder mb-3'>Sign In</h1>
       </div>
       
-{/* 
-      {formik.status ? (
+
+      {formik.status && (
         <div className='mb-lg-15 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
-      ) : (
-        <div className='mb-10 bg-light-info p-8 rounded'>
-          <div className='text-info'>
-            Use account <strong>admin@demo.com</strong> and password <strong>demo</strong> to
-            continue.
-          </div>
-        </div>
-      )} */}
+      ) }
 
       {/* begin::Form group */}
       <div className='fv-row mb-8'>
