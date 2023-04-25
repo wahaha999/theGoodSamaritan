@@ -63,6 +63,7 @@ export function MenuInner() {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               {/* <DemoContainer components={['DatePicker']}> */}
                 <DatePicker sx={{ml:1}} />
+                <DatePicker sx={{ml:1}} />
               {/* </DemoContainer> */}
             </LocalizationProvider>
             </Grid>

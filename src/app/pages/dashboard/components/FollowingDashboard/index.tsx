@@ -18,14 +18,18 @@ const FollowingDashboard = (props: Props) => {
         component="form"
         sx={{ p: '2px 4px',m:'4px 0px', display: 'flex', alignItems: 'center', width: '100%' }}
       >
-        <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
-          <SearchIcon />
-        </IconButton>
-        <InputBase
-          sx={{ ml: 1, flex: 1 }}
-          placeholder={placeholder}
-          inputProps={{ 'aria-label': 'search google maps' }}
-        />
+        {
+          placeholder && <>
+            <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
+              <SearchIcon />
+            </IconButton>
+            <InputBase
+              sx={{ ml: 1, flex: 1 }}
+              placeholder={placeholder}
+              inputProps={{ 'aria-label': 'search google maps' }}
+            />
+          </>
+        }
         
         {/* <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" /> */}
         {/* <IconButton color="primary" sx={{ p: '10px' }} aria-label="directions">
