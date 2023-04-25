@@ -16,5 +16,17 @@ export const theme = createTheme({
         h6: {
             fontWeight:700
         }
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: '8px',
+          textTransform: 'capitalize',
+          fontWeight:600
+          }
+        }
+      }
     }
+    
 });
