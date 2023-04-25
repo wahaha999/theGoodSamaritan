@@ -39,11 +39,15 @@ const registrationSchema = Yup.object().shape({
     .max(50, 'Maximum 50 symbols')
     .required('Last name is required'),
   password: Yup.string()
-    .min(3, 'Minimum 3 symbols')
+    .min(8, ' Use 8 or more characters with a mix of letters, numbers & symbols.')
     .max(50, 'Maximum 50 symbols')
-    .required('Password is required'),
+    .matches(/[A-Z]/, 'Password must contain at least one uppercase letter.')
+    .matches(/[a-z]/, 'Password must contain at least one lowercase letter.')
+    .matches(/[0-9]/, 'Password must contain at least one number.')
+    .matches(/[^a-zA-Z0-9]/, 'Password must contain at least one symbol.')
+    .required('Password is required.'),
   changepassword: Yup.string()
-    .min(3, 'Minimum 3 symbols')
+    .min(8, 'Minimum 8 symbols')
     .max(50, 'Maximum 50 symbols')
     .required('Password confirmation is required')
     .oneOf([Yup.ref('password')], "Password and Confirm Password didn't match"),
@@ -68,7 +72,7 @@ export function Registration() {
           values.password,
           values.non_profit_name
         )
-        navigate('/auth/login')
+        navigate('/auth/login',{state:values.email})
         dispatch(showMessage({
           message: 'Successful registered',
           variant:'success',
@@ -100,7 +104,7 @@ export function Registration() {
   return (
     <form
       className='form w-100 fv-plugins-bootstrap5 fv-plugins-framework'
-      noValidate
+      // noValidate
       id='kt_login_signup_form'
       onSubmit={formik.handleSubmit}
     >
@@ -254,7 +258,11 @@ export function Registration() {
             <div className='flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2'></div>
             <div className='flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2'></div>
             <div className='flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2'></div>
-            <div className='flex-grow-1 bg-secondary bg-active-success rounded h-5px'></div>
+            {
+              formik.touched.password && !formik.errors.password ?
+              <div className='flex-grow-1 bg-secondary bg-active-success rounded h-5px active'></div>:
+              <div className='flex-grow-1 bg-secondary bg-active-success rounded h-5px'></div>
+            }
           </div>
           {/* end::Meter */}
         </div>

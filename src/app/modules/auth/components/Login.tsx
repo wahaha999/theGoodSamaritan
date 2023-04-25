@@ -2,7 +2,7 @@
 import {useState} from 'react'
 import * as Yup from 'yup'
 import clsx from 'clsx'
-import {Link} from 'react-router-dom'
+import {Link, useParams} from 'react-router-dom'
 import {useFormik} from 'formik'
 import {getUserByToken, login} from '../core/_requests'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
@@ -18,26 +18,27 @@ const loginSchema = Yup.object().shape({
     .max(50, 'Maximum 50 symbols')
     .required('Email is required'),
   password: Yup.string()
-    .min(3, 'Minimum 3 symbols')
+    .min(8, 'Use 8 or more characters with a mix of letters, numbers & symbols.')
     .max(50, 'Maximum 50 symbols')
     .required('Password is required'),
 })
 
-const initialValues = {
-  email: 'admin@demo.com',
-  password: 'demo',
-}
 
 /*
-  Formik+YUP+Typescript:
-  https://jaredpalmer.com/formik/docs/tutorial#getfieldprops
-  https://medium.com/@maurice.de.beijer/yup-validation-and-typescript-and-formik-6c342578a20e
+Formik+YUP+Typescript:
+https://jaredpalmer.com/formik/docs/tutorial#getfieldprops
+https://medium.com/@maurice.de.beijer/yup-validation-and-typescript-and-formik-6c342578a20e
 */
 
 export function Login() {
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch<any>()
+  const dispatch = useDispatch<any>();
+  const { state } = useParams();
   // const {saveAuth, setCurrentUser} = useAuth()
+  const initialValues = {
+    email: state??'',
+    password: '',
+  }
 
   const formik = useFormik({
     initialValues,
@@ -54,33 +55,10 @@ export function Login() {
         
         dispatch(setUser(auth));
         dispatch(showMessage({message:'Successful login',variant:'success'}))
-        // saveAuth(auth)
-        // saveAuth({
-        //   api_token: "string",
-        //   refreshToken: "string"
-        // })
-        // const {data: user} = await getUserByToken(auth.api_token)
-        // setCurrentUser(user)
-        // setCurrentUser({
-        //   id: 100,
-        //   username: "tmp user",
-        //   password: "tmp password",
-        //   email: "tmp email",
-        //   first_name: "tmp first name",
-        //   last_name: "tmp last name",
-        //   fullname: "tmp fullname",
-        //   occupation: "tmp occupation",
-        //   companyName: "tmp companyName",
-        //   phone: "tmp phone",
-        //   pic: "tmp pic",
-        //   language: 'en',
-        //   timeZone: "tmp timezone",
-        //   website: 'https://keenthemes.com'
-        // })
       } catch (error) {
         console.error(error)
         // saveAuth(undefined)
-        setStatus('The login details are incorrect')
+        setStatus('The provided combination of email and password is invalid.')
         setSubmitting(false)
         setLoading(false)
       }
@@ -99,19 +77,12 @@ export function Login() {
         <h1 className='text-dark fw-bolder mb-3'>Sign In</h1>
       </div>
       
-{/* 
-      {formik.status ? (
+
+      {formik.status && (
         <div className='mb-lg-15 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
-      ) : (
-        <div className='mb-10 bg-light-info p-8 rounded'>
-          <div className='text-info'>
-            Use account <strong>admin@demo.com</strong> and password <strong>demo</strong> to
-            continue.
-          </div>
-        </div>
-      )} */}
+      ) }
 
       {/* begin::Form group */}
       <div className='fv-row mb-8'>
