@@ -8,9 +8,9 @@ const StripePricingTable = () => {
         <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
       </Helmet>
       <stripe-pricing-table
-        pricing-table-id="prctbl_1MxFx5LnLs48ohxHNO1h1N3L"
+        pricing-table-id={process.env.REACT_APP_PRICING_TABLE_ID}
         customer_id="abcdefg"
-        publishable-key="pk_test_51MpLQpLnLs48ohxHXEEGtaBg5DEzouVe6w9Ytwj711S5ffIk27KF3oG2aTqRWIh9n7zOL1CfQmh5qH3g8GoEg1D0001h62EzRQ"
+        publishable-key={process.env.REACT_APP_PUBLISHABLE_KEY}
       ></stripe-pricing-table>
     </>
   );
