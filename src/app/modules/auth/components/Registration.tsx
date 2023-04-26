@@ -11,7 +11,6 @@ import {PasswordMeterComponent} from '../../../../_metronic/assets/ts/components
 import { useDispatch } from 'react-redux';
 import { showMessage } from '../../../store/fuse/messageSlice'
 const initialValues = {
-  non_profit_name:'',
   first_name: '',
   last_name: '',
   email: '',
@@ -21,10 +20,6 @@ const initialValues = {
 }
 
 const registrationSchema = Yup.object().shape({
-  non_profit_name: Yup.string()
-    .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
-    .required('Non Profit Name is required'),
   first_name: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
@@ -65,14 +60,14 @@ export function Registration() {
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       setLoading(true)
       try {
-        const {data: auth} = await register(
+        const {data} = await register(
           values.email,
           values.first_name,
           values.last_name,
-          values.password,
-          values.non_profit_name
+          values.password
         )
-        navigate('/auth/login',{state:values.email})
+        console.log('data==',data.data.customer_id)
+        navigate('/auth/subscription',{state:{customer_id:data.data.customer_id}})
         dispatch(showMessage({
           message: 'Successful registered',
           variant:'success',
@@ -88,9 +83,8 @@ export function Registration() {
         
         // setCurrentUser(user)
       } catch (error:any) {
-        console.log("error=",error.response.data.message.email[0])
         // saveAuth(undefined)
-        setStatus(error.response.data.message.email[0])
+        setStatus(typeof (error.response.data.message) == "string"?error.response.data.message: error.response.data.message.email[0])
         setSubmitting(false)
         setLoading(false)
       }
@@ -122,30 +116,6 @@ export function Registration() {
       )}
       
       {/* begin::Form group Firstname */}
-      <div className='fv-row mb-8'>
-        <input
-          placeholder='Non Profit Name'
-          type='text'
-          autoComplete='off'
-          {...formik.getFieldProps('non_profit_name')}
-          className={clsx(
-            'form-control bg-transparent',
-            {
-              'is-invalid': formik.touched.non_profit_name && formik.errors.non_profit_name,
-            },
-            {
-              'is-valid': formik.touched.non_profit_name && !formik.errors.non_profit_name,
-            }
-          )}
-        />
-        {formik.touched.non_profit_name && formik.errors.non_profit_name && (
-          <div className='fv-plugins-message-container'>
-            <div className='fv-help-block'>
-              <span role='alert'>{formik.errors.non_profit_name}</span>
-            </div>
-          </div>
-        )}
-      </div>
       <div className='fv-row mb-8'>
         <input
           placeholder='First name'
