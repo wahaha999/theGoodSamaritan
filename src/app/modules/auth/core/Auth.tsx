@@ -72,7 +72,6 @@ const AuthInit = ({children}:any) => {
   const [showSplashScreen, setShowSplashScreen] = useState(true);
   const dispatch = useAppDispatch();
   const {access_token} = useAppSelector(({user}) => user)
-  console.log("🚀 ~ file: Auth.tsx:75 ~ AuthInit ~ access_token:", access_token)
   // We should request user by authToken (IN OUR EXAMPLE IT'S API_TOKEN) before rendering the application
   useEffect(() => {
     const requestUser = async () => {
