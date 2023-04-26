@@ -72,7 +72,7 @@ export function Registration() {
           values.password,
           values.non_profit_name
         )
-        navigate('/auth/login',{state:values.email})
+        navigate('/auth/subscription',{state:values.email})
         dispatch(showMessage({
           message: 'Successful registered',
           variant:'success',
