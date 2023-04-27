@@ -2,7 +2,7 @@
 import {useState} from 'react'
 import * as Yup from 'yup'
 import clsx from 'clsx'
-import {Link, useParams} from 'react-router-dom'
+import {Link, useNavigate, useParams} from 'react-router-dom'
 import {useFormik} from 'formik'
 import {getUserByToken, login} from '../core/_requests'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
@@ -34,6 +34,7 @@ export function Login() {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch<any>();
   const { state } = useParams();
+  const navigate = useNavigate()
   // const {saveAuth, setCurrentUser} = useAuth()
   const initialValues = {
     email: state??'',
@@ -48,17 +49,14 @@ export function Login() {
       try {
 
         const { data: auth } = await login(values.email, values.password);
-        console.log('auth==', auth);
         if (auth.access_token) {
           sessionStorage.setItem('access_token',auth.access_token)
         }
-        
         dispatch(setUser(auth));
-        dispatch(showMessage({message:'Successful login',variant:'success'}))
-      } catch (error) {
-        console.error(error)
+        dispatch(showMessage({ message: 'Successful login', variant: 'success' }));
+      } catch (error:any) {
         // saveAuth(undefined)
-        setStatus('The provided combination of email and password is invalid.')
+        setStatus(typeof (error.response.data.message) == "string"?error.response.data.message:'The provided combination of email and password is invalid.')
         setSubmitting(false)
         setLoading(false)
       }

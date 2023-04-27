@@ -85,7 +85,10 @@ const AuthInit = ({children}:any) => {
                 last_name: data.last_name,
                 first_name: data.first_name,
                 id: data.id,
-                avatar:data.avatar
+                avatar: data.avatar,
+                subscription: data.account?.status,
+                non_profit_name: data.account?.non_profit_name,
+                customer_id: data.account.customer_id
               }
             }
             dispatch(setUser(user))

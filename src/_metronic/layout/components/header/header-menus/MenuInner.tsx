@@ -7,6 +7,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { MenuInnerWithSub } from './MenuInnerWithSub';
 
 const SearchText = styled(TextField)({
    '& .MuiInputBase-root': {
@@ -34,7 +35,21 @@ export function MenuInner() {
           {/* <Button >Dashboard</Button>
           <Button >Account</Button> */}
           <MenuItem title={intl.formatMessage({id: 'MENU.DASHBOARD'})} to='/dashboard' />
-          <MenuItem title='Account' to='/builder' />
+          <MenuInnerWithSub
+            title='Account'
+            to='/account'
+            hasArrow={true}
+            menuPlacement='right-start'
+            menuTrigger={`{default:'click', lg: 'hover'}`}
+            >
+            <MenuItem title='Account Information' to='/account/info' />
+            <MenuItem title='About Your Non-Profit' to='/account/about_non_profit' />
+            <MenuItem title='Noe-Profit Verification' to='/account/verification' />
+            <MenuItem title='Address' to='/account/location' />
+
+          </MenuInnerWithSub>
+          <MenuItem title={'Subscription'} to='/subscription' />
+
         </Grid>
         <Grid container columnSpacing={4}>
           <Grid item>
