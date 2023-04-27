@@ -13,7 +13,10 @@ export interface UserState {
   last_name: string
   avatar: string
   non_profit_name?: string
-  id: number
+  id: number,
+  account_dbkey?: number
+  subscription?: string | null
+  customer_id?:string
 }
 export interface IAuthState {
   user: UserState,

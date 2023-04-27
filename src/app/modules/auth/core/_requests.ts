@@ -45,5 +45,5 @@ export function logout() {
 }
 
 export function getUserByToken() {
-  return axios.get<UserState>(GET_USER_BY_ACCESSTOKEN_URL)
+  return axios.get<any>(GET_USER_BY_ACCESSTOKEN_URL)
 }
