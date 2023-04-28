@@ -66,8 +66,8 @@ export function Registration() {
           values.last_name,
           values.password
         )
-        console.log('data==',data.customer_id)
-        navigate('/auth/subscription',{state:{customer_id:data.customer_id}})
+        console.log('data==',data)
+        navigate('/auth/subscription',{state:{customer_id:data.data.email}})
         dispatch(showMessage({
           message: 'Successful registered',
           variant:'success',

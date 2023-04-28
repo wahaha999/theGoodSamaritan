@@ -4,9 +4,11 @@ import AccountInfo from './AccountInfo'
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import Paper from '@mui/material/Paper';
 import AboutNonProfit from './AboutNonProfit';
 import Verification from './Verification';
 import Location from './Location';
+import { Grid } from '@mui/material';
 
 interface LinkTabProps {
   label?: string;
@@ -31,9 +33,12 @@ function TabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
+        <Grid container justifyContent="center">
+
         <Box sx={{ p: 3 }}>
             {children}
         </Box>
+        </Grid>
       )}
     </div>
   );
@@ -59,15 +64,15 @@ function a11yProps(index: number) {
      console.log('value==',value)
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Tabs value={value} onChange={handleChange} aria-label="nav tabs example">
+    <Paper sx={{ width: '100%',p:4 }}>
+      <Tabs value={value} onChange={handleChange} aria-label="nav tabs example" centered>
         <Tab label="Account Information" component={Link} to="info" />
         <Tab label="About Your Non-Profit" component={Link} to="about_non_profit" />
         <Tab label="Now-Profit Verification" component={Link} to="verification" />
         <Tab label="Address" component={Link} to="location" />
     </Tabs>
     <TabPanel >{ <Outlet/>}</TabPanel>
-    </Box>
+    </Paper>
   );
 }
 
