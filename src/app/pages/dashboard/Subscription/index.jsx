@@ -4,7 +4,7 @@ import { useAppSelector } from 'src/app/store/hook';
 
 
 const Subscription = () => {
-  const {customer_id} = useAppSelector(({user}) => user.user)
+  const {email} = useAppSelector(({user}) => user.user)
     return (
     <>
       <Helmet>
@@ -12,7 +12,7 @@ const Subscription = () => {
       </Helmet>
       <stripe-pricing-table
           pricing-table-id={process.env.REACT_APP_PRICING_TABLE_ID}
-          customer_id = {customer_id}
+          customer-email={email}
         publishable-key={process.env.REACT_APP_PUBLISHABLE_KEY}
       ></stripe-pricing-table>
     </>
