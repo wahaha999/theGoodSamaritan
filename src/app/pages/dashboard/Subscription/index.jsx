@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from 'src/app/store/hook';
 
 const Subscription = () => {
   const {email} = useAppSelector(({user}) => user.user)
-  const {dbkey} = useAppDispatch(({user}) => user.dbkey)
+  const {dbkey} = useAppSelector(({account}) => account.dbkey)
     return (
     <>
       <Helmet>
