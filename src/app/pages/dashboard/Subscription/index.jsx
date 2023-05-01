@@ -1,10 +1,11 @@
 import React from 'react'
 import { Helmet } from 'react-helmet';
-import { useAppSelector } from 'src/app/store/hook';
+import { useAppDispatch, useAppSelector } from 'src/app/store/hook';
 
 
 const Subscription = () => {
   const {email} = useAppSelector(({user}) => user.user)
+  const {account_dbkey} = useAppSelector(({user}) => user.account_dbkey)
     return (
     <>
       <Helmet>
@@ -13,7 +14,8 @@ const Subscription = () => {
       <stripe-pricing-table
           pricing-table-id={process.env.REACT_APP_PRICING_TABLE_ID}
           customer-email={email}
-        publishable-key={process.env.REACT_APP_PUBLISHABLE_KEY}
+          client-reference-id={account_dbkey}
+          publishable-key={process.env.REACT_APP_PUBLISHABLE_KEY}
       ></stripe-pricing-table>
     </>
   )
