@@ -78,10 +78,10 @@ function ColorlibStepIcon(props: StepIconProps) {
   const {active, completed, className} = props
 
   const icons: {[index: string]: React.ReactElement} = {
-    1: <FuseSvgIcon className='text-blue'>heroicons-outline:camera</FuseSvgIcon>,
-    2: <FuseSvgIcon className='text-blue'>heroicons-outline:document-add</FuseSvgIcon>,
-    3: <FuseSvgIcon className='text-blue'>heroicons-outline:cloud-upload</FuseSvgIcon>,
-    4: <FuseSvgIcon className='text-blue'>heroicons-outline:office-building</FuseSvgIcon>,
+    1: <FuseSvgIcon className='text-blue'>heroicons-solid:camera</FuseSvgIcon>,
+    2: <FuseSvgIcon className='text-blue'>heroicons-solid:document-add</FuseSvgIcon>,
+    3: <FuseSvgIcon className='text-blue'>heroicons-solid:cloud-upload</FuseSvgIcon>,
+    4: <FuseSvgIcon className='text-blue'>heroicons-solid:office-building</FuseSvgIcon>,
   }
 
   return (
