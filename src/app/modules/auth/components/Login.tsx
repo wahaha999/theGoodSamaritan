@@ -1,14 +1,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import {useState} from 'react'
-import * as Yup from 'yup'
 import clsx from 'clsx'
-import {Link, useNavigate, useParams} from 'react-router-dom'
 import {useFormik} from 'formik'
-import {getUserByToken, login} from '../core/_requests'
-import {toAbsoluteUrl} from '../../../../_metronic/helpers'
-import { useDispatch } from 'react-redux'
-import { setUser } from '../../../store/userSlice'
-import { showMessage } from 'src/app/store/fuse/messageSlice'
+import {useState} from 'react'
+import {useDispatch} from 'react-redux'
+import {Link, useNavigate, useParams} from 'react-router-dom'
+import {showMessage} from 'src/app/store/fuse/messageSlice'
+import * as Yup from 'yup'
+import {setUser} from '../../../store/userSlice'
+import {login} from '../core/_requests'
 // import {useAuth} from '../core/Auth'
 
 const loginSchema = Yup.object().shape({
@@ -23,7 +22,6 @@ const loginSchema = Yup.object().shape({
     .required('Password is required'),
 })
 
-
 /*
 Formik+YUP+Typescript:
 https://jaredpalmer.com/formik/docs/tutorial#getfieldprops
@@ -31,13 +29,13 @@ https://medium.com/@maurice.de.beijer/yup-validation-and-typescript-and-formik-6
 */
 
 export function Login() {
-  const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch<any>();
-  const { state } = useParams();
+  const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch<any>()
+  const {state} = useParams()
   const navigate = useNavigate()
   // const {saveAuth, setCurrentUser} = useAuth()
   const initialValues = {
-    email: state??'',
+    email: state ?? '',
     password: '',
   }
 
@@ -47,16 +45,19 @@ export function Login() {
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       setLoading(true)
       try {
-
-        const { data: auth } = await login(values.email, values.password);
+        const {data: auth} = await login(values.email, values.password)
         if (auth.access_token) {
-          sessionStorage.setItem('access_token',auth.access_token)
+          sessionStorage.setItem('access_token', auth.access_token)
         }
-        dispatch(setUser(auth));
-        dispatch(showMessage({ message: 'Successful login', variant: 'success' }));
-      } catch (error:any) {
+        dispatch(setUser(auth))
+        dispatch(showMessage({message: 'Successful login', variant: 'success'}))
+      } catch (error: any) {
         // saveAuth(undefined)
-        setStatus(typeof (error.response.data.message) == "string"?error.response.data.message:'The provided combination of email and password is invalid.')
+        setStatus(
+          typeof error.response.data.message == 'string'
+            ? error.response.data.message
+            : 'The provided combination of email and password is invalid.'
+        )
         setSubmitting(false)
         setLoading(false)
       }
@@ -74,13 +75,12 @@ export function Login() {
       <div className='text-center mb-11'>
         <h1 className='text-dark fw-bolder mb-3'>Sign In</h1>
       </div>
-      
 
       {formik.status && (
         <div className='mb-lg-15 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
-      ) }
+      )}
 
       {/* begin::Form group */}
       <div className='fv-row mb-8'>
@@ -172,10 +172,14 @@ export function Login() {
         </Link>
       </div>
       <div className='mb-10 p-8 rounded'>
-          <div className='text-info'>
-            This is an exclusive site for non-profit organizations to share resources and network with others. To ensure the integrity of this site , when you sign in for the first time we will ask you to verify your non-profit status by uploading your non-profit documentation and/or supplying us with your EIN number. this information will never be shared with any one and will only be used to verify your status.
-          </div>
+        <div className='text-info'>
+          This is an exclusive site for non-profit organizations to share resources and network with
+          others. To ensure the integrity of this site , when you sign in for the first time we will
+          ask you to verify your non-profit status by uploading your non-profit documentation and/or
+          supplying us with your EIN number. this information will never be shared with any one and
+          will only be used to verify your status.
         </div>
+      </div>
     </form>
   )
 }

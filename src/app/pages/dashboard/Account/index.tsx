@@ -1,95 +1,226 @@
-import React from 'react'
-import { Link, Navigate, Outlet, Route, Routes, useLocation, useParams } from 'react-router-dom'
+import * as React from 'react'
+import Box from '@mui/material/Box'
+import Stepper from '@mui/material/Stepper'
+import Step from '@mui/material/Step'
+import StepButton from '@mui/material/StepButton'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
+import {
+  Grid,
+  Paper,
+  StepConnector,
+  StepLabel,
+  Tab,
+  stepConnectorClasses,
+  styled,
+} from '@mui/material'
 import AccountInfo from './AccountInfo'
-import Box from '@mui/material/Box';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Paper from '@mui/material/Paper';
-import AboutNonProfit from './AboutNonProfit';
-import Verification from './Verification';
-import Location from './Location';
-import { Grid } from '@mui/material';
+import {FormProvider, useForm, useFormContext} from 'react-hook-form'
+import AboutNonProfit from './AboutNonProfit'
+import Verification from './Verification'
+import Location from './Location'
+import {StepIconProps} from '@mui/material/StepIcon'
+import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
+import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
+import {updateProfile} from '../store/accountSlice'
 
-interface LinkTabProps {
-  label?: string;
-  href?: string;
-}
+const steps = ['Account Info', 'About Your Non Profit', 'Noe Profit Verification', 'Address']
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index?: number;
-  value?: number;
-}
+const ColorlibConnector = styled(StepConnector)(({theme}) => ({
+  [`&.${stepConnectorClasses.alternativeLabel}`]: {
+    top: 22,
+  },
+  [`&.${stepConnectorClasses.active}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      backgroundImage:
+        'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
+    },
+  },
+  [`&.${stepConnectorClasses.completed}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      backgroundImage:
+        'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
+    },
+  },
+  [`& .${stepConnectorClasses.line}`]: {
+    height: 3,
+    border: 0,
+    backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#eaeaf0',
+    borderRadius: 1,
+  },
+}))
 
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+const ColorlibStepIconRoot = styled('div')<{
+  ownerState: {completed?: boolean; active?: boolean}
+}>(({theme, ownerState}) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#ccc',
+  zIndex: 1,
+  color: '#fff',
+  width: 50,
+  cursor: 'pointer',
+  height: 50,
+  display: 'flex',
+  borderRadius: '50%',
+  justifyContent: 'center',
+  alignItems: 'center',
+  ...(ownerState.active && {
+    backgroundImage:
+      'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
+    boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
+  }),
+  ...(ownerState.completed && {
+    backgroundImage:
+      'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
+  }),
+}))
+
+function ColorlibStepIcon(props: StepIconProps) {
+  const {active, completed, className} = props
+
+  const icons: {[index: string]: React.ReactElement} = {
+    1: <FuseSvgIcon className='text-blue'>heroicons-outline:camera</FuseSvgIcon>,
+    2: <FuseSvgIcon className='text-blue'>heroicons-outline:document-add</FuseSvgIcon>,
+    3: <FuseSvgIcon className='text-blue'>heroicons-outline:cloud-upload</FuseSvgIcon>,
+    4: <FuseSvgIcon className='text-blue'>heroicons-outline:office-building</FuseSvgIcon>,
+  }
 
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Grid container justifyContent="center">
-
-        <Box sx={{ p: 3 }}>
-            {children}
-        </Box>
-        </Grid>
-      )}
-    </div>
-  );
-}
-
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
-
-
-
- function AccountLayout() {
-     const [value, setValue] = React.useState(0);
-     const params = useParams();
-    //  const params = useLocation();
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-     };
-     console.log('value==',value)
-
-  return (
-    <Paper sx={{ width: '100%',p:4 }}>
-      <Tabs value={value} onChange={handleChange} aria-label="nav tabs example" centered>
-        <Tab label="Account Information" component={Link} to="info" />
-        <Tab label="About Your Non-Profit" component={Link} to="about_non_profit" />
-        <Tab label="Now-Profit Verification" component={Link} to="verification" />
-        <Tab label="Address" component={Link} to="location" />
-    </Tabs>
-    <TabPanel >{ <Outlet/>}</TabPanel>
-    </Paper>
-  );
-}
-
-type Props = {}
-
-const Account = (props: Props) => {
-  return (
-      <Routes>
-          <Route element={<AccountLayout />}>
-              <Route index element={<Navigate to="info"/>}/>
-              <Route path="info" element={ <AccountInfo/>} />
-              <Route path="about_non_profit" element={ <AboutNonProfit/>} />
-              <Route path="verification" element={ <Verification/>} />
-              <Route path="location" element={ <Location/>} />
-          </Route>
-    </Routes>
+    <ColorlibStepIconRoot ownerState={{completed, active}} className={className}>
+      {icons[String(props.icon)]}
+    </ColorlibStepIconRoot>
   )
 }
 
-export default Account
+export default function Account() {
+  const [activeStep, setActiveStep] = React.useState(0)
+  const [completed, setCompleted] = React.useState<{
+    [k: number]: boolean
+  }>({})
+  const dispatch = useAppDispatch()
+  const user = useAppSelector(({user}) => user.user)
+  const methods = useForm({
+    mode: 'onChange',
+    defaultValues: {},
+    //  resolver: yupResolver(schema),
+  })
+  const {reset, watch, control, formState, getValues} = methods
+  const form = watch()
+
+  React.useEffect(() => {
+    reset({...user})
+  }, [user, reset])
+
+  const totalSteps = () => {
+    return steps.length
+  }
+
+  const completedSteps = () => {
+    return Object.keys(completed).length
+  }
+
+  const isLastStep = () => {
+    return activeStep === totalSteps() - 1
+  }
+
+  const allStepsCompleted = () => {
+    return completedSteps() === totalSteps()
+  }
+
+  const handleNext = () => {
+    const newActiveStep =
+      isLastStep() && !allStepsCompleted()
+        ? // It's the last step, but not all steps have been completed,
+          // find the first step that has been completed
+          steps.findIndex((step, i) => !(i in completed))
+        : activeStep + 1
+    setActiveStep(newActiveStep)
+  }
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1)
+  }
+
+  const handleStep = (step: number) => () => {
+    setActiveStep(step)
+  }
+
+  const handleComplete = () => {
+    const newCompleted = completed
+    newCompleted[activeStep] = true
+    setCompleted(newCompleted)
+    if (isLastStep()) {
+      console.log('value===', getValues())
+      dispatch(updateProfile(getValues()))
+    } else {
+      handleNext()
+    }
+  }
+
+  const handleReset = () => {
+    setActiveStep(0)
+    setCompleted({})
+  }
+
+  return (
+    <FormProvider {...methods}>
+      <Paper sx={{width: '100%', m: 4, p: 4}}>
+        <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
+          {steps.map((label, index) => (
+            <Step key={label} completed={completed[index]}>
+              <StepLabel StepIconComponent={ColorlibStepIcon} onClick={handleStep(index)}>
+                {label}
+              </StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+        <div>
+          {allStepsCompleted() ? (
+            <React.Fragment>
+              <Typography sx={{mt: 2, mb: 1}}>
+                All steps completed - you&apos;re finished
+              </Typography>
+              <Box sx={{display: 'flex', flexDirection: 'row', pt: 2}}>
+                <Box sx={{flex: '1 1 auto'}} />
+                <Button onClick={handleReset}>Reset</Button>
+              </Box>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <Grid container justifyContent='center'>
+                <Box sx={{p: 3}}>{activeStep == 0 && <AccountInfo />}</Box>
+                <Box sx={{p: 3}}>{activeStep == 1 && <AboutNonProfit />}</Box>
+                <Box sx={{p: 3}}>{activeStep == 2 && <Verification />}</Box>
+                <Box sx={{p: 3}}>{activeStep == 3 && <Location />}</Box>
+              </Grid>
+              {/* <Typography sx={{mt: 2, mb: 1, py: 1}}>Step {activeStep + 1}</Typography> */}
+              <Box sx={{display: 'flex', flexDirection: 'row', pt: 2}}>
+                <Button
+                  color='inherit'
+                  disabled={activeStep === 0}
+                  onClick={handleBack}
+                  sx={{mr: 1}}
+                >
+                  Back
+                </Button>
+                <Box sx={{flex: '1 1 auto'}} />
+                <Button onClick={handleNext} sx={{mr: 1}}>
+                  Next
+                </Button>
+                {activeStep !== steps.length &&
+                  (completed[activeStep] ? (
+                    <Typography variant='caption' sx={{display: 'inline-block'}}>
+                      Step {activeStep + 1} already completed
+                    </Typography>
+                  ) : (
+                    <Button onClick={handleComplete}>
+                      {completedSteps() === totalSteps() - 1 ? 'Finish' : 'Complete Step'}
+                    </Button>
+                  ))}
+              </Box>
+            </React.Fragment>
+          )}
+        </div>
+      </Paper>
+    </FormProvider>
+  )
+}
