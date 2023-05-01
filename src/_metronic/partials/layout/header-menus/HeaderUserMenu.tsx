@@ -2,13 +2,12 @@
 import {FC} from 'react'
 import {Link} from 'react-router-dom'
 // import {useAuth} from '../../../../app/modules/auth'
-import {Languages} from './Languages'
 import {toAbsoluteUrl} from '../../../helpers'
-import { useAppSelector } from '../../../../app/store/hook'
-import { logout } from '../../../../app/modules/auth/core/_requests'
+import {useAppSelector} from '../../../../app/store/hook'
+import {logout} from '../../../../app/modules/auth/core/_requests'
 
 const HeaderUserMenu: FC = () => {
-  const {user,access_token} = useAppSelector(({user}) => user)
+  const {user, access_token} = useAppSelector(({user}) => user)
   // const {currentUser, logout} = useAuth()
   return (
     <div
@@ -24,7 +23,6 @@ const HeaderUserMenu: FC = () => {
           <div className='d-flex flex-column'>
             <a href='#' className='fw-bold text-muted text-hover-primary fs-7'>
               {user?.email}
-              
             </a>
           </div>
         </div>
@@ -33,7 +31,7 @@ const HeaderUserMenu: FC = () => {
       <div className='separator my-2'></div>
 
       <div className='menu-item px-5'>
-        <Link to={'/crafted/pages/profile'} className='menu-link px-5'>
+        <Link to={'/account/info'} className='menu-link px-5'>
           My Profile
         </Link>
       </div>
@@ -41,15 +39,13 @@ const HeaderUserMenu: FC = () => {
       <div className='separator my-2'></div>
 
       <div className='menu-item px-5 my-1'>
-        <Link to='/crafted/account/settings' className='menu-link px-5'>
+        <Link to='/account/info' className='menu-link px-5'>
           Account Settings
         </Link>
       </div>
 
       <div className='menu-item px-5'>
-        <a
-          onClick={logout}
-          className='menu-link px-5'>
+        <a onClick={logout} className='menu-link px-5'>
           Sign Out
         </a>
       </div>

@@ -1,8 +1,6 @@
 import axios from 'axios'
-import {AuthModel, UserModel} from './_models'
-import { UserState } from '../../../store/userSlice'
 
-const API_URL = process.env.REACT_APP_API_URL
+export const API_URL = process.env.REACT_APP_API_URL
 
 export const GET_USER_BY_ACCESSTOKEN_URL = `${API_URL}/users/me`
 export const LOGIN_URL = `${API_URL}/auth/login`
