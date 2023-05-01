@@ -4,21 +4,23 @@ import { useLocation } from 'react-router-dom';
 
 const StripePricingTable = () => {
     const  {state}  = useLocation();
-  const customer_id = state?.customer_id
+  const account_dbkey = state?.account_dbkey
+  const email = state?.email
   return (
     <>
       <Helmet>
         <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
       </Helmet>
       {
-        customer_id &&
+        account_dbkey &&
         <>
-      <stripe-pricing-table
+          <stripe-pricing-table
+            customer-email={email}
         pricing-table-id={process.env.REACT_APP_PRICING_TABLE_ID}
-        customer-email={customer_id}
+        client-reference-id={account_dbkey}
         publishable-key={process.env.REACT_APP_PUBLISHABLE_KEY}
       ></stripe-pricing-table>
-      <Typography>{ customer_id}</Typography>
+      <Typography>{ email}</Typography>
         </>
       }
     </>

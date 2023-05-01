@@ -5,11 +5,11 @@ import {useFormik} from 'formik'
 import * as Yup from 'yup'
 import clsx from 'clsx'
 import {getUserByToken, register} from '../core/_requests'
-import {Link,useNavigate } from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {PasswordMeterComponent} from '../../../../_metronic/assets/ts/components'
-import { useDispatch } from 'react-redux';
-import { showMessage } from '../../../store/fuse/messageSlice'
+import {useDispatch} from 'react-redux'
+import {showMessage} from '../../../store/fuse/messageSlice'
 const initialValues = {
   first_name: '',
   last_name: '',
@@ -50,10 +50,10 @@ const registrationSchema = Yup.object().shape({
 })
 
 export function Registration() {
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate ()
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
   // const { saveAuth, setCurrentUser } = useAuth();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const formik = useFormik({
     initialValues,
     validationSchema: registrationSchema,
@@ -66,25 +66,33 @@ export function Registration() {
           values.last_name,
           values.password
         )
-        console.log('data==',data)
-        navigate('/auth/subscription',{state:{customer_id:data.data.email}})
-        dispatch(showMessage({
-          message: 'Successful registered',
-          variant:'success',
-          autoHideDuration: 3000,
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'right',
-          }
-        }))
-        
+        console.log('data==', data)
+        navigate('/auth/subscription', {
+          state: {account_dbkey: data.account_dbkey, email: data.data.email},
+        })
+        dispatch(
+          showMessage({
+            message: 'Successful registered',
+            variant: 'success',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          })
+        )
+
         // saveAuth(auth)
         // const {data: user} = await getUserByToken()
-        
+
         // setCurrentUser(user)
-      } catch (error:any) {
+      } catch (error: any) {
         // saveAuth(undefined)
-        setStatus(typeof (error.response.data.message) == "string"?error.response.data.message: error.response.data.message.email[0])
+        setStatus(
+          typeof error.response.data.message == 'string'
+            ? error.response.data.message
+            : error.response.data.message.email[0]
+        )
         setSubmitting(false)
         setLoading(false)
       }
@@ -114,7 +122,7 @@ export function Registration() {
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
       )}
-      
+
       {/* begin::Form group Firstname */}
       <div className='fv-row mb-8'>
         <input
@@ -228,11 +236,11 @@ export function Registration() {
             <div className='flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2'></div>
             <div className='flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2'></div>
             <div className='flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2'></div>
-            {
-              formik.touched.password && !formik.errors.password ?
-              <div className='flex-grow-1 bg-secondary bg-active-success rounded h-5px active'></div>:
+            {formik.touched.password && !formik.errors.password ? (
+              <div className='flex-grow-1 bg-secondary bg-active-success rounded h-5px active'></div>
+            ) : (
               <div className='flex-grow-1 bg-secondary bg-active-success rounded h-5px'></div>
-            }
+            )}
           </div>
           {/* end::Meter */}
         </div>
