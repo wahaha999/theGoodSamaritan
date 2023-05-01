@@ -23,6 +23,7 @@ import {StepIconProps} from '@mui/material/StepIcon'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {updateProfile} from '../store/accountSlice'
+import {getUserByToken} from 'src/app/modules/auth/core/_requests'
 
 const steps = ['Account Info', 'About Your Non Profit', 'Noe Profit Verification', 'Address']
 
