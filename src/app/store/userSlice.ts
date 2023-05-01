@@ -127,7 +127,7 @@ const userSlice = createSlice({
     // [updateUserSettings.fulfilled]: (state, action) => action.payload,
     // [updateUserShortcuts.fulfilled]: (state, action) => action.payload,
     builder.addCase(setUser.fulfilled, (state, action) => {
-      return {...state, ...action.payload};
+      return {...state, ...action.payload,access_token: sessionStorage.getItem('access_token')};
     });
   },
 });

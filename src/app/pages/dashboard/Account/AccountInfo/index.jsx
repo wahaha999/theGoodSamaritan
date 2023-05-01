@@ -129,7 +129,7 @@ const AccountInfo = (props) => {
                           trash
                         </Icon> */}
                         {/* <IconButton> */}
-                          <FuseSvgIcon className='text-white'>heroicons-outline:camera</FuseSvgIcon>
+                          <FuseSvgIcon className='text-white'>heroicons-solid:camera</FuseSvgIcon>
                         {/* </IconButton> */}
                       </label>
                     </div>

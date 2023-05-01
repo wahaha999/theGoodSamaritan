@@ -7,7 +7,7 @@ import {MenuTestPage} from '../pages/MenuTestPage'
 import {getCSSVariableValue} from '../../_metronic/assets/ts/_utils'
 import {WithChildren} from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
-import { useAppSelector } from '../store/hook'
+import {useAppSelector} from '../store/hook'
 import Account from '../pages/dashboard/Account'
 
 const PrivateRoutes = () => {
@@ -18,33 +18,31 @@ const PrivateRoutes = () => {
   const ChatPage = lazy(() => import('../modules/apps/chat/ChatPage'))
   const UsersPage = lazy(() => import('../modules/apps/user-management/UsersPage'))
   const Subscription = lazy(() => import('../pages/dashboard/Subscription/index'))
-  
+
   const user = useAppSelector(({user}) => {
     return user.user
   })
-  console.log("🚀 ~ file: PrivateRoutes.tsx:22 ~ PrivateRoutes ~ user:", user)
+  console.log('🚀 ~ file: PrivateRoutes.tsx:22 ~ PrivateRoutes ~ user:', user)
   return (
     <Routes>
       <Route element={<MasterLayout />}>
-
-
         {/* Redirect to Dashboard after success login/registartion */}
-        {
-          user.subscription ?
-            <Route path='auth/*' element={<Navigate to='/dashboard' />} />
-            :
-            <Route path='auth/*' element={<Navigate to='/subscription' />} /> 
-       } 
+        {user.status ? (
+          <Route path='auth/*' element={<Navigate to='/dashboard' />} />
+        ) : (
+          <Route path='auth/*' element={<Navigate to='/subscription' />} />
+        )}
         {/* Pages */}
         <Route path='dashboard' element={<DashboardWrapper />} />
         <Route path='builder' element={<BuilderPageWrapper />} />
         <Route path='menu-test' element={<MenuTestPage />} />
-        <Route path='account/*' element={ <Account/>} />
+        <Route path='account/*' element={<Account />} />
         <Route
           path='subscription'
-          element={<SuspensedView>
-            <Subscription />
-          </SuspensedView>
+          element={
+            <SuspensedView>
+              <Subscription />
+            </SuspensedView>
           }
         />
         {/* Lazy Modules */}

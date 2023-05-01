@@ -23,6 +23,7 @@ import {StepIconProps} from '@mui/material/StepIcon'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {updateProfile} from '../store/accountSlice'
+import {getUserByToken} from 'src/app/modules/auth/core/_requests'
 
 const steps = ['Account Info', 'About Your Non Profit', 'Noe Profit Verification', 'Address']
 
@@ -78,10 +79,10 @@ function ColorlibStepIcon(props: StepIconProps) {
   const {active, completed, className} = props
 
   const icons: {[index: string]: React.ReactElement} = {
-    1: <FuseSvgIcon className='text-blue'>heroicons-outline:camera</FuseSvgIcon>,
-    2: <FuseSvgIcon className='text-blue'>heroicons-outline:document-add</FuseSvgIcon>,
-    3: <FuseSvgIcon className='text-blue'>heroicons-outline:cloud-upload</FuseSvgIcon>,
-    4: <FuseSvgIcon className='text-blue'>heroicons-outline:office-building</FuseSvgIcon>,
+    1: <FuseSvgIcon className='text-blue'>heroicons-solid:camera</FuseSvgIcon>,
+    2: <FuseSvgIcon className='text-blue'>heroicons-solid:document-add</FuseSvgIcon>,
+    3: <FuseSvgIcon className='text-blue'>heroicons-solid:cloud-upload</FuseSvgIcon>,
+    4: <FuseSvgIcon className='text-blue'>heroicons-solid:office-building</FuseSvgIcon>,
   }
 
   return (
