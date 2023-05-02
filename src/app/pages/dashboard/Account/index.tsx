@@ -13,6 +13,7 @@ import {
   Tab,
   stepConnectorClasses,
   styled,
+  useTheme,
 } from '@mui/material'
 import AccountInfo from './AccountInfo'
 import {FormProvider, useForm, useFormContext} from 'react-hook-form'
@@ -98,6 +99,7 @@ export default function Account() {
     [k: number]: boolean
   }>({})
   const dispatch = useAppDispatch()
+  const theme = useTheme()
   const user = useAppSelector(({user}) => user.user)
   const methods = useForm({
     mode: 'onChange',
@@ -177,8 +179,12 @@ export default function Account() {
         <div>
           {allStepsCompleted() ? (
             <React.Fragment>
-              <Typography sx={{mt: 2, mb: 1}}>
-                All steps completed - you&apos;re finished
+              <Typography
+                variant='h6'
+                sx={{mt: 2, mb: 1, color: theme.palette.success.main, textAlign: 'center'}}
+              >
+                Congratulations, All required information on your Account has been filled in. You
+                may go back to your dashboard and start networking.
               </Typography>
               <Box sx={{display: 'flex', flexDirection: 'row', pt: 2}}>
                 <Box sx={{flex: '1 1 auto'}} />
@@ -204,9 +210,9 @@ export default function Account() {
                   Back
                 </Button>
                 <Box sx={{flex: '1 1 auto'}} />
-                <Button onClick={handleNext} sx={{mr: 1}}>
+                {/* <Button onClick={handleNext} sx={{mr: 1}}>
                   Next
-                </Button>
+                </Button> */}
                 {activeStep !== steps.length &&
                   (completed[activeStep] ? (
                     <Typography variant='caption' sx={{display: 'inline-block'}}>
