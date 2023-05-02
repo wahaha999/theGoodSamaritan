@@ -1,11 +1,12 @@
 import SearchIcon from '@mui/icons-material/Search'
-import {Grid, Select, TextField, styled} from '@mui/material'
+import {Button, Grid, Select, TextField, styled} from '@mui/material'
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs'
 import {DatePicker} from '@mui/x-date-pickers/DatePicker'
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider'
 import {useIntl} from 'react-intl'
 import {MenuInnerWithSub} from './MenuInnerWithSub'
 import {MenuItem} from './MenuItem'
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
 
 const SearchText = styled(TextField)({
   '& .MuiInputBase-root': {
@@ -46,8 +47,14 @@ export function MenuInner() {
             <MenuItem title='Address' to='/account/location' />
           </MenuInnerWithSub>
           <MenuItem title={'Subscription'} to='/subscription' />
+          <Button startIcon={<NotificationsActiveIcon color='secondary' />} sx={{ml: 2}}>
+            Your Connections
+          </Button>
+          <Button startIcon={<NotificationsActiveIcon color='secondary' />} sx={{ml: 2}}>
+            Saved Posts
+          </Button>
         </Grid>
-        <Grid container columnSpacing={4}>
+        {/* <Grid container columnSpacing={4}>
           <Grid item>
             <SearchText placeholder='Search Posts' InputProps={{startAdornment: <SearchIcon />}} />
           </Grid>
@@ -69,16 +76,23 @@ export function MenuInner() {
           </Grid>
           <Grid item>
             <Grid container alignItems='center'>
-              <label>Active Posts between:</label>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                {/* <DemoContainer components={['DatePicker']}> */}
-                <DatePicker sx={{ml: 1}} />
-                <DatePicker sx={{ml: 1}} />
-                {/* </DemoContainer> */}
-              </LocalizationProvider>
+              <label>Select Posts:</label>
+              <Select
+                sx={{ml: 1}}
+                labelId='demo-select-small-label'
+                id='demo-select-small'
+                value='Today'
+                // value={age}
+                // label="Age"
+                // onChange={handleChange}
+              >
+                <option value='Today'>Today</option>
+                <option value={20}>Twenty</option>
+                <option value={30}>Thirty</option>
+              </Select>
             </Grid>
           </Grid>
-        </Grid>
+        </Grid> */}
       </div>
     </>
   )

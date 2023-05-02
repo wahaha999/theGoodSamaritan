@@ -18,15 +18,21 @@ import {
 import AccountInfo from './AccountInfo'
 import {FormProvider, useForm, useFormContext} from 'react-hook-form'
 import AboutNonProfit from './AboutNonProfit'
-import Verification from './Verification'
 import Location from './Location'
 import {StepIconProps} from '@mui/material/StepIcon'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {updateProfile} from '../store/accountSlice'
 import {getUserByToken} from 'src/app/modules/auth/core/_requests'
+import Verification from './Verification'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import _ from 'src/app/modules/@lodash/@lodash'
+import FuseLoading from 'src/app/modules/core/FuseLoading/FuseLoading'
+import { showMessage } from 'src/app/store/fuse/messageSlice'
+import { getStates } from '../store/planSlice'
 
-const steps = ['Account Info', 'About Your Non Profit', 'Noe Profit Verification', 'Address']
+const steps = ['Account Info', 'About Your Non Profit', 'Non Profit Verification', 'Address']
 
 const ColorlibConnector = styled(StepConnector)(({theme}) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -52,9 +58,7 @@ const ColorlibConnector = styled(StepConnector)(({theme}) => ({
   },
 }))
 
-const ColorlibStepIconRoot = styled('div')<{
-  ownerState: {completed?: boolean; active?: boolean}
-}>(({theme, ownerState}) => ({
+const ColorlibStepIconRoot = styled('div')(({theme, ownerState}) => ({
   backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#ccc',
   zIndex: 1,
   color: '#fff',
@@ -76,10 +80,65 @@ const ColorlibStepIconRoot = styled('div')<{
   }),
 }))
 
-function ColorlibStepIcon(props: StepIconProps) {
+
+function validateEIN(ein) {
+  // Remove any dashes from the EIN number
+  ein = ein.replace(/-/g, '')
+  // Validate that the EIN number is exactly nine digits long
+  if (!/^\d{9}$/.test(ein)) {
+    return false
+  }
+
+  // Validate that the first two digits are between 01 and 99
+  const firstTwoDigits = parseInt(ein.substring(0, 2), 10)
+  if (firstTwoDigits < 1 || firstTwoDigits > 99) {
+    return false
+  }
+
+  // Validate that the third digit is between 1 and 6
+  const thirdDigit = parseInt(ein.substring(2, 3), 10)
+  if (thirdDigit < 1 || thirdDigit > 6) {
+    return false
+  }
+
+  // Calculate the check digit and validate that it matches the ninth digit
+  let checkDigit = 0
+  for (let i = 0; i < 8; i++) {
+    checkDigit += parseInt(ein.substring(i, i + 1), 10) * (9 - i)
+  }
+  checkDigit = (10 - (checkDigit % 10)) % 10
+
+  if (checkDigit !== parseInt(ein.substring(8, 9), 10)) {
+    return false
+  }
+
+  // If all checks pass, the EIN number is valid
+  return true
+}
+yup.addMethod(yup.StringSchema, 'validateEIN', function (errorMessage) {
+  return this.test('validateEIN', errorMessage, function (value) {
+    const {createError} = this
+    const isValid = validateEIN(value)
+
+    return isValid || createError({message: errorMessage})
+  })
+})
+
+const schema = yup.object().shape({
+  phone_number: yup.string().required('You must enter a Phone Number'),
+  address: yup.string().required('You must enter a address'),
+  city: yup.string().required('You must enter a city'),
+  state: yup.string().required('You must enter a state'),
+  zip_code: yup.string().required('You must enter a Zip Code'),
+  EIN: yup.string().required('EIN is required').validateEIN('Invalid EIN format'),
+  non_profit_name: yup.string().required('Non Profit Name is required'),
+})
+
+
+function ColorlibStepIcon(props) {
   const {active, completed, className} = props
 
-  const icons: {[index: string]: React.ReactElement} = {
+  const icons = {
     1: <FuseSvgIcon className='text-blue'>heroicons-solid:camera</FuseSvgIcon>,
     2: <FuseSvgIcon className='text-blue'>heroicons-solid:document-add</FuseSvgIcon>,
     3: <FuseSvgIcon className='text-blue'>heroicons-solid:cloud-upload</FuseSvgIcon>,
@@ -95,19 +154,25 @@ function ColorlibStepIcon(props: StepIconProps) {
 
 export default function Account() {
   const [activeStep, setActiveStep] = React.useState(0)
-  const [completed, setCompleted] = React.useState<{
-    [k: number]: boolean
-  }>({})
+  const [completed, setCompleted] = React.useState({})
   const dispatch = useAppDispatch()
   const theme = useTheme()
   const user = useAppSelector(({user}) => user.user)
   const methods = useForm({
     mode: 'onChange',
-    defaultValues: {},
-    //  resolver: yupResolver(schema),
+    defaultValues: {
+      fax_number: '',
+      phone_number:'',
+    },
+     resolver: yupResolver(schema),
   })
-  const {reset, watch, control, formState, getValues} = methods
-  const form = watch()
+  const {reset, watch, control, formState, getValues,handleSubmit} = methods
+  const form = watch();
+  const { errors, isValid } = formState;
+
+  React.useEffect(() => {
+    dispatch(getStates())
+  },[])
 
   React.useEffect(() => {
     reset({...user})
@@ -143,17 +208,24 @@ export default function Account() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1)
   }
 
-  const handleStep = (step: number) => () => {
+  const handleStep = (step) => () => {
     setActiveStep(step)
   }
 
-  const handleComplete = () => {
+  const handleComplete = (data) => {
+    console.log('activestep==', activeStep,errors,data);
+    
     const newCompleted = completed
     newCompleted[activeStep] = true
+    
     setCompleted(newCompleted)
-    if (isLastStep()) {
+    if (isLastStep() && isValid) {
       console.log('value===', getValues())
-      dispatch(updateProfile(getValues()))
+      dispatch(updateProfile(getValues())).then(() => {
+        dispatch(showMessage({message:'Successfully updated',variant:'success'}))
+      }).catch(err => {
+        dispatch(showMessage({message:'Something is wrong',variant:'error'}))
+      })
     } else {
       handleNext()
     }
@@ -164,9 +236,13 @@ export default function Account() {
     setCompleted({})
   }
 
+  if (_.isEmpty(form) || !user) {
+    return <FuseLoading/>
+  }
+
   return (
     <FormProvider {...methods}>
-      <Paper sx={{width: '100%', m: 4, p: 4}}>
+      <Paper sx={{width: '100%', m: 1, p: 4}}>
         <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
           {steps.map((label, index) => (
             <Step key={label} completed={completed[index]}>
@@ -188,7 +264,7 @@ export default function Account() {
               </Typography>
               <Box sx={{display: 'flex', flexDirection: 'row', pt: 2}}>
                 <Box sx={{flex: '1 1 auto'}} />
-                <Button onClick={handleReset}>Reset</Button>
+                <Button onClick={handleReset}>Update Account</Button>
               </Box>
             </React.Fragment>
           ) : (
@@ -219,7 +295,7 @@ export default function Account() {
                       Step {activeStep + 1} already completed
                     </Typography>
                   ) : (
-                    <Button onClick={handleComplete}>
+                    <Button disabled={completedSteps() === totalSteps() - 1 && !isValid} onClick={handleComplete}>
                       {completedSteps() === totalSteps() - 1 ? 'Finish' : 'Complete Step'}
                     </Button>
                   ))}

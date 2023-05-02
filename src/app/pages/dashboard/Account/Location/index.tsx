@@ -1,20 +1,57 @@
-import React from 'react'
-import {Typography, Grid, Box, TextField, InputAdornment} from '@mui/material'
+import React, {useState} from 'react'
+import {
+  Typography,
+  Grid,
+  Box,
+  TextField,
+  InputAdornment,
+  Autocomplete,
+  CircularProgress,
+} from '@mui/material'
 import {Controller, useForm, useFormContext} from 'react-hook-form'
 import {yupResolver} from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
-
-const schema = yup.object().shape({
-  phone_number: yup.string().required('You must enter a Phone Number'),
-})
+import axios from 'axios'
+import {API_URL} from 'src/app/modules/auth/core/_requests'
+import {IState} from '../../store/planSlice'
+import withReducer from 'src/app/store/withReducer'
+import reducer from '../../store'
+import {useAppSelector} from 'src/app/store/hook'
 
 type Props = {}
 
 const Location = (props: Props) => {
+  const [open, setOpen] = useState<boolean>(false)
+  const [options, setOptions] = React.useState<readonly IState[]>([])
+  const loading = open && options.length === 0
+
   const methods = useFormContext()
   const {control, formState, watch} = methods
+
   const {errors} = formState
+  const {state} = useAppSelector(({Account}) => Account.plan)
+
+  // React.useEffect(() => {
+  //   let active = true
+
+  //   if (!loading) {
+  //     return undefined
+  //   }
+
+  //   ;(async () => {
+  //     const {data} = await axios.get(`${API_URL}/get_state`)
+  //     console.log('data==', data)
+
+  //     if (active) {
+  //       setOptions([...data])
+  //     }
+  //   })()
+
+  //   return () => {
+  //     active = false
+  //   }
+  // }, [loading])
 
   return (
     <>
@@ -31,6 +68,7 @@ const Location = (props: Props) => {
             <Controller
               name='phone_number'
               control={control}
+              defaultValue=''
               render={({field}) => (
                 <TextField
                   className='mt-32'
@@ -57,6 +95,7 @@ const Location = (props: Props) => {
             <Controller
               control={control}
               name='fax_number'
+              defaultValue=''
               render={({field}) => (
                 <TextField
                   className='mt-32'
@@ -83,6 +122,7 @@ const Location = (props: Props) => {
           <Grid item md={12}>
             <Controller
               control={control}
+              defaultValue=''
               name='address'
               render={({field}) => (
                 <TextField
@@ -110,6 +150,7 @@ const Location = (props: Props) => {
           <Grid item md={12}>
             <Controller
               control={control}
+              defaultValue=''
               name='city'
               render={({field}) => (
                 <TextField
@@ -135,36 +176,51 @@ const Location = (props: Props) => {
             />
           </Grid>
           <Grid item md={6}>
-            <Controller
-              control={control}
-              name='state'
-              render={({field}) => (
-                <TextField
-                  required
-                  className='mt-32'
-                  {...field}
-                  label='State'
-                  placeholder='State'
-                  id='state'
-                  error={!!errors.state}
-                  helperText={errors?.state?.message as string}
-                  variant='outlined'
-                  fullWidth
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position='start'>
-                        <FuseSvgIcon size={20}>heroicons-solid:beaker</FuseSvgIcon>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              )}
-            />
+            {state && (
+              <Controller
+                control={control}
+                name='state'
+                defaultValue=''
+                render={({field: {onChange, value}}) => {
+                  console.log('value==', value)
+                  return (
+                    <Autocomplete
+                      id='state'
+                      fullWidth
+                      // value={value}
+                      inputValue={value}
+                      // defaultValue={value}
+                      // onOpen={() => {
+                      //   setOpen(true)
+                      // }}
+                      onChange={(event: any, newValue: IState | null) => {
+                        onChange(`${newValue?.State} - ${newValue?.Description}`)
+                      }}
+                      onInputChange={(event, newInputValue) => {
+                        console.log('newvalue==', newInputValue, typeof newInputValue)
+                        if (newInputValue != null) {
+                          onChange(newInputValue)
+                        }
+                      }}
+                      // onClose={() => {
+                      //   setOpen(false)
+                      // }}
+                      isOptionEqualToValue={(option, value) => option.id == value.id}
+                      getOptionLabel={(option) => `${option.State} - ${option.Description}`}
+                      options={state}
+                      loading={loading}
+                      renderInput={(params) => <TextField {...params} label='state' />}
+                    />
+                  )
+                }}
+              />
+            )}
           </Grid>
           <Grid item md={6}>
             <Controller
               control={control}
               name='zip_code'
+              defaultValue=''
               render={({field}) => (
                 <TextField
                   className='mt-32'
@@ -194,4 +250,4 @@ const Location = (props: Props) => {
   )
 }
 
-export default Location
+export default withReducer('Account', reducer)(Location)
