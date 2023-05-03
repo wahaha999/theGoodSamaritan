@@ -36,7 +36,25 @@ export function MenuInner() {
           {/* <Button >Dashboard</Button>
           <Button >Account</Button> */}
           <MenuItem title={intl.formatMessage({id: 'MENU.DASHBOARD'})} to='/dashboard' />
-          <MenuItem title='Account' to='/builder' />
+          <MenuInnerWithSub
+            title='Account'
+            to='/account'
+            hasArrow={true}
+            menuPlacement='right-start'
+            menuTrigger={`{default:'click', lg: 'hover'}`}
+          >
+            <MenuItem title='Account Information' to='/account/info' />
+            <MenuItem title='About Your Non-Profit' to='/account/about_non_profit' />
+            <MenuItem title='Noe-Profit Verification' to='/account/verification' />
+            <MenuItem title='Address' to='/account/location' />
+          </MenuInnerWithSub>
+          <MenuItem title={'Subscription'} to='/subscription' />
+          <Button startIcon={<NotificationsActiveIcon color='secondary' />} sx={{ml: 2}}>
+            Your Connections
+          </Button>
+          <Button startIcon={<NotificationsActiveIcon color='secondary' />} sx={{ml: 2}}>
+            Saved Posts
+          </Button>
         </Grid>
         {params['*'] == 'dashboard' && (
           <Grid container columnSpacing={4} sx={{mt: 1}}>

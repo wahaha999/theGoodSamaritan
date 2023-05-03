@@ -10,6 +10,7 @@ import './_metronic/assets/fonticon/fonticon.css'
 import './_metronic/assets/keenicons/duotone/style.css'
 import './_metronic/assets/keenicons/outline/style.css'
 import './_metronic/assets/keenicons/solid/style.css'
+import './app/styles/tailwind.css'
 /**
  * TIP: Replace this style import with rtl styles to enable rtl mode
  *
@@ -19,7 +20,7 @@ import './_metronic/assets/sass/style.scss'
 import './_metronic/assets/sass/plugins.scss'
 import './_metronic/assets/sass/style.react.scss'
 import {AppRoutes} from './app/routing/AppRoutes'
-import { Provider } from 'react-redux'
+import {Provider} from 'react-redux'
 import store from './app/store'
 import setupAxios from './app/setup/axios/SetupAxios'
 /**
@@ -34,7 +35,7 @@ import setupAxios from './app/setup/axios/SetupAxios'
  * @see https://github.com/axios/axios#interceptors
  */
 // setupAxios(axios)
-setupAxios(axios, store);
+setupAxios(axios, store)
 Chart.register(...registerables)
 
 const queryClient = new QueryClient()
@@ -44,7 +45,7 @@ if (container) {
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
         <MetronicI18nProvider>
-            <AppRoutes />
+          <AppRoutes />
         </MetronicI18nProvider>
       </Provider>
       <ReactQueryDevtools initialIsOpen={false} />

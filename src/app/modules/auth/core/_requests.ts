@@ -1,8 +1,6 @@
 import axios from 'axios'
-import {AuthModel, UserModel} from './_models'
-import { UserState } from '../../../store/userSlice'
 
-const API_URL = process.env.REACT_APP_API_URL
+export const API_URL = process.env.REACT_APP_API_URL
 
 export const GET_USER_BY_ACCESSTOKEN_URL = `${API_URL}/users/me`
 export const LOGIN_URL = `${API_URL}/auth/login`
@@ -23,14 +21,12 @@ export function register(
   first_name: string,
   last_name: string,
   password: string,
-  non_profit_name: string
 ) {
   return axios.post(REGISTER_URL, {
     email,
     first_name: first_name,
     last_name: last_name,
     password,
-    non_profit_name,
   })
 }
 
@@ -47,5 +43,5 @@ export function logout() {
 }
 
 export function getUserByToken() {
-  return axios.get<UserState>(GET_USER_BY_ACCESSTOKEN_URL)
+  return axios.get<any>(GET_USER_BY_ACCESSTOKEN_URL)
 }

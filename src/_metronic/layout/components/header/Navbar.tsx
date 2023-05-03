@@ -1,7 +1,8 @@
 import clsx from 'clsx'
-import {KTIcon, toAbsoluteUrl} from '../../../helpers'
-import {HeaderNotificationsMenu, HeaderUserMenu, Search, ThemeModeSwitcher} from '../../../partials'
+import {KTIcon, toAbsoluteUrl, toServerUrl} from '../../../helpers'
+import {HeaderUserMenu} from '../../../partials'
 import {useLayout} from '../../core'
+import {useAppSelector} from 'src/app/store/hook'
 
 const itemClass = 'ms-1 ms-lg-3'
 const btnClass =
@@ -11,15 +12,15 @@ const btnIconClass = 'fs-1'
 
 const Navbar = () => {
   const {config} = useLayout()
+  const {avatar} = useAppSelector(({user}) => user.user)
   return (
     <div className='app-navbar flex-shrink-0'>
-
       <div className={clsx('app-navbar-item', itemClass)}>
         <div className={clsx('position-relative', btnClass)} id='kt_drawer_chat_toggle'>
           <KTIcon iconName='message-text-2' className={btnIconClass} />
           <span className='bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink' />
         </div>
-      </div> 
+      </div>
 
       <div className={clsx('app-navbar-item', itemClass)}>
         <div
@@ -28,7 +29,7 @@ const Navbar = () => {
           data-kt-menu-attach='parent'
           data-kt-menu-placement='bottom-end'
         >
-          <img src={toAbsoluteUrl('/media/avatars/300-1.jpg')} alt='' />
+          <img src={toServerUrl('/media/avatar/' + avatar)} alt='' />
         </div>
         <HeaderUserMenu />
       </div>

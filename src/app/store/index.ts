@@ -1,4 +1,4 @@
-import { configureStore, Middleware, getDefaultMiddleware,EnhancedStore, AnyAction, MiddlewareArray, ThunkMiddleware, Dispatch } from '@reduxjs/toolkit';
+import { AnyAction, Dispatch, EnhancedStore, Middleware, MiddlewareArray, ThunkMiddleware, configureStore } from '@reduxjs/toolkit';
 import createReducer from './rootReducer';
 
 declare let module: any;
