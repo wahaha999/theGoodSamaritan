@@ -28,7 +28,11 @@ const PrivateRoutes = () => {
       <Route element={<MasterLayout />}>
         {/* Redirect to Dashboard after success login/registartion */}
         {user.status ? (
-          <Route path='auth/*' element={<Navigate to='/dashboard' />} />
+          user.non_profit_name ? (
+            <Route path='auth/*' element={<Navigate to='/dashboard' />} />
+          ) : (
+            <Route path='auth/*' element={<Navigate to='/account' />} />
+          )
         ) : (
           <Route path='auth/*' element={<Navigate to='/subscription' />} />
         )}

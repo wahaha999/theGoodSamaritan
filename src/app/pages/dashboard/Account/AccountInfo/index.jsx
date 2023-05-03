@@ -15,8 +15,10 @@ import React, {HTMLInputTypeAttribute, useState} from 'react'
 import {useAppSelector} from 'src/app/store/hook'
 import {toAbsoluteUrl, toServerUrl} from 'src/_metronic/helpers'
 import FuseSvgIcon from '../../../../modules/core/FuseSvgIcon/FuseSvgIcon'
-import {Controller, useFormContext} from 'react-hook-form'
-import {orange} from '@mui/material/colors'
+import {Controller, useForm, useFormContext} from 'react-hook-form'
+import { orange } from '@mui/material/colors'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 
 const Root = styled('div')(({theme}) => ({
   '& .productImageFeaturedStar': {
@@ -55,14 +57,16 @@ const Root = styled('div')(({theme}) => ({
   },
 }))
 
+
+
 const AccountInfo = (props) => {
   const user = useAppSelector(({user}) => {
     return user.user
   })
   const methods = useFormContext()
   const {control, formState, watch} = methods
+
   const {errors} = formState
-  const avatar = watch('avatar')
   const [preview, setPreview] = useState();
   return (
     <Root>
@@ -94,7 +98,7 @@ const AccountInfo = (props) => {
                   <div className='absolute inset-0 bg-black bg-opacity-50 z-10' />
                   <div className='absolute inset-0 flex items-center justify-around z-20'>
                     <div>
-                      <label htmlFor='button-avatar' className='flex p-8 cursor-pointer'>
+                      <label htmlFor='button-avatar' className='flex p-2 cursor-pointer'>
                         <input
                           accept='image/*'
                           className='hidden'
@@ -190,9 +194,9 @@ const AccountInfo = (props) => {
                   {...field}
                   label='Non Profit Name'
                   placeholder='Non Profit Name'
-                  id='name'
-                  error={!!errors.name}
-                  helperText={errors?.name?.message}
+                  id='non_profit_name'
+                  error={!!errors.non_profit_name}
+                  helperText={errors?.non_profit_name?.message}
                   variant='outlined'
                   required
                   fullWidth

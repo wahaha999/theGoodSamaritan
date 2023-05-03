@@ -9,7 +9,7 @@ import PostTitleItem from './components/PostTitleItem'
 const DashboardPage: FC = () => (
   <>
     <Grid container columnSpacing={4} sx={{mt: 2}}>
-      <Grid item md={5}>
+      <Grid item md={8}>
         <MyPostsDashboard />
       </Grid>
       <Grid item md={4}>
@@ -34,7 +34,7 @@ const DashboardPage: FC = () => (
           <PostTitleItem title='Faith Convenant Church' img='/media/avatars/300-5.jpg' />
         </FollowingDashboard>
       </Grid>
-      <Grid item md={3}>
+      {/* <Grid item md={3}>
         <FollowingDashboard placeholder='Search Followed Ports' title='45 Saved Posts'>
           <PostTitleItem request title='Faith Convenant Church' img='/media/avatars/300-2.jpg' />
           <PostTitleItem request title='Faith Convenant Church' img='/media/avatars/300-7.jpg' />
@@ -42,7 +42,7 @@ const DashboardPage: FC = () => (
           <PostTitleItem title='Faith Convenant Church' img='/media/avatars/300-9.jpg' />
           <PostTitleItem title='Faith Convenant Church' img='/media/avatars/300-10.jpg' />
         </FollowingDashboard>
-      </Grid>
+      </Grid> */}
     </Grid>
   </>
 )
