@@ -7,6 +7,7 @@ import {useIntl} from 'react-intl'
 import {MenuInnerWithSub} from './MenuInnerWithSub'
 import {MenuItem} from './MenuItem'
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
+import {useParams} from 'react-router-dom'
 
 const SearchText = styled(TextField)({
   '& .MuiInputBase-root': {
@@ -26,6 +27,7 @@ const SearchText = styled(TextField)({
 
 export function MenuInner() {
   const intl = useIntl()
+  const params = useParams()
 
   return (
     <>
@@ -54,45 +56,50 @@ export function MenuInner() {
             Saved Posts
           </Button>
         </Grid>
-        {/* <Grid container columnSpacing={4}>
-          <Grid item>
-            <SearchText placeholder='Search Posts' InputProps={{startAdornment: <SearchIcon />}} />
-          </Grid>
-          <Grid item>
-            <label>Sort By:</label>
-            <Select
-              sx={{ml: 1}}
-              labelId='demo-select-small-label'
-              id='demo-select-small'
-              value='latest'
-              // value={age}
-              // label="Age"
-              // onChange={handleChange}
-            >
-              <option value='latest'>Latest</option>
-              <option value={20}>Twenty</option>
-              <option value={30}>Thirty</option>
-            </Select>
-          </Grid>
-          <Grid item>
-            <Grid container alignItems='center'>
-              <label>Select Posts:</label>
+        {params['*'] == 'dashboard' && (
+          <Grid container columnSpacing={4} sx={{mt: 1}}>
+            <Grid item>
+              <SearchText
+                placeholder='Search Posts'
+                InputProps={{startAdornment: <SearchIcon />}}
+              />
+            </Grid>
+            <Grid item>
+              <label>Sort By:</label>
               <Select
                 sx={{ml: 1}}
                 labelId='demo-select-small-label'
                 id='demo-select-small'
-                value='Today'
+                value='latest'
                 // value={age}
                 // label="Age"
                 // onChange={handleChange}
               >
-                <option value='Today'>Today</option>
+                <option value='latest'>Latest</option>
                 <option value={20}>Twenty</option>
                 <option value={30}>Thirty</option>
               </Select>
             </Grid>
+            <Grid item>
+              <Grid container alignItems='center'>
+                <label>Select Posts:</label>
+                <Select
+                  sx={{ml: 1}}
+                  labelId='demo-select-small-label'
+                  id='demo-select-small'
+                  value='Today'
+                  // value={age}
+                  // label="Age"
+                  // onChange={handleChange}
+                >
+                  <option value='Today'>Today</option>
+                  <option value={20}>Twenty</option>
+                  <option value={30}>Thirty</option>
+                </Select>
+              </Grid>
+            </Grid>
           </Grid>
-        </Grid> */}
+        )}
       </div>
     </>
   )
