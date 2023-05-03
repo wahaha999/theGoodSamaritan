@@ -52,7 +52,7 @@ const Verification = (props) => {
             <Button startIcon={<CloudUploadIcon />} variant='contained' component='label'>
               <input
                 hidden
-                accept='image/*'
+                accept=".doc, .docx, .pdf"
                 type='file'
                 onChange={async (e) => {
                   function readFileAsync() {
