@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useMemo, useState} from 'react'
 import {
   Typography,
   Grid,
@@ -31,6 +31,15 @@ const Location = (props: Props) => {
 
   const {errors} = formState
   const {state} = useAppSelector(({Account}) => Account.plan)
+
+  const tempState: any[] = useMemo(() => {
+    let temp: any = []
+    Object.keys(state).map((item, index) => {
+      temp.push(`${state[item].State} - ${state[item].Description}`)
+    })
+    return temp
+  }, [state])
+  console.log('🚀 ~ file: index.tsx:36 ~ consttempState:any[]=useMemo ~ tempState:', tempState)
 
   // React.useEffect(() => {
   //   let active = true
@@ -187,27 +196,24 @@ const Location = (props: Props) => {
                     <Autocomplete
                       id='state'
                       fullWidth
-                      // value={value}
-                      inputValue={value}
+                      value={value ?? ''}
+                      inputValue={value ?? ''}
                       // defaultValue={value}
                       // onOpen={() => {
                       //   setOpen(true)
                       // }}
                       onChange={(event: any, newValue: IState | null) => {
-                        onChange(`${newValue?.State} - ${newValue?.Description}`)
+                        onChange(newValue)
                       }}
                       onInputChange={(event, newInputValue) => {
-                        console.log('newvalue==', newInputValue, typeof newInputValue)
-                        if (newInputValue != null) {
-                          onChange(newInputValue)
-                        }
+                        onChange(newInputValue ?? '')
                       }}
                       // onClose={() => {
                       //   setOpen(false)
                       // }}
-                      isOptionEqualToValue={(option, value) => option.id == value.id}
-                      getOptionLabel={(option) => `${option.State} - ${option.Description}`}
-                      options={state}
+                      isOptionEqualToValue={(option, value) => option == value}
+                      getOptionLabel={(option) => option}
+                      options={tempState}
                       loading={loading}
                       renderInput={(params) => <TextField {...params} label='state' />}
                     />
