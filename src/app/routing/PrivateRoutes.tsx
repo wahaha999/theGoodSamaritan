@@ -29,77 +29,83 @@ const PrivateRoutes = () => {
         {/* Redirect to Dashboard after success login/registartion */}
         {user.status ? (
           user.non_profit_name ? (
-            <Route path='auth/*' element={<Navigate to='/dashboard' />} />
+            <>
+              <Route path='auth/*' element={<Navigate to='/dashboard' />} />
+              {/* Pages */}
+              <Route path='dashboard' element={<DashboardWrapper />} />
+              <Route path='builder' element={<BuilderPageWrapper />} />
+              <Route path='menu-test' element={<MenuTestPage />} />
+              <Route path='account/*' element={<Account />} />
+              <Route
+                path='subscription'
+                element={
+                  <SuspensedView>
+                    <Subscription />
+                  </SuspensedView>
+                }
+              />
+              {/* Lazy Modules */}
+              <Route
+                path='crafted/pages/profile/*'
+                element={
+                  <SuspensedView>
+                    <ProfilePage />
+                  </SuspensedView>
+                }
+              />
+              <Route
+                path='crafted/pages/wizards/*'
+                element={
+                  <SuspensedView>
+                    <WizardsPage />
+                  </SuspensedView>
+                }
+              />
+              <Route
+                path='crafted/widgets/*'
+                element={
+                  <SuspensedView>
+                    <WidgetsPage />
+                  </SuspensedView>
+                }
+              />
+              <Route
+                path='crafted/account/*'
+                element={
+                  <SuspensedView>
+                    <AccountPage />
+                  </SuspensedView>
+                }
+              />
+              <Route
+                path='apps/chat/*'
+                element={
+                  <SuspensedView>
+                    <ChatPage />
+                  </SuspensedView>
+                }
+              />
+              <Route
+                path='apps/user-management/*'
+                element={
+                  <SuspensedView>
+                    <UsersPage />
+                  </SuspensedView>
+                }
+              />
+              {/* Page Not Found */}
+              <Route path='*' element={<Navigate to='/error/404' />} />
+            </>
           ) : (
-            <Route path='auth/*' element={<Navigate to='/account' />} />
+            <>
+              <Route path='auth/*' element={<Navigate to='/account' />} />
+              <Route path='*' element={<Navigate to='/account' />} />
+              <Route path='account/*' element={<Account />} />
+            </>
           )
         ) : (
           <Route path='auth/*' element={<Navigate to='/subscription' />} />
         )}
-        {/* Pages */}
-        <Route path='dashboard' element={<DashboardWrapper />} />
-        <Route path='builder' element={<BuilderPageWrapper />} />
-        <Route path='menu-test' element={<MenuTestPage />} />
-        <Route path='account/*' element={<Account />} />
-        <Route
-          path='subscription'
-          element={
-            <SuspensedView>
-              <Subscription />
-            </SuspensedView>
-          }
-        />
-        {/* Lazy Modules */}
-        <Route
-          path='crafted/pages/profile/*'
-          element={
-            <SuspensedView>
-              <ProfilePage />
-            </SuspensedView>
-          }
-        />
-        <Route
-          path='crafted/pages/wizards/*'
-          element={
-            <SuspensedView>
-              <WizardsPage />
-            </SuspensedView>
-          }
-        />
-        <Route
-          path='crafted/widgets/*'
-          element={
-            <SuspensedView>
-              <WidgetsPage />
-            </SuspensedView>
-          }
-        />
-        <Route
-          path='crafted/account/*'
-          element={
-            <SuspensedView>
-              <AccountPage />
-            </SuspensedView>
-          }
-        />
-        <Route
-          path='apps/chat/*'
-          element={
-            <SuspensedView>
-              <ChatPage />
-            </SuspensedView>
-          }
-        />
-        <Route
-          path='apps/user-management/*'
-          element={
-            <SuspensedView>
-              <UsersPage />
-            </SuspensedView>
-          }
-        />
-        {/* Page Not Found */}
-        <Route path='*' element={<Navigate to='/error/404' />} />
       </Route>
     </Routes>
   )

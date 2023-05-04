@@ -24,7 +24,11 @@ const BorderButton = styled((props: BorderButtonProps) => {
 const params = [0, 50, 100, 200, 500, 1000]
 const AboutNonProfit = (props: Props) => {
   const methods = useFormContext()
-  const {control, formState, watch} = methods
+  const {
+    control,
+    formState: {errors},
+    watch,
+  } = methods
   // const [value,setValue] = useState<number>(0)
   const handleClick = (id: number) => {
     // setValue(id);
@@ -49,7 +53,9 @@ const AboutNonProfit = (props: Props) => {
                       onChange(index + 1)
                     }}
                   >
-                    {params[index] + 1} -{params[index + 1]}
+                    {params[index] === 1000
+                      ? `${params[index]} +`
+                      : `${params[index] + 1} - ${params[index + 1]}`}
                   </BorderButton>
                 ))}
               </>
@@ -57,6 +63,9 @@ const AboutNonProfit = (props: Props) => {
           }}
         />
       </Grid>
+      {errors.organize && (
+        <Typography color='red'>{errors.organize.message?.toString()}</Typography>
+      )}
       <Box sx={{display: 'flex', mb: 3}}>
         <Typography paddingRight={4}>Tell us about your Non-Profit Organization</Typography>
         <Typography>
@@ -70,7 +79,7 @@ const AboutNonProfit = (props: Props) => {
         render={({field: {onChange, value}}) => (
           <ReactQuill
             theme='snow'
-            style={{height: '500px'}}
+            style={{height: '300px'}}
             value={value}
             onChange={(e) => {
               onChange(e)

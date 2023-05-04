@@ -33,13 +33,13 @@ const Location = (props: Props) => {
   const {state} = useAppSelector(({Account}) => Account.plan)
 
   const tempState: any[] = useMemo(() => {
+    console.log('hello')
     let temp: any = []
     Object.keys(state).map((item, index) => {
       temp.push(`${state[item].State} - ${state[item].Description}`)
     })
     return temp
   }, [state])
-  console.log('🚀 ~ file: index.tsx:36 ~ consttempState:any[]=useMemo ~ tempState:', tempState)
 
   // React.useEffect(() => {
   //   let active = true
@@ -105,10 +105,10 @@ const Location = (props: Props) => {
               control={control}
               name='fax_number'
               defaultValue=''
-              render={({field}) => (
+              render={({field: {value}}) => (
                 <TextField
                   className='mt-32'
-                  {...field}
+                  value={value == 'null' ? '' : value}
                   label='Fax Number'
                   placeholder='Fax Number'
                   id='fax_number'
@@ -191,7 +191,6 @@ const Location = (props: Props) => {
                 name='state'
                 defaultValue=''
                 render={({field: {onChange, value}}) => {
-                  console.log('value==', value)
                   return (
                     <Autocomplete
                       id='state'
@@ -215,7 +214,14 @@ const Location = (props: Props) => {
                       getOptionLabel={(option) => option}
                       options={tempState}
                       loading={loading}
-                      renderInput={(params) => <TextField {...params} label='state' />}
+                      renderInput={(params) => (
+                        <TextField
+                          error={!!errors.state}
+                          helperText={errors?.state?.message as string}
+                          {...params}
+                          label='state'
+                        />
+                      )}
                     />
                   )
                 }}
