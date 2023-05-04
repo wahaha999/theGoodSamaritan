@@ -3,8 +3,6 @@ export default function setupAxios(axios: any, store: any) {
   axios.interceptors.request.use(
     (config: any) => {
       const access_token = sessionStorage.getItem('access_token')
-      console.log('user==',access_token)
-
       if (access_token) {
         config.headers.Authorization = `Bearer ${access_token}`
       }

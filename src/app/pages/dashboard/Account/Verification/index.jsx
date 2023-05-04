@@ -1,17 +1,43 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import {Typography, Button, TextField, InputAdornment} from '@mui/material'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import {Controller, useForm, useFormContext} from 'react-hook-form'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 import {yupResolver} from '@hookform/resolvers/yup'
 import * as yup from 'yup'
+import axios from 'axios'
+import { API_URL } from 'src/app/modules/auth/core/_requests'
+import { useDispatch } from 'react-redux'
+import { showMessage } from 'src/app/store/fuse/messageSlice'
 
 
 const Verification = (props) => {
    const methods = useFormContext()
   const {control, formState, watch} = methods
+  const dispatch = useDispatch();
+  const { errors } = formState
+  
+   const handleDownLoad = useCallback((event, name) => {
+    event.stopPropagation()
 
-  const {errors} = formState
+    axios.post(
+        `${API_URL}/account/download-doc`,
+        { name },
+        {
+          responseType: 'blob',
+        }
+      )
+      .then((res) => {
+        let url = window.URL.createObjectURL(res.data)
+        let a = document.createElement('a')
+        a.href = url
+        a.download = name
+        a.click()
+      })
+      .catch((error) => {
+        dispatch(showMessage({message:'This file is not founded',variant:'error'}))
+      })
+  }, [])
 
   return (
     <>
@@ -82,7 +108,7 @@ const Verification = (props) => {
               />
               Upload Files
             </Button>
-            <Typography>{typeof value === 'string' ? value : value?.name}</Typography>
+            <Button onClick={(e) => handleDownLoad(e,typeof value === 'string' ? value : value?.name)}>{typeof value === 'string' ? value : value?.name}</Button>
           </>
         )}
       />
