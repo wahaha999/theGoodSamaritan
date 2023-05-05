@@ -8,7 +8,7 @@ import {getCSSVariableValue} from '../../_metronic/assets/ts/_utils'
 import {WithChildren} from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
 import {useAppSelector} from '../store/hook'
-import Account from '../pages/dashboard/Account'
+// import Account from '../pages/dashboard/Account'
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
@@ -18,6 +18,7 @@ const PrivateRoutes = () => {
   const ChatPage = lazy(() => import('../modules/apps/chat/ChatPage'))
   const UsersPage = lazy(() => import('../modules/apps/user-management/UsersPage'))
   const Subscription = lazy(() => import('../pages/dashboard/Subscription/index'))
+  const Account = lazy(() => import('../pages/dashboard/Account'))
 
   const user = useAppSelector(({user}) => {
     return user.user
@@ -35,7 +36,14 @@ const PrivateRoutes = () => {
               <Route path='dashboard' element={<DashboardWrapper />} />
               <Route path='builder' element={<BuilderPageWrapper />} />
               <Route path='menu-test' element={<MenuTestPage />} />
-              <Route path='account/*' element={<Account />} />
+              <Route
+                path='account/*'
+                element={
+                  <SuspensedView>
+                    <Account />
+                  </SuspensedView>
+                }
+              />
               <Route
                 path='subscription'
                 element={
@@ -100,7 +108,14 @@ const PrivateRoutes = () => {
             <>
               <Route path='auth/*' element={<Navigate to='/account' />} />
               <Route path='*' element={<Navigate to='/account' />} />
-              <Route path='account/*' element={<Account />} />
+              <Route
+                path='account/*'
+                element={
+                  <SuspensedView>
+                    <Account />
+                  </SuspensedView>
+                }
+              />
             </>
           )
         ) : (

@@ -3,11 +3,13 @@ import {FC} from 'react'
 import {Link} from 'react-router-dom'
 // import {useAuth} from '../../../../app/modules/auth'
 import {toAbsoluteUrl} from '../../../helpers'
-import {useAppSelector} from '../../../../app/store/hook'
-import {logout} from '../../../../app/modules/auth/core/_requests'
+import {useAppDispatch, useAppSelector} from '../../../../app/store/hook'
+import {logoutUser, userLoggedOut} from 'src/app/store/userSlice'
+// import {logout} from '../../../../app/modules/auth/core/_requests'
 
 const HeaderUserMenu: FC = () => {
   const {user, access_token} = useAppSelector(({user}) => user)
+  const dispatch = useAppDispatch()
   // const {currentUser, logout} = useAuth()
   return (
     <div
@@ -45,7 +47,7 @@ const HeaderUserMenu: FC = () => {
       </div>
 
       <div className='menu-item px-5'>
-        <a onClick={logout} className='menu-link px-5'>
+        <a onClick={() => dispatch(logoutUser())} className='menu-link px-5'>
           Sign Out
         </a>
       </div>

@@ -44,9 +44,9 @@ export function MenuInner() {
             menuTrigger={`{default:'click', lg: 'hover'}`}
           >
             <MenuItem title='Account Information' to='/account/info' />
-            <MenuItem title='About Your Non-Profit' to='/account/about_non_profit' />
+            {/* <MenuItem title='About Your Non-Profit' to='/account/about_non_profit' />
             <MenuItem title='Noe-Profit Verification' to='/account/verification' />
-            <MenuItem title='Address' to='/account/location' />
+            <MenuItem title='Address' to='/account/location' /> */}
           </MenuInnerWithSub>
           <MenuItem title={'Subscription'} to='/subscription' />
           <Button startIcon={<NotificationsActiveIcon color='secondary' />} sx={{ml: 2}}>

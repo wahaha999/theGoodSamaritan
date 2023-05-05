@@ -3,10 +3,16 @@ import {useEffect, useRef} from 'react'
 import {ILayout, useLayout} from '../../core'
 import {SidebarMenu} from './sidebar-menu/SidebarMenu'
 import {SidebarLogo} from './SidebarLogo'
+import {useAppDispatch} from 'src/app/store/hook'
+import {getCategories} from './store/categorySlice'
 
 const Sidebar = () => {
   const {config} = useLayout()
   const sidebarRef = useRef<HTMLDivElement>(null)
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    dispatch(getCategories())
+  }, [])
 
   useEffect(() => {
     updateDOM(config)

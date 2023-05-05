@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from 'react'
 import {LayoutSplashScreen} from '../../../../_metronic/layout/core'
 import {useAppDispatch, useAppSelector} from '../../../store/hook'
-import {IAuthState, setUser} from '../../../store/userSlice'
+import {IAuthState, logoutUser, setUser} from '../../../store/userSlice'
 import {getUserByToken} from './_requests'
 
 // type AuthContextProps = {
@@ -66,16 +66,14 @@ const AuthInit = ({children}: any) => {
           delete temp.account
           if (temp.email) {
             dispatch(setUser({user: temp}))
+          } else {
+            dispatch(logoutUser())
           }
-
-          // if (user) {
-          //   // setCurrentUser(data)
-          //   // dispatch(setUser(user))
-          // }
         }
       } catch (error) {
         console.error(error)
         if (!didRequest.current) {
+          dispatch(logoutUser())
           // logout()
         }
       } finally {
