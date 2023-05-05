@@ -1,175 +1,307 @@
-/* eslint-disable react/jsx-no-target-blank */
-import React from 'react'
-import {useIntl} from 'react-intl'
-import {KTIcon} from '../../../../helpers'
-import {SidebarMenuItemWithSub} from './SidebarMenuItemWithSub'
-import {SidebarMenuItem} from './SidebarMenuItem'
+import * as React from 'react'
+import {Theme, styled} from '@mui/material/styles'
+import Box from '@mui/material/Box'
+import TreeView from '@mui/lab/TreeView'
+import TreeItem, {TreeItemProps, treeItemClasses} from '@mui/lab/TreeItem'
+import Typography from '@mui/material/Typography'
+import MailIcon from '@mui/icons-material/Mail'
+import DeleteIcon from '@mui/icons-material/Delete'
+import Label from '@mui/icons-material/Label'
+import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount'
+import InfoIcon from '@mui/icons-material/Info'
+import ForumIcon from '@mui/icons-material/Forum'
+import LocalOfferIcon from '@mui/icons-material/LocalOffer'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
+import ArrowRightIcon from '@mui/icons-material/ArrowRight'
+import {SvgIconProps} from '@mui/material/SvgIcon'
+import {Checkbox} from '@mui/material'
+import CheckBoxOutlineBlankOutlinedIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined'
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
+import CheckBoxIcon from '@mui/icons-material/CheckBox'
+import {useAppSelector} from 'src/app/store/hook'
+import withReducer from 'src/app/store/withReducer'
+import reducer from '../store'
+import {Controller, FormProvider, useForm, useFormContext} from 'react-hook-form'
 
-const SidebarMenuMain = () => {
-  const intl = useIntl()
+declare module 'react' {
+  interface CSSProperties {
+    '--tree-view-color'?: string
+    '--tree-view-bg-color'?: string
+  }
+}
 
+type StyledTreeItemProps = TreeItemProps & {
+  bgColor?: string
+  color?: string
+  labelIcon: React.ElementType<SvgIconProps>
+  labelInfo?: string
+  labelText: string
+  name: string
+}
+
+const StyledTreeItemRoot = styled(TreeItem)(({theme}) => ({
+  color: theme.palette.text.secondary,
+  [`& .${treeItemClasses.content}`]: {
+    color: theme.palette.text.secondary,
+    borderTopRightRadius: theme.spacing(2),
+    borderBottomRightRadius: theme.spacing(2),
+    paddingRight: theme.spacing(1),
+    fontWeight: theme.typography.fontWeightMedium,
+    '&.Mui-expanded': {
+      fontWeight: theme.typography.fontWeightRegular,
+    },
+    '&:hover': {
+      backgroundColor: theme.palette.action.hover,
+    },
+    '&.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused': {
+      backgroundColor: `var(--tree-view-bg-color, ${theme.palette.action.selected})`,
+      color: 'var(--tree-view-color)',
+    },
+    [`& .${treeItemClasses.label}`]: {
+      fontWeight: 'inherit',
+      color: theme.palette.secondary.main,
+    },
+  },
+  [`& .${treeItemClasses.group}`]: {
+    marginLeft: 0,
+    [`& .${treeItemClasses.content}`]: {
+      paddingLeft: theme.spacing(2),
+    },
+  },
+}))
+
+function StyledTreeItem(props: StyledTreeItemProps) {
+  const {bgColor, color, labelIcon: LabelIcon, labelInfo, labelText, name, ...other} = props
+  const methods = useFormContext()
+  const {control, watch} = methods
+  const value = watch(`${name}`)
   return (
-    <>
-      <SidebarMenuItem
-        to='/dashboard'
-        icon='element-11'
-        title={intl.formatMessage({id: 'MENU.DASHBOARD'})}
-        fontIcon='bi-app-indicator'
-      />
-      {/* <SidebarMenuItem to='/builder' icon='switch' title='Layout Builder' fontIcon='bi-layers' /> */}
-      <div className='menu-item'>
-        <div className='menu-content pt-8 pb-2'>
-          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>View</span>
-        </div>
-      </div>
-      <SidebarMenuItem
-        to='/apps/user-management/users'
-        icon='abstract-28'
-        title='My Posts'
-        fontIcon='bi-layers'
-      />
-      <SidebarMenuItem
-        to='/apps/user-management/users'
-        icon='abstract-28'
-        title="Every one Else's Posts"
-        fontIcon='bi-layers'
-      />
-      <div className='menu-item'>
-        <div className='menu-content pt-8 pb-2'>
-          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Search for Non-Profits</span>
-        </div>
-      </div>
-      <SidebarMenuItem
-        to='/apps/user-management/users'
-        icon='abstract-28'
-        title='Sharing a Message'
-        fontIcon='bi-layers'
-      />
-      <SidebarMenuItem
-        to='/apps/user-management/users'
-        icon='abstract-28'
-        title="With Resources to Share"
-        fontIcon='bi-layers'
-      />
-      <SidebarMenuItem
-        to='/apps/user-management/users'
-        icon='abstract-28'
-        title="In need of Resources"
-        fontIcon='bi-layers'
-      />
-      <SidebarMenuItem
-        to='/apps/user-management/users'
-        icon='abstract-28'
-        title="That have an Event"
-        fontIcon='bi-layers'
-      />
-      <div className='menu-item'>
-        <div className='menu-content pt-8 pb-2'>
-          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Select States to Search</span>
-        </div>
-      </div>
-      <SidebarMenuItemWithSub
-        to='/crafted/pages'
-        title='States'
-        fontIcon='bi-archive'
-        icon='element-plus'
-      >
-        <SidebarMenuItemWithSub to='/crafted/pages/profile' title='Profile' hasBullet={true}>
-          <SidebarMenuItem to='/crafted/pages/profile/overview' title='Overview' hasBullet={true} />
-          <SidebarMenuItem to='/crafted/pages/profile/projects' title='Projects' hasBullet={true} />
-          <SidebarMenuItem
-            to='/crafted/pages/profile/campaigns'
-            title='Campaigns'
-            hasBullet={true}
-          />
-          <SidebarMenuItem
-            to='/crafted/pages/profile/documents'
-            title='Documents'
-            hasBullet={true}
-          />
-          <SidebarMenuItem
-            to='/crafted/pages/profile/connections'
-            title='Connections'
-            hasBullet={true}
-          />
-        </SidebarMenuItemWithSub>
+    <Controller
+      name={name}
+      control={control}
+      render={({field}) => (
+        <StyledTreeItemRoot
+          label={
+            <Box sx={{display: 'flex', alignItems: 'center', p: 0.5, pr: 0}}>
+              <Checkbox
+                {...field}
+                checked={value !== undefined ? value : false}
+                color='secondary'
+                icon={<CheckBoxOutlineBlankIcon color='secondary' />}
+                checkedIcon={<CheckBoxIcon />}
+                // sx={{'& .MuiSvgIcon-root': {bgcolor: 'white'}}}
+                size='medium'
+              />
+              {/* <Box component={LabelIcon} color='inherit' sx={{mr: 1}} /> */}
 
-        <SidebarMenuItemWithSub to='/crafted/pages/wizards' title='Wizards' hasBullet={true}>
-          <SidebarMenuItem
-            to='/crafted/pages/wizards/horizontal'
-            title='Horizontal'
-            hasBullet={true}
-          />
-          <SidebarMenuItem to='/crafted/pages/wizards/vertical' title='Vertical' hasBullet={true} />
-        </SidebarMenuItemWithSub>
-      </SidebarMenuItemWithSub>
-      <SidebarMenuItemWithSub
-        to='/crafted/accounts'
-        title='Regions'
-        icon='profile-circle'
-        fontIcon='bi-person'
-      >
-        <SidebarMenuItem to='/crafted/account/overview' title='Overview' hasBullet={true} />
-        <SidebarMenuItem to='/crafted/account/settings' title='Settings' hasBullet={true} />
-      </SidebarMenuItemWithSub>
-      {/* <SidebarMenuItemWithSub to='/error' title='Errors' fontIcon='bi-sticky' icon='cross-circle'>
-        <SidebarMenuItem to='/error/404' title='Error 404' hasBullet={true} />
-        <SidebarMenuItem to='/error/500' title='Error 500' hasBullet={true} />
-      </SidebarMenuItemWithSub>
-      <SidebarMenuItemWithSub
-        to='/crafted/widgets'
-        title='Widgets'
-        icon='element-7'
-        fontIcon='bi-layers'
-      >
-        <SidebarMenuItem to='/crafted/widgets/lists' title='Lists' hasBullet={true} />
-        <SidebarMenuItem to='/crafted/widgets/statistics' title='Statistics' hasBullet={true} />
-        <SidebarMenuItem to='/crafted/widgets/charts' title='Charts' hasBullet={true} />
-        <SidebarMenuItem to='/crafted/widgets/mixed' title='Mixed' hasBullet={true} />
-        <SidebarMenuItem to='/crafted/widgets/tables' title='Tables' hasBullet={true} />
-        <SidebarMenuItem to='/crafted/widgets/feeds' title='Feeds' hasBullet={true} />
-      </SidebarMenuItemWithSub> */}
-      <div className='menu-item'>
-        <div className='menu-content pt-8 pb-2'>
-          <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Select Categories</span>
-        </div>
-      </div>
-      <SidebarMenuItem
-        to='/apps/user-management/users'
-        icon='abstract-28'
-        title="De-Select All"
-        fontIcon='bi-layers'
-      />
-      <SidebarMenuItemWithSub
-        to='/apps/chat'
-        title='Category 1'
-        fontIcon='bi-chat-left'
-        icon='message-text-2'
-      >
-        <SidebarMenuItem to='/apps/chat/private-chat' title='Private Chat' hasBullet={true} />
-        <SidebarMenuItem to='/apps/chat/group-chat' title='Group Chart' hasBullet={true} />
-        <SidebarMenuItem to='/apps/chat/drawer-chat' title='Drawer Chart' hasBullet={true} />
-      </SidebarMenuItemWithSub>
-      <SidebarMenuItem
-        to='/apps/user-management/users'
-        icon='abstract-28'
-        title='Category 2'
-        fontIcon='bi-layers'
-      />
-      {/* <div className='menu-item'>
-        <a
-          target='_blank'
-          className='menu-link'
-          href={process.env.REACT_APP_PREVIEW_DOCS_URL + '/docs/changelog'}
-        >
-          <span className='menu-icon'>
-            <KTIcon iconName='code' className='fs-2' />
-          </span>
-          <span className='menu-title'>Changelog {process.env.REACT_APP_VERSION}</span>
-        </a>
-      </div> */}
-    </>
+              <Typography
+                variant='subtitle1'
+                color='secondary'
+                sx={{fontWeight: 'inherit', flexGrow: 1}}
+              >
+                {labelText}
+              </Typography>
+
+              <Typography variant='caption' color='inherit'>
+                {labelInfo}
+              </Typography>
+            </Box>
+          }
+          style={{
+            '--tree-view-color': color,
+            '--tree-view-bg-color': bgColor,
+          }}
+          {...other}
+        />
+      )}
+    />
   )
 }
 
-export {SidebarMenuMain}
+function SidebarMenuMain() {
+  const category = useAppSelector(({sidebar}) => sidebar.category)
+  const methods = useForm({
+    mode: 'onChange',
+  })
+  const {getValues, watch, reset, setValue} = methods
+
+  React.useEffect(() => {
+    if (category.length > 0) {
+      const initialValues: Record<string, boolean> = category.reduce((acc: any, item: any) => {
+        acc[item.name.toLowerCase()] = false
+        item.subcategories.forEach((sub: any) => {
+          acc[sub.name.toLowerCase()] = false
+        })
+        return acc
+      }, {})
+
+      // Add other static fields to initialValues
+      initialValues.my_posts = false
+      initialValues.every_posts = false
+      initialValues.sharing_message = false
+      initialValues.resource_to_share = false
+      initialValues.need_resources = false
+      initialValues.have_event = false
+      initialValues.states = false
+      initialValues.all_select = false
+
+      // Reset the form with the new initialValues when category data is available
+      reset(initialValues)
+    }
+  }, [category, reset])
+
+  const allSelect = watch('all_select') // Watch the all_select field
+
+  React.useEffect(() => {
+    if (category.length > 0) {
+      // Iterate through the category data and set the related fields to the value of all_select
+      category.forEach((item: any) => {
+        setValue(item.name.toLowerCase(), allSelect)
+        item.subcategories.forEach((sub: any) => {
+          setValue(sub.name.toLowerCase(), allSelect)
+        })
+      })
+    }
+  }, [category, setValue, allSelect])
+  const allValues = watch()
+
+  // React.useEffect(() => {
+  //   // console.log('value=====================', allValues)
+  // }, [allValues])
+  return (
+    <FormProvider {...methods}>
+      <TreeView
+        aria-label='gmail'
+        defaultExpanded={['3']}
+        defaultCollapseIcon={<ArrowDropDownIcon color='secondary' />}
+        defaultExpandIcon={<ArrowRightIcon color='secondary' />}
+        defaultEndIcon={<div style={{width: 24}} />}
+        sx={{flexGrow: 1, maxWidth: 400, overflowY: 'auto'}}
+      >
+        <div className='menu-item'>
+          <div className='menu-content pt-8 pb-2'>
+            <span className='menu-section text-muted text-uppercase fs-8 ls-1 ps-4'>View</span>
+          </div>
+        </div>
+        <StyledTreeItem nodeId='1' labelText='My Posts' name='my_posts' labelIcon={MailIcon} />
+        <StyledTreeItem
+          nodeId='2'
+          labelText="Every One Else's Posts"
+          name='every_posts'
+          labelIcon={DeleteIcon}
+        />
+        <div className='menu-item'>
+          <div className='menu-content pt-8 pb-2'>
+            <span className='menu-section text-muted text-uppercase fs-8 ls-1 ps-4'>
+              Search for Non-Profits
+            </span>
+          </div>
+        </div>
+        {/* <StyledTreeItem nodeId='3' labelText='Categories' labelIcon={Label}>
+          <StyledTreeItem
+            nodeId='5'
+            labelText='Social'
+            labelIcon={SupervisorAccountIcon}
+            labelInfo='90'
+            // color='#1a73e8'
+            // bgColor='#e8f0fe'
+          />
+          <StyledTreeItem
+            nodeId='6'
+            labelText='Updates'
+            labelIcon={InfoIcon}
+            labelInfo='2,294'
+            // color='#e3742f'
+            // bgColor='#fcefe3'
+          />
+          <StyledTreeItem
+            nodeId='7'
+            labelText='Forums'
+            labelIcon={ForumIcon}
+            labelInfo='3,566'
+            // color='#a250f5'
+            // bgColor='#f3e8fd'
+          />
+          <StyledTreeItem
+            nodeId='8'
+            labelText='Promotions'
+            labelIcon={LocalOfferIcon}
+            labelInfo='733'
+            // color='primary'
+            // bgColor='#e6f4ea'
+          />
+        </StyledTreeItem> */}
+        <StyledTreeItem
+          nodeId='3'
+          labelText='Sharing a Message'
+          name='sharing_message'
+          labelIcon={Label}
+          labelInfo='90'
+        />
+        <StyledTreeItem
+          nodeId='4'
+          labelText='With Resources to Share'
+          name='resource_to_share'
+          labelIcon={Label}
+          labelInfo='3,566'
+        />
+        <StyledTreeItem
+          nodeId='5'
+          labelText='In need of Resources'
+          name='need_resources'
+          labelIcon={Label}
+          labelInfo='733'
+        />
+        <StyledTreeItem
+          nodeId='6'
+          labelText='That have an Event'
+          name='have_event'
+          labelIcon={Label}
+          labelInfo='1037'
+        />
+        <div className='menu-item'>
+          <div className='menu-content pt-8 pb-2'>
+            <span className='menu-section text-muted text-uppercase fs-8 ls-1 ps-4'>
+              Select States to Search
+            </span>
+          </div>
+        </div>
+        <StyledTreeItem nodeId='4' labelText='States' name='states' labelIcon={Label} />
+        <div className='menu-item'>
+          <div className='menu-content pt-8 pb-2'>
+            <span className='menu-section text-muted text-uppercase fs-8 ls-1 ps-4'>
+              Select Categories
+            </span>
+          </div>
+        </div>
+        <StyledTreeItem
+          nodeId='7'
+          labelText={allSelect ? 'De-Select All' : 'Select All'}
+          name={'all_select'}
+          labelIcon={Label}
+        />
+        {category.map((item: any, index: number) => (
+          <StyledTreeItem
+            nodeId={item.name}
+            labelText={item.name}
+            labelIcon={Label}
+            key={index}
+            name={item.name.toLowerCase()}
+          >
+            {item.subcategories?.map((item1: any, index: number) => (
+              <StyledTreeItem
+                name={item1.name.toLowerCase()}
+                nodeId={item1.name}
+                labelText={item1.name}
+                labelIcon={Label}
+                key={index}
+              />
+            ))}
+          </StyledTreeItem>
+        ))}
+      </TreeView>
+    </FormProvider>
+  )
+}
+
+export default withReducer('sidebar', reducer)(SidebarMenuMain)

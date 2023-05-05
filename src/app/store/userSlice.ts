@@ -1,5 +1,8 @@
 /* eslint import/no-extraneous-dependencies: off */
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from './rootReducer';
+import history from '../modules/@history';
+
 // import { setInitialSettings } from 'app/store/fuse/settingsSlice';
 // import { showMessage } from 'app/store/fuse/messageSlice';
 // import settingsConfig from 'app/configs/settingsConfig';
@@ -84,22 +87,23 @@ export const setUser = createAsyncThunk('user/setUser', async (user: IAuthState,
 //   }
 // );
 
-// export const logoutUser = () => async (dispatch: any, getState: () => RootState) => {
-//   const { user } = getState();
+export const logoutUser = () => async (dispatch: any, getState: () => RootState) => {
+  const { user }:any = getState();
 
-//   if (!user.role || user.role.length === 0) {
-//     // is guest
-//     return null;
-//   }
+  // if (!user.role || user.role.length === 0) {
+  //   // is guest
+  //   return null;
+  // }
+  sessionStorage.removeItem('access_token');
 
-//   history.push({
-//     pathname: '/',
-//   });
+  history.push({
+    pathname: '/auth',
+  });
 
-//   // dispatch(setInitialSettings());
+  // dispatch(setInitialSettings());
 
-//   return dispatch(userLoggedOut());
-// };
+  return dispatch(userLoggedOut());
+};
 
 // export const updateUserData = (user) => async (dispatch, getState) => {
 //   if (!user.role || user.role.length === 0) {
