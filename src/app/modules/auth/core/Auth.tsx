@@ -62,8 +62,8 @@ const AuthInit = ({children}: any) => {
       try {
         if (!didRequest.current) {
           const {data} = await getUserByToken()
-          const temp = {...data, ...data.account}
-          delete temp.account
+          const temp = {...data}
+          // delete temp.account
           if (temp.email) {
             dispatch(setUser({user: temp}))
           } else {

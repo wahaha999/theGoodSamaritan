@@ -183,7 +183,7 @@ export default function Account() {
   },[])
 
   React.useEffect(() => {
-    reset({...user})
+    reset({...user.account})
   }, [user, reset])
 
   const totalSteps = () => {
