@@ -158,7 +158,7 @@ const AccountInfo = (props) => {
                       height:'100%'
                     }}
                     className='object-cover text-64 font-bold'
-                    src={preview ? preview : toServerUrl('/media/avatar/' + user?.account.avatar)}
+                    src={preview ? preview : toServerUrl('/media/account/avatar/' + user?.account.avatar)}
                     // alt={contact.name}
                   />
                 </Box>

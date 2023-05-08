@@ -1,18 +1,21 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useEffect, useState} from 'react'
 import {Link} from 'react-router-dom'
-import {KTIcon} from '../../../../_metronic/helpers'
+import {KTIcon, toAbsoluteUrl, toServerUrl} from '../../../../_metronic/helpers'
 import {
   ChartsWidget1,
   ListsWidget5,
   TablesWidget1,
   TablesWidget5,
 } from '../../../../_metronic/partials/widgets'
-import {Button, Grid, TextField, Typography, styled} from '@mui/material'
+import {Avatar, Button, Grid, IconButton, TextField, Typography, styled} from '@mui/material'
 import {Controller, FormProvider, useForm, useFormContext} from 'react-hook-form'
 import * as yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'
-import {useAppSelector} from 'src/app/store/hook'
+import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
+import {updateUser} from 'src/app/pages/dashboard/store/accountSlice'
+import {showMessage} from 'src/app/store/fuse/messageSlice'
+import FuseSvgIcon from '../../core/FuseSvgIcon/FuseSvgIcon'
 interface IProps {
   name: string
   label: string
@@ -36,6 +39,7 @@ const StyledTextFiled = (props: IProps) => {
       render={({field}) => (
         <TextField
           {...field}
+          defaultValue=''
           label={label}
           {...rest}
           error={!!errors[name]}
@@ -58,7 +62,9 @@ const schema = yup.object().shape({
 })
 export function Overview() {
   const [edit, setEdit] = useState(false)
+  const [preview, setPreview] = useState()
   const users = useAppSelector(({user}) => user.user)
+  const dispatch = useAppDispatch()
   const methods = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
@@ -70,10 +76,19 @@ export function Overview() {
       reset({...newData})
     }
   }, [reset, users])
+  const user = watch()
   const onSubmit = (data: any) => {
     console.log('data===', data)
+    const {account_dbkey, email_verified_at, id, updated_at, ...res_data} = data
+    dispatch(updateUser(res_data))
+      .then(() => {
+        dispatch(showMessage({message: 'Successful updated', variant: 'success'}))
+      })
+      .catch(() => {})
+      .finally(() => {
+        setEdit(false)
+      })
   }
-  const user = watch()
 
   return (
     <>
@@ -100,7 +115,7 @@ export function Overview() {
                 onClick={() => {
                   setEdit(true)
                   if (edit) {
-                    handleSubmit(onSubmit)
+                    handleSubmit(onSubmit)()
                   }
                 }}
                 variant='contained'
@@ -111,175 +126,146 @@ export function Overview() {
           </div>
 
           <div className='card-body p-9'>
-            <Grid container spacing={2} alignItems='center' mb={3}>
-              <Grid item md={4}>
-                <Typography>First Name</Typography>
+            <Grid container alignItems='center'>
+              <Grid item md={10}>
+                <Grid container spacing={2} alignItems='center' mb={3}>
+                  <Grid item md={4}>
+                    <Typography>First Name</Typography>
+                  </Grid>
+                  <Grid item md={8}>
+                    {edit ? (
+                      <StyledTextFiled label='First Name' name='first_name' required />
+                    ) : (
+                      <Typography>{user?.first_name}</Typography>
+                    )}
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2} alignItems='center' mb={3}>
+                  <Grid item md={4}>
+                    <Typography>Last Name</Typography>
+                  </Grid>
+                  <Grid item md={8}>
+                    {edit ? (
+                      <StyledTextFiled label='Last Name' name='last_name' required />
+                    ) : (
+                      <Typography>{user?.last_name}</Typography>
+                    )}
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2} alignItems='center' mb={3}>
+                  <Grid item md={4}>
+                    <Typography>Email</Typography>
+                  </Grid>
+                  <Grid item md={8}>
+                    {edit ? (
+                      <StyledTextFiled label='Email' name='email' required />
+                    ) : (
+                      <Typography>{user?.email}</Typography>
+                    )}
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2} alignItems='center' mb={3}>
+                  <Grid item md={4}>
+                    <Typography>Title</Typography>
+                  </Grid>
+                  <Grid item md={8}>
+                    {edit ? (
+                      <StyledTextFiled label='Title' name='title' required />
+                    ) : (
+                      <Typography>{user?.title}</Typography>
+                    )}
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2} alignItems='center' mb={3}>
+                  <Grid item md={4}>
+                    <Typography>Contact Phone</Typography>
+                  </Grid>
+                  <Grid item md={8}>
+                    {edit ? (
+                      <StyledTextFiled label='Contact Phone' name='phone_number' />
+                    ) : (
+                      <Typography>{user?.phone_number}</Typography>
+                    )}
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2} alignItems='center' mb={3}>
+                  <Grid item md={4}>
+                    <Typography>Level</Typography>
+                  </Grid>
+                  <Grid item md={8}>
+                    <Typography>Account owner</Typography>
+                  </Grid>
+                </Grid>
               </Grid>
-              <Grid item md={8}>
-                {edit ? (
-                  <StyledTextFiled label='First Name' name='first_name' required />
-                ) : (
-                  <Typography>{user?.first_name}</Typography>
-                )}
+              <Grid item md={2}>
+                <Controller
+                  name='avatar'
+                  control={control}
+                  render={({field: {onChange}}) => (
+                    <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
+                      <img
+                        src={preview ? preview : toServerUrl('/media/user/avatar/' + user?.avatar)}
+                        alt='Metronic'
+                      />
+                      <div className='position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px'></div>
+                      <div className='absolute inset-0 flex items-center justify-around z-20'>
+                        <div>
+                          <label htmlFor='button-avatar' className='flex p-2 cursor-pointer'>
+                            <input
+                              accept='image/*'
+                              className='hidden'
+                              id='button-avatar'
+                              type='file'
+                              onChange={async (e: any) => {
+                                function readFileAsync() {
+                                  return new Promise((resolve, reject) => {
+                                    const file = e.target.files[0]
+                                    if (!file) {
+                                      return
+                                    }
+                                    const reader: any = new FileReader()
+
+                                    reader.onload = () => {
+                                      resolve(`data:${file.type};base64,${btoa(reader.result)}`)
+                                    }
+                                    reader.onerror = reject
+                                    reader.readAsBinaryString(file)
+                                  })
+                                }
+                                const newImage: any = await readFileAsync()
+                                setPreview(newImage)
+                                onChange(e.target.files[0])
+                              }}
+                            />
+                            {edit && (
+                              <FuseSvgIcon className='text-white'>
+                                heroicons-solid:camera
+                              </FuseSvgIcon>
+                            )}
+                          </label>
+                        </div>
+                        {edit && (
+                          <div>
+                            <IconButton
+                              onClick={() => {
+                                onChange('')
+                              }}
+                            >
+                              <FuseSvgIcon className='text-white'>
+                                heroicons-solid:trash
+                              </FuseSvgIcon>
+                            </IconButton>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                />
               </Grid>
             </Grid>
-            <Grid container spacing={2} alignItems='center' mb={3}>
-              <Grid item md={4}>
-                <Typography>Last Name</Typography>
-              </Grid>
-              <Grid item md={8}>
-                {edit ? (
-                  <StyledTextFiled label='Last Name' name='last_name' required />
-                ) : (
-                  <Typography>{user?.last_name}</Typography>
-                )}
-              </Grid>
-            </Grid>
-            <Grid container spacing={2} alignItems='center' mb={3}>
-              <Grid item md={4}>
-                <Typography>Email</Typography>
-              </Grid>
-              <Grid item md={8}>
-                {edit ? (
-                  <StyledTextFiled label='Email' name='email' required />
-                ) : (
-                  <Typography>{user?.email}</Typography>
-                )}
-              </Grid>
-            </Grid>
-            <Grid container spacing={2} alignItems='center' mb={3}>
-              <Grid item md={4}>
-                <Typography>Contact Phone</Typography>
-              </Grid>
-              <Grid item md={8}>
-                {edit ? (
-                  <StyledTextFiled label='Contact Phone' name='contact_phone' />
-                ) : (
-                  <Typography>{user?.phone_number}</Typography>
-                )}
-              </Grid>
-            </Grid>
-            <Grid container spacing={2} alignItems='center' mb={3}>
-              <Grid item md={4}>
-                <Typography>Level</Typography>
-              </Grid>
-              <Grid item md={8}>
-                <Typography>Account owner</Typography>
-              </Grid>
-            </Grid>
-            {/* <div className='row  mb-7'>
-            <label className='col-lg-4 fw-bold text-muted'>Full Name</label>
-
-            <div className='col-lg-8'>
-              {edit ? <TextField /> : <span className='fw-bolder fs-6 text-dark'>Max Smith</span>}
-            </div>
-          </div>
-
-          <div className='row mb-7'>
-            <label className='col-lg-4 fw-bold text-muted'>Company</label>
-
-            <div className='col-lg-8 fv-row'>
-              <span className='fw-bold fs-6'>Keenthemes</span>
-            </div>
-          </div>
-
-          <div className='row mb-7'>
-            <label className='col-lg-4 fw-bold text-muted'>
-              Contact Phone
-              <i
-                className='fas fa-exclamation-circle ms-1 fs-7'
-                data-bs-toggle='tooltip'
-                title='Phone number must be active'
-              ></i>
-            </label>
-
-            <div className='col-lg-8 d-flex align-items-center'>
-              <span className='fw-bolder fs-6 me-2'>044 3276 454 935</span>
-
-              <span className='badge badge-success'>Verified</span>
-            </div>
-          </div>
-
-          <div className='row mb-7'>
-            <label className='col-lg-4 fw-bold text-muted'>Company Site</label>
-
-            <div className='col-lg-8'>
-              <a href='#' className='fw-bold fs-6 text-dark text-hover-primary'>
-                keenthemes.com
-              </a>
-            </div>
-          </div>
-
-          <div className='row mb-7'>
-            <label className='col-lg-4 fw-bold text-muted'>
-              Country
-              <i
-                className='fas fa-exclamation-circle ms-1 fs-7'
-                data-bs-toggle='tooltip'
-                title='Country of origination'
-              ></i>
-            </label>
-
-            <div className='col-lg-8'>
-              <span className='fw-bolder fs-6 text-dark'>Germany</span>
-            </div>
-          </div>
-
-          <div className='row mb-7'>
-            <label className='col-lg-4 fw-bold text-muted'>Communication</label>
-
-            <div className='col-lg-8'>
-              <span className='fw-bolder fs-6 text-dark'>Email, Phone</span>
-            </div>
-          </div>
-
-          <div className='row mb-10'>
-            <label className='col-lg-4 fw-bold text-muted'>Allow Changes</label>
-
-            <div className='col-lg-8'>
-              <span className='fw-bold fs-6'>Yes</span>
-            </div>
-          </div> */}
-
-            {/* <div className='notice d-flex bg-light-warning rounded border-warning border border-dashed p-6'>
-            <KTIcon iconName='information-5' className='fs-2tx text-warning me-4' />
-            <div className='d-flex flex-stack flex-grow-1'>
-              <div className='fw-bold'>
-                <h4 className='text-gray-800 fw-bolder'>We need your attention!</h4>
-                <div className='fs-6 text-gray-600'>
-                  Your payment was declined. To start using tools, please
-                  <Link className='fw-bolder' to='/crafted/account/settings'>
-                    {' '}
-                    Add Payment Method
-                  </Link>
-                  .
-                </div>
-              </div>
-            </div>
-          </div> */}
           </div>
         </div>
       </FormProvider>
-
-      {/* <div className='row gy-10 gx-xl-10'>
-        <div className='col-xl-6'>
-          <ChartsWidget1 className='card-xxl-stretch mb-5 mb-xl-10' />
-        </div>
-
-        <div className='col-xl-6'>
-          <TablesWidget1 className='card-xxl-stretch mb-5 mb-xl-10' />
-        </div>
-      </div>
-
-      <div className='row gy-10 gx-xl-10'>
-        <div className='col-xl-6'>
-          <ListsWidget5 className='card-xxl-stretch mb-5 mb-xl-10' />
-        </div>
-
-        <div className='col-xl-6'>
-          <TablesWidget5 className='card-xxl-stretch mb-5 mb-xl-10' />
-        </div>
-      </div> */}
     </>
   )
 }
