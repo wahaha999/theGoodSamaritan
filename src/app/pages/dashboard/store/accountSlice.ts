@@ -15,8 +15,8 @@ export const updateProfile = createAsyncThunk('dashboard/account/updateProfile',
         })
         const response = await axios.post(`${API_URL}/account/update`, formData);
         console.log('data==', response.data);
-        const temp = { ...response.data, ...response.data.account }
-        delete temp.account;
+        const temp = { ...response.data}
+        // delete temp.account;
         console.log('data==', temp);
         dispatch(setUser({ user: temp }));
         return temp;
