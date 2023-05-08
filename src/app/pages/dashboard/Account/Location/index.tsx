@@ -206,8 +206,8 @@ const Location = (props: Props) => {
                       // onOpen={() => {
                       //   setOpen(true)
                       // }}
-                      onChange={(event: any, newValue: IState | null) => {
-                        onChange(newValue)
+                      onChange={(event: any, newValue: any) => {
+                        onChange(newValue.split('-')[0].trim())
                       }}
                       onInputChange={(event, newInputValue) => {
                         onChange(newInputValue ?? '')
