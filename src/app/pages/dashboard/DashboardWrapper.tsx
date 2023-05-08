@@ -10,13 +10,13 @@ import {motion} from 'framer-motion'
 const container = {
   show: {
     transition: {
-      staggerChildren: 0.06,
+      staggerChildren: 2,
     },
   },
 }
 
 const item = {
-  hidden: {opacity: 0, y: 50},
+  hidden: {opacity: 0, y: 100},
   show: {opacity: 1, y: 0},
 }
 

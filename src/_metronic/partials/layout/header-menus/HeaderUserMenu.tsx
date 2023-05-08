@@ -2,7 +2,7 @@
 import {FC} from 'react'
 import {Link} from 'react-router-dom'
 // import {useAuth} from '../../../../app/modules/auth'
-import {toAbsoluteUrl} from '../../../helpers'
+import {toAbsoluteUrl, toServerUrl} from '../../../helpers'
 import {useAppDispatch, useAppSelector} from '../../../../app/store/hook'
 import {logoutUser, userLoggedOut} from 'src/app/store/userSlice'
 // import {logout} from '../../../../app/modules/auth/core/_requests'
@@ -19,7 +19,7 @@ const HeaderUserMenu: FC = () => {
       <div className='menu-item px-3'>
         <div className='menu-content d-flex align-items-center px-3'>
           <div className='symbol symbol-50px me-5'>
-            <img alt='Logo' src={toAbsoluteUrl('/media/avatars/300-1.jpg')} />
+            <img alt='Logo' src={toServerUrl('/media/avatar/' + user?.avatar)} />
           </div>
 
           <div className='d-flex flex-column'>

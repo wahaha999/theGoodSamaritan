@@ -76,12 +76,12 @@ const AccountInfo = (props) => {
         defaultValue='30'
         render={({field:{value}}) => 
 
-        <Typography variant='h6'>Your Account Number: {value}</Typography>
+        <Typography >Your Account Number: {value}</Typography>
         }
       />
       <Grid container rowSpacing={4}>
         <Grid item container alignItems='center' justifyContent='space-between'>
-          <Typography variant='h6'>Upload an Image to represent your Non-Profit:</Typography>
+          <Typography >Upload an Image to represent your Non-Profit:</Typography>
           <Grid item md={6} container justifyContent='center'>
             <Controller
               name='avatar'
@@ -182,7 +182,7 @@ const AccountInfo = (props) => {
           </Grid> */}
         </Grid>
         <Grid item container alignItems='center' justifyContent='space-between'>
-          <Typography variant='h6'>Name of Non-Profit:</Typography>
+          <Typography >Name of Non-Profit:</Typography>
           <Grid item md={6}>
             <Controller
               control={control}
