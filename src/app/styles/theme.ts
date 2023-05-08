@@ -9,13 +9,15 @@ export const theme = createTheme({
       main: '#F9BF3B',
     },
     },
-    typography: {
+  typography: {
+      fontFamily:'Inter',
         h5: {
             fontWeight:700
         },
         h6: {
             fontWeight:700
-        }
+    },
+        body1:{fontSize:14,fontWeight:600}
   },
   components: {
     MuiButton: {
@@ -27,6 +29,7 @@ export const theme = createTheme({
           }
         }
       }
-    }
+  },
+  
     
 });

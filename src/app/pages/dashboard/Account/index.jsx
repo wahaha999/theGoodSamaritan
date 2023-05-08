@@ -6,11 +6,13 @@ import StepButton from '@mui/material/StepButton'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import {
+  AppBar,
   Grid,
   Paper,
   StepConnector,
   StepLabel,
   Tab,
+  Toolbar,
   stepConnectorClasses,
   styled,
   useTheme,
@@ -38,7 +40,7 @@ const steps = ['Account Info', 'About Your Non Profit', 'Non Profit Verification
 
 const ColorlibConnector = styled(StepConnector)(({theme}) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
-    top: 22,
+    top: 40,
   },
   [`&.${stepConnectorClasses.active}`]: {
     [`& .${stepConnectorClasses.line}`]: {
@@ -62,9 +64,9 @@ const ColorlibStepIconRoot = styled('div')(({theme, ownerState}) => ({
   backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#ccc',
   zIndex: 1,
   color: '#fff',
-  width: 50,
+  width: 70,
   cursor: 'pointer',
-  height: 50,
+  height: 70,
   display: 'flex',
   borderRadius: '50%',
   justifyContent: 'center',
@@ -82,6 +84,9 @@ const ColorlibStepIconRoot = styled('div')(({theme, ownerState}) => ({
 
 
 function validateEIN(ein) {
+  if (ein[2] !== "-") {
+    return false
+  }
   // Remove any dashes from the EIN number
   ein = ein.replace(/-/g, '')
   // Validate that the EIN number is exactly nine digits long
@@ -127,8 +132,8 @@ yup.addMethod(yup.StringSchema, 'validateEIN', function (errorMessage) {
 const schema = yup.object().shape( {
   non_profit_name: yup.string().required('Non Profit Name is required'),
 
-  organize: yup.number().min(1,"you must select your organize").required('organize is required'),
-  EIN: yup.string().required('EIN is required').validateEIN('Invalid EIN format'),
+  organize: yup.number().min(1,"Please select the size of your non-profit").required('organize is required'),
+  EIN: yup.string().required('EIN is required').validateEIN('Please enter the correct format to enter your EIN ##-#######'),
   address: yup.string().required('You must enter a address'),
   city: yup.string().required('You must enter a city'),
   state: yup.string().required('You must enter a state'),
@@ -141,10 +146,10 @@ function ColorlibStepIcon(props) {
   const {active, completed, className} = props
 
   const icons = {
-    1: <FuseSvgIcon className='text-blue'>heroicons-solid:camera</FuseSvgIcon>,
-    2: <FuseSvgIcon className='text-blue'>heroicons-solid:document-add</FuseSvgIcon>,
-    3: <FuseSvgIcon className='text-blue'>heroicons-solid:cloud-upload</FuseSvgIcon>,
-    4: <FuseSvgIcon className='text-blue'>heroicons-solid:office-building</FuseSvgIcon>,
+    1: <FuseSvgIcon className='text-blue' size={30}>heroicons-solid:camera</FuseSvgIcon>,
+    2: <FuseSvgIcon className='text-blue' size={30}>heroicons-solid:document-add</FuseSvgIcon>,
+    3: <FuseSvgIcon className='text-blue' size={30}>heroicons-solid:cloud-upload</FuseSvgIcon>,
+    4: <FuseSvgIcon className='text-blue' size={30}>heroicons-solid:office-building</FuseSvgIcon>,
   }
 
   return (
@@ -215,7 +220,6 @@ export default function Account() {
       // find the first step that has been completed
       steps.findIndex((step, i) => !(i in completed))
       : activeStep + 1
-      console.log("🚀 ~ file: index.jsx:207 ~ handleNext ~ newActiveStep:", newActiveStep)
       setActiveStep(newActiveStep)
       
       }
@@ -230,7 +234,6 @@ export default function Account() {
   }
 
   const handleComplete = (data) => {
-    console.log('activestep==', activeStep,form, errors, completed, methods, data);
     const { non_profit_name,EIN,address,organize } = data
     if ((!non_profit_name && activeStep == 0) ||activeStep == 1 && !organize||( !EIN && activeStep == 2) || (isValid && activeStep == 3) ) {
       // handleSubmit()
@@ -238,7 +241,6 @@ export default function Account() {
       newCompleted[activeStep] = true
       setCompleted(newCompleted)
       if (isLastStep() && isValid) {
-        console.log('value===', getValues())
         dispatch(updateProfile(getValues())).then(() => {
           dispatch(showMessage({message:'Successfully updated',variant:'success'}))
         }).catch(err => {
@@ -268,7 +270,7 @@ export default function Account() {
           <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
             {steps.map((label, index) => (
               <Step key={label} completed={completed[index]}>
-                <StepLabel StepIconComponent={ColorlibStepIcon} onClick={handleStep(index)}>
+                <StepLabel StepIconComponent={ColorlibStepIcon} onClick={handleStep(index)} sx={{"& .MuiStepLabel-label":{fontSize:16,fontWeight:600}}}>
                   {label}
                 </StepLabel>
               </Step>
@@ -302,8 +304,10 @@ export default function Account() {
                   <Box sx={{}}>{activeStep == 2 && <Verification />}</Box>
                   <Box sx={{}}>{activeStep == 3 && <Location />}</Box>
                 </Grid>
-                {/* <Typography sx={{mt: 2, mb: 1, py: 1}}>Step {activeStep + 1}</Typography> */}
-                <Box sx={{display: 'flex', flexDirection: 'row', pt: 2}}>
+                <AppBar position="sticky"  sx={{ top: 'auto', bottom: 0,boxShadow:'none' }} color='inherit'>
+                  <Toolbar>
+
+                {/* <Box sx={{display: 'flex', flexDirection: 'row', pt: 2}}> */}
                   <Button
                     color='primary'
                     disabled={activeStep === 0}
@@ -329,7 +333,10 @@ export default function Account() {
                       </Button>
                       {/* <input type="submit"/> */}
                     {/* ))} */}
-                </Box>
+                {/* </Box> */}
+                  </Toolbar>
+                </AppBar>
+                {/* <Typography sx={{mt: 2, mb: 1, py: 1}}>Step {activeStep + 1}</Typography> */}
               </React.Fragment>
             )}
           </div>

@@ -4,7 +4,7 @@ import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import SearchIcon from '@mui/icons-material/Search'
-import {Button, Grid, Paper} from '@mui/material'
+import {Button, Grid, Paper, Skeleton} from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
@@ -52,7 +52,16 @@ function CustomizedInputBase() {
 
 export default function MyPostsDashboard() {
   const [expanded, setExpanded] = React.useState(false)
-
+  const [loading, setLoading] = React.useState(false)
+  // React.useEffect(() => {
+  //   setInterval(() => {
+  //     setLoading(false)
+  //   }, 3000)
+  // }, [])
+  const handleImageLoaded = () => {
+    console.log('hello')
+    setLoading(true)
+  }
   return (
     <DashboardPaper>
       <CustomizedInputBase />
@@ -78,12 +87,17 @@ export default function MyPostsDashboard() {
           title='Shrimp and Chorizo Paella'
           subheader='September 14, 2016'
         />
+        {/* {!loading ? (
+          <Skeleton sx={{height: 194}} animation='wave' variant='rectangular' />
+        ) : ( */}
         <CardMedia
           component='img'
-          height='194'
+          height={194}
+          // onLoad={handleImageLoaded}
           image={toAbsoluteUrl('/media/example/example.png')}
           alt='Paella dish'
         />
+        {/* )} */}
         <CardContent>
           <Typography variant='body2' color='text.secondary'>
             This impressive paella is a perfect party dish and a fun meal to cook together with your

@@ -27,12 +27,7 @@ const AboutNonProfit = (props: Props) => {
   const {
     control,
     formState: {errors},
-    watch,
   } = methods
-  // const [value,setValue] = useState<number>(0)
-  const handleClick = (id: number) => {
-    // setValue(id);
-  }
   return (
     <>
       <Typography>
@@ -79,7 +74,7 @@ const AboutNonProfit = (props: Props) => {
         render={({field: {onChange, value}}) => (
           <ReactQuill
             theme='snow'
-            style={{height: '300px'}}
+            style={{height: '250px', marginTop: 2}}
             value={value}
             onChange={(e) => {
               onChange(e)

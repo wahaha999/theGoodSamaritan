@@ -33,12 +33,13 @@ const Location = (props: Props) => {
   const {state} = useAppSelector(({Account}) => Account.plan)
 
   const tempState: any[] = useMemo(() => {
-    console.log('hello')
-    let temp: any = []
-    Object.keys(state).map((item, index) => {
-      temp.push(`${state[item].State} - ${state[item].Description}`)
-    })
-    return temp
+    if (state) {
+      let temp: any = []
+      Object.keys(state).map((item, index) => {
+        temp.push(`${state[item].State} - ${state[item].Description}`)
+      })
+      return temp
+    }
   }, [state])
 
   // React.useEffect(() => {
@@ -105,26 +106,30 @@ const Location = (props: Props) => {
               control={control}
               name='fax_number'
               defaultValue=''
-              render={({field: {value}}) => (
-                <TextField
-                  className='mt-32'
-                  value={value == 'null' ? '' : value}
-                  label='Fax Number'
-                  placeholder='Fax Number'
-                  id='fax_number'
-                  error={!!errors.fax_number}
-                  helperText={errors?.fax_number?.message as string}
-                  variant='outlined'
-                  fullWidth
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position='start'>
-                        <FuseSvgIcon size={20}>heroicons-solid:paper-airplane</FuseSvgIcon>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              )}
+              render={({field: {value, ...other}}) => {
+                console.log('value==', value)
+                return (
+                  <TextField
+                    {...other}
+                    className='mt-32'
+                    value={value == 'null' ? '' : value}
+                    label='Fax Number'
+                    placeholder='Fax Number'
+                    id='fax_number'
+                    error={!!errors.fax_number}
+                    helperText={errors?.fax_number?.message as string}
+                    variant='outlined'
+                    fullWidth
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position='start'>
+                          <FuseSvgIcon size={20}>heroicons-solid:paper-airplane</FuseSvgIcon>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                )
+              }}
             />
             {/* <TextField label='Fax Number' fullWidth /> */}
           </Grid>
