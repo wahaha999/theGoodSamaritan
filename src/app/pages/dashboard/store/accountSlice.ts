@@ -44,10 +44,19 @@ export const updateUser = createAsyncThunk('dashboard/user/updateUser', async (d
         });
         const response = await axios.post(`${API_URL}/users/update`, formData);
         const temp = { ...response.data };
-        // console.log("🚀 ~ file: accountSlice.ts:35 ~ updateUser ~ temp:", temp)
         dispatch(setUser({ user: temp }));
         return temp;
     } catch (error) {
         dispatch(showMessage({message: 'Something wrong', variant: 'error'}))
+    }
+})
+
+export const updatePassword = createAsyncThunk('dashboard/user/updatePassword', async (data: any, { dispatch, getState }) => {
+    try {
+        const response = await axios.post(`${API_URL}/users/update-password`, data);
+        dispatch(showMessage({message:'Password is changed successfully',variant:'success'}))
+    } catch (error:any) {
+        dispatch(showMessage({message:error.response.data?.message,variant:'error'}))
+        
     }
 })
