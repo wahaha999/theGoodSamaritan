@@ -3,6 +3,15 @@ import {Typography, Grid, ButtonBase, styled, Box, ButtonBaseProps} from '@mui/m
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import {Controller, useFormContext} from 'react-hook-form'
+import {CKEditor} from '@ckeditor/ckeditor5-react'
+// import CustomizeClassicEditor from 'src/app/modules/core/CKeditor/CustomizeClassicEditor'
+// import CustomizeClassicEditor from 'src/app/modules/core/CKeditor/CustomizeClassicEditor'
+// import CustomizeClassicEditor from 'src/app/modules/core/CKeditor/CustomizeClassicEditor'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+// import {SimpleUploadAdapter} from '@ckeditor/ckeditor5-upload'
+// import CustomizeClassicEditor from 'src/app/modules/core/CKeditor/CustomizeClassicEditor'
+// import SimpleUploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter'
+
 type Props = {}
 interface BorderButtonProps extends ButtonBaseProps {
   clicked: boolean
@@ -72,14 +81,29 @@ const AboutNonProfit = (props: Props) => {
         name='mission'
         control={control}
         render={({field: {onChange, value}}) => (
-          <ReactQuill
-            theme='snow'
-            style={{height: '250px', marginTop: 2}}
-            value={value}
-            onChange={(e) => {
-              onChange(e)
-            }}
-          />
+          // <ReactQuill
+          //   theme='snow'
+          //   style={{height: '250px', marginTop: 2}}
+          //   value={value}
+          //   onChange={(e) => {
+          //     onChange(e)
+          //   }}
+          // />
+          <div id='editor-container'>
+            <CKEditor
+              editor={ClassicEditor}
+              data={value}
+              onReady={(editor) => {
+                // You can store the "editor" and use when it is needed.
+                console.log('Editor is ready to use!', editor)
+              }}
+              onChange={(event, editor) => {
+                const data = editor.getData()
+                onChange(data)
+                // console.log({event, editor, data})
+              }}
+            />
+          </div>
         )}
       />
     </>
