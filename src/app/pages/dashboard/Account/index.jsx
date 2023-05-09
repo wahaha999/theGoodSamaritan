@@ -107,15 +107,15 @@ function validateEIN(ein) {
   }
 
   // Calculate the check digit and validate that it matches the ninth digit
-  let checkDigit = 0
-  for (let i = 0; i < 8; i++) {
-    checkDigit += parseInt(ein.substring(i, i + 1), 10) * (9 - i)
-  }
-  checkDigit = (10 - (checkDigit % 10)) % 10
+  // let checkDigit = 0
+  // for (let i = 0; i < 8; i++) {
+  //   checkDigit += parseInt(ein.substring(i, i + 1), 10) * (9 - i)
+  // }
+  // checkDigit = (10 - (checkDigit % 10)) % 10
 
-  if (checkDigit !== parseInt(ein.substring(8, 9), 10)) {
-    return false
-  }
+  // if (checkDigit !== parseInt(ein.substring(8, 9), 10)) {
+  //   return false
+  // }
 
   // If all checks pass, the EIN number is valid
   return true

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import {Typography, Button, TextField, InputAdornment, Grid, IconButton, Chip} from '@mui/material'
+import {Typography, Button, TextField, InputAdornment, Grid, IconButton, Chip, Tooltip, styled, tooltipClasses} from '@mui/material'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import {Controller, useForm, useFormContext} from 'react-hook-form'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
@@ -11,6 +11,19 @@ import { useDispatch } from 'react-redux'
 import { showMessage } from 'src/app/store/fuse/messageSlice'
 import LoadingButton from '@mui/lab/LoadingButton';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+
+const LightTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} arrow/>
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.common.white,
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 11,
+  },
+}));
+
 
 const Verification = (props) => {
   const [loading, setLoading] = useState(false);
@@ -85,26 +98,33 @@ const Verification = (props) => {
       <Controller
         name='EIN'
         control={control}
-        render={({field}) => (
-          <TextField
-            className='mt-32'
-            required
-            {...field}
-            label='Enter your EIN'
-            placeholder="12-3456789"
-            id='EIN'
-            error={!!errors.EIN}
-            helperText={errors?.EIN?.message }
-            variant='outlined'
-            fullWidth
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position='start'>
-                  <FuseSvgIcon size={20} >heroicons-solid:location-marker</FuseSvgIcon>
-                </InputAdornment>
-              ),
-            }}
-          />
+        render={({ field }) => (
+          <>
+            <Grid container alignItems='center'>
+              <TextField
+                className='mt-32'
+                required
+                {...field}
+                label='Enter your EIN'
+                placeholder="12-3456789"
+                id='EIN'
+                error={!!errors.EIN}
+                helperText={errors?.EIN?.message }
+                variant='outlined'
+                // fullWidth
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <FuseSvgIcon size={20} >heroicons-solid:location-marker</FuseSvgIcon>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <LightTooltip placement="right" title="A non-profit should have documentation to support its tax-exempt status, such as a determination letter from the IRS or a state tax authority. Please provide a copy of this documentation for review">
+                <ErrorOutlineIcon sx={{ml:4}} />
+              </LightTooltip>
+            </Grid>
+          </>
         )}
       />
       <Typography mt={1}>Your EIN should be in the format of two digits separated by a hyphen, followed by seven more digits</Typography>
