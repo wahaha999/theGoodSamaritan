@@ -12,14 +12,6 @@ const PostEditor = (props: Props) => {
       name='content'
       control={control}
       render={({field: {onChange, value}}) => (
-        // <ReactQuill
-        //   theme='snow'
-        //   style={{height: '250px', marginTop: 2}}
-        //   value={value}
-        //   onChange={(e) => {
-        //     onChange(e)
-        //   }}
-        // />
         <div id='editor-container'>
           <CKEditor
             editor={ClassicEditor}

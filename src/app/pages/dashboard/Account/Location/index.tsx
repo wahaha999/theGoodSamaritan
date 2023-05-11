@@ -79,10 +79,11 @@ const Location = (props: Props) => {
               name='phone_number'
               control={control}
               defaultValue=''
-              render={({field}) => (
+              render={({field: {value, ...other}}) => (
                 <TextField
                   className='mt-32'
-                  {...field}
+                  value={value == 'null' ? '' : value}
+                  {...other}
                   label='Phone Number'
                   placeholder='Phone Number'
                   id='phone_number'
