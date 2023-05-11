@@ -183,7 +183,7 @@ function MyPostsDashboard() {
         </FormProvider>
         {posts?.map((post: any, index: number) => (
           <motion.div variants={itemVariants} key={index}>
-            <Card sx={{width: '100%', margin: '16px 0px'}}>
+            <Card sx={{width: '100%', margin: '16px 0px', border: '1px solid #D5DBDB'}}>
               <CardHeader
                 avatar={
                   <Avatar
