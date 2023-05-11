@@ -1,9 +1,11 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import plan from './planSlice';
+import post from './postSlice'
 
 
 const reducer = combineReducers({
-  plan
+  plan,
+  post
 });
 
 export default reducer;

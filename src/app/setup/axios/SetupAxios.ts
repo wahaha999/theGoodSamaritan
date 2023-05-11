@@ -1,3 +1,4 @@
+import { logoutUser } from "src/app/store/userSlice"
 
 export default function setupAxios(axios: any, store: any) {
   axios.interceptors.request.use(
@@ -20,6 +21,8 @@ export default function setupAxios(axios: any, store: any) {
       const { status } = error.response
 
       if (status === 401) {
+        delete axios.defaults.headers.common.Authorization;
+        logoutUser();
         // forceLogout() //TODO: force logout
       }
 

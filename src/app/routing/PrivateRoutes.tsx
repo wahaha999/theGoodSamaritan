@@ -23,13 +23,13 @@ const PrivateRoutes = () => {
   const user = useAppSelector(({user}) => {
     return user.user
   })
-  console.log('🚀 ~ file: PrivateRoutes.tsx:22 ~ PrivateRoutes ~ user:', user)
+  // console.log('🚀 ~ file: PrivateRoutes.tsx:22 ~ PrivateRoutes ~ user:', user)
   return (
     <Routes>
       <Route element={<MasterLayout />}>
         {/* Redirect to Dashboard after success login/registartion */}
-        {user.account.status ? (
-          user.account.non_profit_name ? (
+        {user.account?.status ? (
+          user.account?.non_profit_name ? (
             <>
               <Route path='auth/*' element={<Navigate to='/dashboard' />} />
               {/* Pages */}

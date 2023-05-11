@@ -1,77 +1,81 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import {Typography, Button, TextField, InputAdornment, Grid, IconButton, Chip, Tooltip, styled, tooltipClasses} from '@mui/material'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
-import {Controller, useForm, useFormContext} from 'react-hook-form'
-import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
-import {yupResolver} from '@hookform/resolvers/yup'
-import * as yup from 'yup'
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
+import {
+  Button,
+  Chip,
+  Grid,
+  InputAdornment,
+  TextField,
+  Tooltip,
+  Typography,
+  styled,
+  tooltipClasses
+} from '@mui/material'
 import axios from 'axios'
-import { API_URL } from 'src/app/modules/auth/core/_requests'
+import { useCallback, useEffect, useState } from 'react'
+import { Controller, useFormContext } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
+import { API_URL } from 'src/app/modules/auth/core/_requests'
+import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 import { showMessage } from 'src/app/store/fuse/messageSlice'
-import LoadingButton from '@mui/lab/LoadingButton';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
-const LightTooltip = styled(({ className, ...props }) => (
-  <Tooltip {...props} classes={{ popper: className }} arrow/>
-))(({ theme }) => ({
+const LightTooltip = styled(({className, ...props}) => (
+  <Tooltip {...props} classes={{popper: className}} arrow />
+))(({theme}) => ({
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: theme.palette.common.white,
     color: 'rgba(0, 0, 0, 0.87)',
     boxShadow: theme.shadows[1],
     fontSize: 11,
   },
-}));
-
+}))
 
 const Verification = (props) => {
-  const [loading, setLoading] = useState(false);
-   const methods = useFormContext()
-  const {control, formState, watch,resetField,reset} = methods
-  const dispatch = useDispatch();
-  const { errors } = formState
-  const [filePreviews, setFilePreviews] = useState([]);
-  const doc = watch('doc');
+  const [loading, setLoading] = useState(false)
+  const methods = useFormContext()
+  const {control, formState, watch, resetField, reset} = methods
+  const dispatch = useDispatch()
+  const {errors} = formState
+  const [filePreviews, setFilePreviews] = useState([])
+  const doc = watch('doc')
   // console.log("🚀 ~ file: index.jsx:23 ~ Verification ~ doc:", doc)
   useEffect(() => {
     if (typeof doc !== 'string') {
-      
       setFilePreviews([...doc])
     } else {
-      
       setFilePreviews([...JSON.parse(doc)])
     }
-  },[])
+  }, [])
 
   const readFileAsync = (file) => {
     return new Promise((resolve, reject) => {
-      const reader = new FileReader();
+      const reader = new FileReader()
       reader.onload = () => {
         if (typeof reader?.result === 'string') {
-          resolve(`data:${file.type};base64,${btoa(reader?.result)}`);
+          resolve(`data:${file.type};base64,${btoa(reader?.result)}`)
         } else {
-          return;
+          return
         }
-      };
-      reader.onerror = reject;
-      reader.readAsBinaryString(file);
-    });
-  };
+      }
+      reader.onerror = reject
+      reader.readAsBinaryString(file)
+    })
+  }
 
-  const handleRemove = (index,onChange) => {
-    let files = filePreviews.splice(index, 1);
-    setFilePreviews([...filePreviews]);
+  const handleRemove = (index, onChange) => {
+    let files = filePreviews.splice(index, 1)
+    setFilePreviews([...filePreviews])
     onChange([...filePreviews])
     // reset('doc',[...filePreviews])
   }
-  
-   const handleDownLoad = useCallback((event, name) => {
+
+  const handleDownLoad = useCallback((event, name) => {
     event.stopPropagation()
-     setLoading(true);
-    axios.post(
+    setLoading(true)
+    axios
+      .post(
         `${API_URL}/account/download-doc`,
-        { name },
+        {name},
         {
           responseType: 'blob',
         }
@@ -82,11 +86,11 @@ const Verification = (props) => {
         a.href = url
         a.download = name
         a.click()
-        setLoading(false);
+        setLoading(false)
       })
       .catch((error) => {
-        dispatch(showMessage({message:'This file is not founded',variant:'error'}))
-        setLoading(false);
+        dispatch(showMessage({message: 'This file is not founded', variant: 'error'}))
+        setLoading(false)
       })
   }, [])
 
@@ -98,7 +102,7 @@ const Verification = (props) => {
       <Controller
         name='EIN'
         control={control}
-        render={({ field }) => (
+        render={({field}) => (
           <>
             <Grid container alignItems='center'>
               <TextField
@@ -106,78 +110,89 @@ const Verification = (props) => {
                 required
                 {...field}
                 label='Enter your EIN'
-                placeholder="12-3456789"
+                placeholder='12-3456789'
                 id='EIN'
                 error={!!errors.EIN}
-                helperText={errors?.EIN?.message }
+                helperText={errors?.EIN?.message}
                 variant='outlined'
                 // fullWidth
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position='start'>
-                      <FuseSvgIcon size={20} >heroicons-solid:location-marker</FuseSvgIcon>
+                      <FuseSvgIcon size={20}>heroicons-solid:location-marker</FuseSvgIcon>
                     </InputAdornment>
                   ),
                 }}
               />
-              <LightTooltip placement="right" title="A non-profit should have documentation to support its tax-exempt status, such as a determination letter from the IRS or a state tax authority. Please provide a copy of this documentation for review">
-                <ErrorOutlineIcon sx={{ml:4}} />
+              <LightTooltip
+                placement='right'
+                title='A valid non-profit EIN number, like any other EIN number, is a unique nine-digit number assigned by the Internal Revenue Service (IRS) for tax purposes. Non-profit organizations can apply for an EIN number if they are required to file certain tax returns, such as Form 990, Return of Organization Exempt from Income Tax'
+              >
+                <ErrorOutlineIcon sx={{ml: 4}} />
               </LightTooltip>
             </Grid>
           </>
         )}
       />
-      <Typography mt={1}>Your EIN should be in the format of two digits separated by a hyphen, followed by seven more digits</Typography>
+      <Typography mt={1}>
+        Your EIN should be in the format of two digits separated by a hyphen, followed by seven more
+        digits
+      </Typography>
       <Typography my={3}>Upload your Non-Profit Documentation</Typography>
       <Controller
         name='doc'
         // defaultValue={[]}
         control={control}
-        render={({ field: { onChange, value } }) => {
+        render={({field: {onChange, value}}) => {
           // setFilePreviews([...filePreviews,...value])
           // console.log('value==',value)
           return (
-          <>
-            <Button startIcon={<CloudUploadIcon />} variant='contained' component='label'>
-              <input
-                hidden
-                accept=".doc, .docx, .pdf"
-                type='file'
-                onChange={async (e) => {
-                  const files = Array.from(e.target.files);
-                  // onChange(files);
-                  const filePreviewsPromises = files.map(async (file) => {
-                    const fileDataUrl = await readFileAsync(file);
-                    return { file, fileDataUrl };
-                  });
+            <>
+              <Grid container alignItems='center'>
+                <Button startIcon={<CloudUploadIcon />} variant='contained' component='label'>
+                  <input
+                    hidden
+                    accept='.doc, .docx, .pdf'
+                    type='file'
+                    onChange={async (e) => {
+                      const files = Array.from(e.target.files)
+                      // onChange(files);
+                      const filePreviewsPromises = files.map(async (file) => {
+                        const fileDataUrl = await readFileAsync(file)
+                        return {file, fileDataUrl}
+                      })
 
-                  const newFilePreviews = await Promise.all(filePreviewsPromises);
-                  setFilePreviews([...filePreviews, ...newFilePreviews]);
-                  onChange([...filePreviews, ...newFilePreviews]);
-                }}
-                multiple
-              />
-              Upload Files
-            </Button>
-            <Grid container mt={2}>
-              {
-                filePreviews?.map((item, index) => (
+                      const newFilePreviews = await Promise.all(filePreviewsPromises)
+                      setFilePreviews([...filePreviews, ...newFilePreviews])
+                      onChange([...filePreviews, ...newFilePreviews])
+                    }}
+                    multiple
+                  />
+                  Upload Files
+                </Button>
+                <LightTooltip
+                  placement='right'
+                  title='A non-profit should have documentation to support its tax-exempt status, such as a determination letter from the IRS or a state tax authority. Please provide a copy of this documentation for review'
+                >
+                  <ErrorOutlineIcon sx={{ml: 4}} />
+                </LightTooltip>
+              </Grid>
+              <Grid container mt={2} gap={1}>
+                {filePreviews?.map((item, index) => (
                   <Chip
                     key={index}
-                    // loading={loading}
                     label={typeof item === 'string' ? item : item.file.name}
                     variant='outlined'
-                  onClick={(e) => handleDownLoad(e, typeof item === 'string' ? item : item?.file.name)}
-                  // loadingIndicator="downloading..."
-                  // loadingPosition="center"
-                    onDelete={() => handleRemove(index,onChange)}
-                />
-                  
-                ))
-              }
-            </Grid>
-          </>
-        )}}
+                    onClick={(e) =>
+                      handleDownLoad(e, typeof item === 'string' ? item : item?.file.name)
+                    }
+                    onDelete={() => handleRemove(index, onChange)}
+                  />
+                ))}
+              </Grid>
+            </>
+          )
+        }}
       />
     </>
   )

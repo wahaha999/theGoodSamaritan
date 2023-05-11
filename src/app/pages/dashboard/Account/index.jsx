@@ -207,10 +207,10 @@ export default function Account() {
     if (isLastStep() && isValid) {
         console.log('value===', getValues())
         dispatch(updateProfile(getValues())).then(() => {
-          dispatch(showMessage({ message: 'Successfully updated', variant: 'success' }));
+          // dispatch(showMessage({ message: 'Successfully updated', variant: 'success' }));
           setActiveStep(4)
         }).catch(err => {
-          dispatch(showMessage({message:'Something is wrong',variant:'error'}))
+          // dispatch(showMessage({message:'Something is wrong',variant:'error'}))
         })
     } else {
       // console.log('err==',errors)
@@ -242,9 +242,9 @@ export default function Account() {
       setCompleted(newCompleted)
       if (isLastStep() && isValid) {
         dispatch(updateProfile(getValues())).then(() => {
-          dispatch(showMessage({message:'Successfully updated',variant:'success'}))
+          // dispatch(showMessage({message:'Successfully updated',variant:'success'}))
         }).catch(err => {
-          dispatch(showMessage({message:'Something is wrong',variant:'error'}))
+          // dispatch(showMessage({message:'Something is wrong',variant:'error'}))
         })
       } else {
         handleNext()
