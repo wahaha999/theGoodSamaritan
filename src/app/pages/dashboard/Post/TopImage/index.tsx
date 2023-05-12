@@ -52,7 +52,7 @@ function TopImage() {
   const [preview, setPreview] = useState<any>([])
   const {control, watch} = methods
 
-  const images = watch('images')
+  // const images = watch('images')
 
   return (
     <>

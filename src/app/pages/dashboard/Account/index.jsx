@@ -137,7 +137,8 @@ const schema = yup.object().shape( {
   address: yup.string().required('You must enter a address'),
   city: yup.string().required('You must enter a city'),
   state: yup.string().required('You must enter a state'),
-  zip_code: yup.string().required('You must enter a Zip Code')
+  zip_code: yup.string().required('You must enter a Zip Code'),
+  timezone:yup.string().required('You must select Your Timezone')
   ,
 })
 

@@ -7,6 +7,11 @@ import {
   InputAdornment,
   Autocomplete,
   CircularProgress,
+  FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormHelperText,
 } from '@mui/material'
 import {Controller, useForm, useFormContext} from 'react-hook-form'
 import {yupResolver} from '@hookform/resolvers/yup'
@@ -18,6 +23,9 @@ import {IState} from '../../store/planSlice'
 import withReducer from 'src/app/store/withReducer'
 import reducer from '../../store'
 import {useAppSelector} from 'src/app/store/hook'
+import {ITimezone, timezone} from 'src/app/constants/timezone'
+import AccessTimeIcon from '@mui/icons-material/AccessTime'
+import {error} from 'console'
 
 type Props = {}
 
@@ -162,7 +170,7 @@ const Location = (props: Props) => {
               )}
             />
           </Grid>
-          <Grid item md={12}>
+          <Grid item md={6}>
             <Controller
               control={control}
               defaultValue=''
@@ -187,6 +195,35 @@ const Location = (props: Props) => {
                     ),
                   }}
                 />
+              )}
+            />
+          </Grid>
+          <Grid item md={6}>
+            <Controller
+              name='timezone'
+              control={control}
+              defaultValue=''
+              render={({field}) => (
+                <FormControl fullWidth error={!!errors.timezone}>
+                  <InputLabel>Timezone</InputLabel>
+                  <Select
+                    {...field}
+                    label='Timezone'
+                    fullWidth
+                    startAdornment={
+                      <InputAdornment position='start'>
+                        <AccessTimeIcon />
+                      </InputAdornment>
+                    }
+                  >
+                    {timezone.map((item: ITimezone, index: number) => (
+                      <MenuItem value={item.title} key={index}>
+                        {item.title}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <FormHelperText>{errors.timezone?.message as string}</FormHelperText>
+                </FormControl>
               )}
             />
           </Grid>
