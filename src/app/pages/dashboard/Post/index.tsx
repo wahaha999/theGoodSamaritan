@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {memo} from 'react'
 import {FormProvider, useForm} from 'react-hook-form'
 import PostEditor from './PostEditor'
 import PostOptions from './PostOptions'
@@ -16,4 +16,4 @@ const Post = (props: Props) => {
   )
 }
 
-export default Post
+export default memo(Post)

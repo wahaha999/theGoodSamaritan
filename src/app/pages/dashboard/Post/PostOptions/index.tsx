@@ -27,7 +27,9 @@ import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined'
 import moment from 'moment'
 import dayjs, {Dayjs} from 'dayjs'
 import GoogleMap from 'google-map-react'
-
+import MapContainer from '../GoogleMap'
+import {motion} from 'framer-motion'
+import {ITimezone, timezone} from 'src/app/constants/timezone'
 type Props = {}
 const labels = [
   {id: 1, color: 'red', title: 'Sharing Message'},
@@ -170,6 +172,7 @@ function Marker(props: any) {
 //   {title: 'Monty Python and the Holy Grail', year: 1975},
 // ]
 const PostOptions = (props: Props) => {
+  const {account} = useAppSelector(({user}) => user.user)
   const {
     control,
     watch,
@@ -194,173 +197,182 @@ const PostOptions = (props: Props) => {
   }, [category])
   return (
     <>
-      <Box sx={{borderRadius: '8px', margin: 4, backgroundColor: '#F6F5F9', padding: 4}}>
-        <Grid container alignItems='center'>
-          <Grid item md={4}>
-            <Typography>Select the Purpose*</Typography>
-          </Grid>
-          <Grid item md={8}>
-            <Controller
-              name='purpose'
-              control={control}
-              defaultValue=''
-              render={({field}) => (
-                <FormControl fullWidth error={!!errors.purpose}>
-                  <InputLabel required id='select-label'>
-                    Purpose
-                  </InputLabel>
-                  <Select
-                    required
-                    fullWidth
-                    labelId='select-label'
-                    id='label-select'
-                    {...field}
-                    startAdornment={
-                      <InputAdornment position='start'>
-                        <ShareIcon />
-                      </InputAdornment>
-                    }
-                    //   value={value}
-                    label='Purpose'
-                    //   onChange={handleChange}
-                    //   ref={ref}
-                    classes={{select: 'd-flex items-center space-x-12'}}
-                  >
-                    {labels.map((label) => (
-                      <MenuItem value={label.id} key={label.id} className='space-x-12'>
-                        <Box
-                          className='w-12 h-12 shrink-0 rounded-full'
-                          sx={{backgroundColor: label.color}}
-                        />
-                        <span>{label.title}</span>
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  <FormHelperText>{errors?.purpose?.message as string}</FormHelperText>
-                </FormControl>
-              )}
-            />
-          </Grid>
+      <Grid container alignItems='center' my={4}>
+        <Grid item md={4}>
+          <Typography>Select the Purpose*</Typography>
         </Grid>
-        <Grid container alignItems='center' justifyContent='space-between' mt={2}>
-          <Grid item container md={6} alignItems='center'>
-            <Grid item md={4}>
-              <Typography>Event Name*</Typography>
-            </Grid>
-            <Grid item md={8}>
-              <Controller
-                defaultValue=''
-                name='event_name'
-                control={control}
-                render={({field}) => (
-                  <TextField
-                    error={!!errors.event_name}
-                    helperText={errors.event_name?.message as string}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position='start'>
-                          <EmojiEventsOutlinedIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                    placeholder='Event Name'
-                    required
-                    label='Event Name'
-                    {...field}
-                    disabled={purpose !== 4}
-                    fullWidth
-                  />
-                )}
-              />
-            </Grid>
-          </Grid>
-          <Grid item container md={4} alignItems='center'>
-            <Grid item md={4}>
-              <Typography>Timezone</Typography>
-            </Grid>
-            <Grid item md={8}>
-              <Controller
-                name='timezone'
-                control={control}
-                defaultValue=''
-                render={({field}) => (
-                  <FormControl fullWidth>
-                    <InputLabel>Timezone</InputLabel>
-                    <Select
+        <Grid item md={8}>
+          <Controller
+            name='purpose'
+            control={control}
+            defaultValue=''
+            render={({field}) => (
+              <FormControl fullWidth error={!!errors.purpose}>
+                <InputLabel required id='select-label'>
+                  Purpose
+                </InputLabel>
+                <Select
+                  required
+                  fullWidth
+                  labelId='select-label'
+                  id='label-select'
+                  {...field}
+                  startAdornment={
+                    <InputAdornment position='start'>
+                      <ShareIcon />
+                    </InputAdornment>
+                  }
+                  //   value={value}
+                  label='Purpose'
+                  //   onChange={handleChange}
+                  //   ref={ref}
+                  classes={{select: 'd-flex items-center space-x-12'}}
+                >
+                  {labels.map((label) => (
+                    <MenuItem value={label.id} key={label.id} className='space-x-12'>
+                      <Box
+                        className='w-12 h-12 shrink-0 rounded-full'
+                        sx={{backgroundColor: label.color}}
+                      />
+                      <span>{label.title}</span>
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>{errors?.purpose?.message as string}</FormHelperText>
+              </FormControl>
+            )}
+          />
+        </Grid>
+      </Grid>
+      {purpose == 4 && (
+        <motion.div
+          initial={{height: 0}}
+          animate={{height: 'auto'}}
+          exit={{height: 0}}
+          transition={{duration: 0.3}}
+          style={{borderRadius: '8px', backgroundColor: '#F6F5F9', padding: '12px'}}
+        >
+          <Grid container alignItems='center' justifyContent='space-between' mt={2}>
+            <Grid item container md={6} alignItems='center'>
+              <Grid item md={4}>
+                <Typography>Event Name*</Typography>
+              </Grid>
+              <Grid item md={8}>
+                <Controller
+                  defaultValue=''
+                  name='event_name'
+                  control={control}
+                  render={({field}) => (
+                    <TextField
+                      error={!!errors.event_name}
+                      helperText={errors.event_name?.message as string}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position='start'>
+                            <EmojiEventsOutlinedIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                      placeholder='Event Name'
+                      required
+                      label='Event Name'
                       {...field}
-                      label='Timezone'
+                      disabled={purpose !== 4}
                       fullWidth
-                      startAdornment={
-                        <InputAdornment position='start'>
-                          <AccessTimeIcon />
-                        </InputAdornment>
-                      }
-                    >
-                      <MenuItem value='CT'>Central</MenuItem>
-                      <MenuItem value='PM'>Central</MenuItem>
-                      <MenuItem value='CMT'>Central</MenuItem>
-                      <MenuItem value='PO'>Central</MenuItem>
-                    </Select>
-                  </FormControl>
-                )}
-              />
+                    />
+                  )}
+                />
+              </Grid>
+            </Grid>
+            <Grid item container md={4} alignItems='center'>
+              <Grid item md={4}>
+                <Typography>Timezone</Typography>
+              </Grid>
+              <Grid item md={8}>
+                <Controller
+                  name='timezone'
+                  control={control}
+                  defaultValue={account?.timezone ?? ''}
+                  render={({field}) => (
+                    <FormControl fullWidth>
+                      <InputLabel>Timezone</InputLabel>
+                      <Select
+                        {...field}
+                        label='Timezone'
+                        fullWidth
+                        startAdornment={
+                          <InputAdornment position='start'>
+                            <AccessTimeIcon />
+                          </InputAdornment>
+                        }
+                      >
+                        {timezone.map((item: ITimezone, index: number) => (
+                          <MenuItem value={item.title} key={index}>
+                            {item.title}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
+                />
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-        <Grid container alignItems='center' justifyContent='space-between' mt={2}>
-          <Grid item container alignItems='center' md={5}>
-            <Grid item md={3}>
-              <Typography>Start Date</Typography>
+          <Grid container alignItems='center' justifyContent='space-between' mt={2}>
+            <Grid item container alignItems='center' md={5}>
+              <Grid item md={3}>
+                <Typography>Start Date</Typography>
+              </Grid>
+              <Grid item md={9} container justifyContent='flex-end'>
+                <Controller
+                  name='start'
+                  control={control}
+                  defaultValue={dayjs('2022-04-17')}
+                  render={({field: {onChange, value}}) => (
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={['DatePicker']}>
+                        <DatePicker
+                          defaultValue=''
+                          value={value}
+                          onChange={(value) => {
+                            onChange(value)
+                          }}
+                          label='Start date'
+                        />
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  )}
+                />
+              </Grid>
             </Grid>
-            <Grid item md={9} container justifyContent='flex-end'>
-              <Controller
-                name='start'
-                control={control}
-                defaultValue={dayjs('2022-04-17')}
-                render={({field: {onChange, value}}) => (
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DatePicker']}>
-                      <DatePicker
-                        defaultValue=''
-                        value={value}
-                        onChange={(value) => {
-                          onChange(value)
-                        }}
-                        label='Start date'
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                )}
-              />
+            <Grid item container alignItems='center' md={5}>
+              <Grid item md={3}>
+                <Typography>End Date</Typography>
+              </Grid>
+              <Grid item md={9} container justifyContent='flex-end'>
+                <Controller
+                  name='end'
+                  control={control}
+                  defaultValue={dayjs('2022-04-17')}
+                  render={({field: {onChange, value}}) => (
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={['DatePicker']}>
+                        <DatePicker
+                          value={value}
+                          onChange={(value) => {
+                            onChange(value)
+                          }}
+                          label='End date'
+                        />
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  )}
+                />
+              </Grid>
             </Grid>
           </Grid>
-          <Grid item container alignItems='center' md={5}>
-            <Grid item md={3}>
-              <Typography>End Date</Typography>
-            </Grid>
-            <Grid item md={9} container justifyContent='flex-end'>
-              <Controller
-                name='end'
-                control={control}
-                defaultValue={dayjs('2022-04-17')}
-                render={({field: {onChange, value}}) => (
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DatePicker']}>
-                      <DatePicker
-                        value={value}
-                        onChange={(value) => {
-                          onChange(value)
-                        }}
-                        label='End date'
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                )}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-      </Box>
+        </motion.div>
+      )}
       <Controller
         name='category'
         // defaultValue=''
@@ -368,7 +380,7 @@ const PostOptions = (props: Props) => {
         render={({field: {onChange, value}}) => (
           <>
             <Typography mx={4} my={2}>
-              Select Your Category
+              Select Your Category*
             </Typography>
             <FormControl fullWidth error={!!errors.category}>
               <Autocomplete
@@ -377,7 +389,6 @@ const PostOptions = (props: Props) => {
                   value.map((item: any) => {
                     temp.push(item.id)
                   })
-                  console.log('value==', temp)
                   onChange(temp)
                 }}
                 sx={{mx: 4, mb: 2}}
@@ -392,6 +403,7 @@ const PostOptions = (props: Props) => {
                 filterSelectedOptions
                 renderInput={(params) => (
                   <TextField
+                    required
                     error={!!errors.category}
                     helperText={errors.category?.message as string}
                     {...params}
@@ -412,7 +424,7 @@ const PostOptions = (props: Props) => {
           </>
         )}
       />
-      <Controller
+      {/* <Controller
         name='address'
         control={control}
         defaultValue={{lat: 10.99835602, lng: 77.01502627}}
@@ -440,7 +452,8 @@ const PostOptions = (props: Props) => {
             </GoogleMap>
           </div>
         )}
-      />
+      /> */}
+      <MapContainer />
     </>
   )
 }
