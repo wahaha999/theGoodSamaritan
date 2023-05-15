@@ -8,6 +8,7 @@ import {CKEditor} from '@ckeditor/ckeditor5-react'
 // import CustomizeClassicEditor from 'src/app/modules/core/CKeditor/CustomizeClassicEditor'
 // import CustomizeClassicEditor from 'src/app/modules/core/CKeditor/CustomizeClassicEditor'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import {uploadAdapter} from 'src/app/helpers/image-upload'
 // import {SimpleUploadAdapter} from '@ckeditor/ckeditor5-upload'
 // import CustomizeClassicEditor from 'src/app/modules/core/CKeditor/CustomizeClassicEditor'
 // import SimpleUploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter'
@@ -37,6 +38,13 @@ const AboutNonProfit = (props: Props) => {
     control,
     formState: {errors},
   } = methods
+
+  function uploadPlugin(editor: any) {
+    editor.plugins.get('FileRepository').createUploadAdapter = (loader: any) => {
+      return uploadAdapter(loader)
+    }
+  }
+
   return (
     <>
       <Typography>
@@ -91,6 +99,7 @@ const AboutNonProfit = (props: Props) => {
           // />
           <div id='editor-container'>
             <CKEditor
+              config={{extraPlugins: [uploadPlugin]}}
               editor={ClassicEditor}
               data={value}
               onReady={(editor) => {

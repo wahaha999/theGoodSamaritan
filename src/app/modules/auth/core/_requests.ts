@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 export const API_URL = process.env.REACT_APP_API_URL
+export const APP_PUBLIC_URL = process.env.REACT_APP_PUBLIC_URL
 
 export const GET_USER_BY_ACCESSTOKEN_URL = `${API_URL}/users/me`
 export const LOGIN_URL = `${API_URL}/auth/login`

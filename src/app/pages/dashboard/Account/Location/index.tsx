@@ -38,7 +38,7 @@ const Location = (props: Props) => {
   const {control, formState, watch} = methods
 
   const {errors} = formState
-  const {state} = useAppSelector(({Account}) => Account.plan)
+  const {state} = useAppSelector(({post}) => post.plan)
 
   const tempState: any[] = useMemo(() => {
     if (state) {
@@ -305,4 +305,4 @@ const Location = (props: Props) => {
   )
 }
 
-export default withReducer('Account', reducer)(Location)
+export default Location

@@ -8,6 +8,7 @@ import PostTitleItem from './components/PostTitleItem'
 import {motion} from 'framer-motion'
 import {useAppDispatch} from 'src/app/store/hook'
 import {getPosts} from './store/postSlice'
+import {getStates} from './store/planSlice'
 
 const container = {
   show: {
@@ -23,6 +24,11 @@ const item = {
 }
 
 const DashboardPage: FC = () => {
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    dispatch(getStates())
+  }, [])
+
   return (
     <>
       <motion.div variants={container} initial='hidden' animate='show'>
