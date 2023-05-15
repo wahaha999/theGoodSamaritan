@@ -29,9 +29,9 @@ export const createPost = createAsyncThunk('dashboard/post/create', async (post:
                     }
                 })
             } else {
-                if (item == "address") {
-                    formData.append('lat',post['address'].lat)
-                    formData.append('lng',post['address'].lng)
+                if (item == "location") {
+                    formData.append('lat',post['location'].lat)
+                    formData.append('lng',post['location'].lng)
                 } else {
                     
                     formData.append(item, post[item]);

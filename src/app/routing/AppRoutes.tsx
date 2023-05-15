@@ -11,7 +11,7 @@ import {PrivateRoutes} from './PrivateRoutes'
 import {ErrorsPage} from '../modules/errors/ErrorsPage'
 import {Logout, AuthPage} from '../modules/auth'
 import {App} from '../App'
-import { useAppSelector } from '../store/hook'
+import {useAppSelector} from '../store/hook'
 
 /**
  * Base URL of the website.
@@ -21,7 +21,7 @@ import { useAppSelector } from '../store/hook'
 const {PUBLIC_URL} = process.env
 
 const AppRoutes: FC = () => {
-  const {access_token} = useAppSelector(({ user }) => user);
+  const {access_token} = useAppSelector(({user}) => user)
   // const {currentUser} = useAuth()
   return (
     <BrowserRouter basename={PUBLIC_URL}>

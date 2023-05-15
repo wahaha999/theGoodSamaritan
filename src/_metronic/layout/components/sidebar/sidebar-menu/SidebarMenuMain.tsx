@@ -163,7 +163,50 @@ function SidebarMenuMain() {
       })
     }
   }, [category, setValue, allSelect])
-  const allValues = watch()
+
+  const watchedFields = watch()
+
+  React.useEffect(() => {
+    if (category.length > 0) {
+      // Iterate through the category data and check for changes in the related fields
+      category.forEach((item: any) => {
+        let allSubcategoriesChecked = true
+
+        // If the category field is true, set all related subcategory fields to true
+        if (watchedFields[item.name.toLowerCase()]) {
+          item.subcategories.forEach((sub: any) => {
+            setValue(sub.name.toLowerCase(), true)
+          })
+        } else {
+          item.subcategories.forEach((sub: any) => {
+            setValue(sub.name.toLowerCase(), false)
+          })
+        }
+      })
+    }
+  }, [category, setValue, watchedFields])
+
+  // React.useEffect(() => {
+  //   if (category.length > 0) {
+  //     // Iterate through the category data and check for changes in the subcategory fields
+  //     category.forEach((item: any) => {
+  //       let allSubcategoriesChecked = true
+  //       if (item.subcategories.length > 0) {
+  //         // Check if all subcategories are checked
+  //         item.subcategories.forEach((sub: any) => {
+  //           if (!watchedFields[sub.name.toLowerCase()]) {
+  //             allSubcategoriesChecked = false
+  //           }
+  //         })
+
+  //         if (!allSubcategoriesChecked) {
+  //           // If any subcategory field is false, set the parent category field to false
+  //           setValue(item.name.toLowerCase(), false)
+  //         }
+  //       }
+  //     })
+  //   }
+  // }, [category, setValue, watchedFields])
 
   // React.useEffect(() => {
   //   // console.log('value=====================', allValues)

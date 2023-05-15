@@ -16,6 +16,8 @@ import {
   DialogTitle,
   Divider,
   Grid,
+  Menu,
+  MenuItem,
   Paper,
   Skeleton,
   Stack,
@@ -195,6 +197,15 @@ function MyPostsDashboard() {
   const [expanded, setExpanded] = React.useState(false)
   const [loading, setLoading] = React.useState(true)
   const [popup, setPopup] = React.useState(false)
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
   const methods = useForm({
     mode: 'onChange',
     defaultValues: {},
@@ -207,6 +218,7 @@ function MyPostsDashboard() {
   } = methods
   const {handleSubmit} = methods
   const onSubmit = (data: any) => {
+    console.log('data==', data)
     dispatch(createPost(data))
       .then(() => {
         // dispatch(showMessage({message: 'Successful posted', variant: 'success'}))
@@ -221,6 +233,13 @@ function MyPostsDashboard() {
       setLoading(false)
     }
   }, [posts])
+
+  React.useEffect(() => {
+    if (user.account) {
+      const {address, state, city, zip_code} = user.account
+      reset({address, state, city, zip_code, location: {lat: 10.99835602, lng: 77.01502627}})
+    }
+  }, [user, reset])
 
   // const descriptionElementRef = React.useRef<HTMLElement>(null)
   // React.useEffect(() => {
@@ -266,9 +285,34 @@ function MyPostsDashboard() {
                     <Button variant='outlined' sx={{mr: 4}}>
                       Make A Connection
                     </Button>
-                    <IconButton aria-label='settings'>
-                      <MoreVertIcon />
-                    </IconButton>
+                    {post?.user?.account_dbkey == user.account_dbkey && (
+                      <>
+                        <IconButton aria-label='settings' onClick={handleClick}>
+                          <MoreVertIcon />
+                        </IconButton>
+                        <Menu
+                          elevation={1}
+                          anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'right',
+                          }}
+                          transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                          }}
+                          id='basic-menu'
+                          anchorEl={anchorEl}
+                          open={open}
+                          onClose={handleClose}
+                          MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                          }}
+                        >
+                          <MenuItem onClick={handleClose}>Delete</MenuItem>
+                          <MenuItem onClick={handleClose}>Edit</MenuItem>
+                        </Menu>
+                      </>
+                    )}
                   </>
                 }
                 title={<Typography>{post?.user?.account.non_profit_name}</Typography>}
@@ -291,7 +335,7 @@ function MyPostsDashboard() {
         ) : ( */}
               <CardMedia
                 component='div'
-                sx={{maxHeight: '500px'}}
+                // sx={{maxHeight: '500px'}}
                 // height='500px'
                 // // onLoad={handleImageLoaded}
                 // image={toServerUrl('/media/post/image/' + JSON.parse(post?.images)[0])}
@@ -300,12 +344,12 @@ function MyPostsDashboard() {
                 {loading ? (
                   <Skeleton height={200} animation='wave' variant='rectangular' />
                 ) : (
-                  <Carousel showThumbs={false} autoPlay infiniteLoop>
+                  <Carousel showThumbs={false} autoPlay infiniteLoop dynamicHeight>
                     {JSON.parse(post?.images).map((item: any, index: number) => (
                       <div key={index}>
                         <img
                           src={toServerUrl('/media/post/image/' + item)}
-                          style={{maxHeight: '500px'}}
+                          style={{maxHeight: '500px', objectFit: 'cover'}}
                         />
                       </div>
                     ))}
@@ -318,9 +362,13 @@ function MyPostsDashboard() {
                 <Divider sx={{m: 4, border: '1px solid'}} />
                 <Grid container alignItems='center' sx={{mb: 2}}>
                   <LocationOnIcon color='primary' sx={{mr: 2}} />
-                  <Typography color='purple'>
-                    lat: {post?.lat} lng: {post?.lng}
-                  </Typography>
+                  {post?.address ? (
+                    <Typography color='purple'>{post?.address}</Typography>
+                  ) : (
+                    <Typography color='purple'>
+                      lat: {post?.lat} lng: {post?.lng}
+                    </Typography>
+                  )}
                 </Grid>
                 <Grid container alignItems='center'>
                   <Avatar
@@ -395,7 +443,7 @@ function MyPostsDashboard() {
           </motion.div>
         ))}
       </DashboardPaper>
-      <AnimatedDialog open={popup} scroll='paper' maxWidth='md'>
+      <AnimatedDialog open={popup} scroll='paper' maxWidth='md' fullWidth>
         <FormProvider {...methods}>
           <DialogTitle>
             <>
