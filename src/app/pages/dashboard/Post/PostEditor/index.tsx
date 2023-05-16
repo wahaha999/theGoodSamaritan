@@ -27,6 +27,23 @@ const PostEditor = (props: Props) => {
           <CKEditor
             config={{
               extraPlugins: [uploadPlugin],
+              toolbar: [
+                'heading',
+                '|',
+                'bold',
+                'italic',
+                'link',
+                'bulletedList',
+                'numberedList',
+                '|',
+                'indent',
+                'outdent',
+                '|',
+                'imageUpload',
+                'mediaEmbed',
+                'undo',
+                'redo',
+              ],
               mediaEmbed: {
                 previewsInData: true,
               },
@@ -35,13 +52,12 @@ const PostEditor = (props: Props) => {
             data={value}
             onReady={(editor) => {
               // You can store the "editor" and use when it is needed.
-              console.log('Editor is ready to use!', editor)
+              // console.log('Editor is ready to use!', editor)
             }}
             onChange={(event, editor) => {
               let data = editor.getData()
-              const regex = /(https:\/\/www\.youtube\.com\/embed\/[a-zA-Z0-9_-]+)/g
-              data = data.replace(regex, '$1?autoplay=1')
-              console.log('data==', data)
+              // const regex = /(https:\/\/www\.youtube\.com\/embed\/[a-zA-Z0-9_-]+)/g
+              // data = data.replace(regex, '$1?autoplay=1')
               onChange(data)
               // console.log({event, editor, data})
             }}

@@ -9,15 +9,15 @@ import {
   Tooltip,
   Typography,
   styled,
-  tooltipClasses
+  tooltipClasses,
 } from '@mui/material'
 import axios from 'axios'
-import { useCallback, useEffect, useState } from 'react'
-import { Controller, useFormContext } from 'react-hook-form'
-import { useDispatch } from 'react-redux'
-import { API_URL } from 'src/app/modules/auth/core/_requests'
+import {useCallback, useEffect, useState} from 'react'
+import {Controller, useFormContext} from 'react-hook-form'
+import {useDispatch} from 'react-redux'
+import {API_URL} from 'src/app/modules/auth/core/_requests'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
-import { showMessage } from 'src/app/store/fuse/messageSlice'
+import {showMessage} from 'src/app/store/fuse/messageSlice'
 
 const LightTooltip = styled(({className, ...props}) => (
   <Tooltip {...props} classes={{popper: className}} arrow />
@@ -43,7 +43,7 @@ const Verification = (props) => {
     if (typeof doc !== 'string') {
       setFilePreviews([...doc])
     } else {
-      setFilePreviews([...JSON.parse(doc)])
+      setFilePreviews([...JSON.parse(doc ? doc : '[]')])
     }
   }, [])
 
@@ -141,7 +141,7 @@ const Verification = (props) => {
       <Typography my={3}>Upload your Non-Profit Documentation</Typography>
       <Controller
         name='doc'
-        // defaultValue={[]}
+        defaultValue={'[]'}
         control={control}
         render={({field: {onChange, value}}) => {
           // setFilePreviews([...filePreviews,...value])

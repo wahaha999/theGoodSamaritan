@@ -41,7 +41,7 @@ export const createPost = createAsyncThunk('dashboard/post/create', async (post:
         })
         const { data } = await axios.post(`${API_URL}/post/create`,formData)
         dispatch(getPosts());
-        dispatch(showMessage({ message: 'Successful posted' }))
+        dispatch(showMessage({ message: 'Successful posted' ,variant:'success'}))
         // return data;
     } catch (error:any) {
         console.log("🚀 ~ file: postSlice.ts:26 ~ createPost ~ error:", error)
@@ -60,6 +60,22 @@ export const getPosts = createAsyncThunk('dashboard/post/get', async (_, { getSt
         
     }
 })
+export const deletePost = createAsyncThunk('dashboard/post/delete', async (id:number, { getState, dispatch }) => {
+    try {
+        
+        const { data } = await axios.delete(`${API_URL}/post/delete/${id}`);
+        
+        // console.log("🚀 ~ file: postSlice.ts:48 ~ getPosts ~ data:", data);
+        dispatch(getPosts());
+        dispatch(showMessage({ message: 'Successfully deleted' ,variant:'success'}))
+        // return data;
+        
+    } catch (error:any) {
+        console.log('error==',error)
+        dispatch(showMessage({message:error.response.data.message,variant:'error'}))
+    }
+})
+
 
 const postSlice = createSlice({
   name: 'post',
