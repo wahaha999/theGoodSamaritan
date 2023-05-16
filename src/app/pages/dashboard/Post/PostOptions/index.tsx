@@ -30,6 +30,7 @@ import GoogleMap from 'google-map-react'
 import MapContainer from '../GoogleMap'
 import {motion} from 'framer-motion'
 import {ITimezone, timezone} from 'src/app/constants/timezone'
+import {DateTimePicker} from '@mui/x-date-pickers'
 type Props = {}
 const labels = [
   {id: 1, color: 'red', title: 'Sharing Message'},
@@ -178,8 +179,8 @@ const PostOptions = (props: Props) => {
     watch,
     formState: {errors},
   } = useFormContext()
-  console.log('errors==', errors)
   const purpose = watch('purpose')
+  const start = watch('start')
   const {category} = useAppSelector(({sidebar}) => sidebar)
   const all_category = useMemo(() => {
     let temp: any = []
@@ -204,8 +205,8 @@ const PostOptions = (props: Props) => {
         <Grid item md={8}>
           <Controller
             name='purpose'
-            control={control}
             defaultValue=''
+            control={control}
             render={({field}) => (
               <FormControl fullWidth error={!!errors.purpose}>
                 <InputLabel required id='select-label'>
@@ -215,6 +216,7 @@ const PostOptions = (props: Props) => {
                   required
                   fullWidth
                   labelId='select-label'
+                  placeholder='Select your purpose'
                   id='label-select'
                   {...field}
                   startAdornment={
@@ -292,7 +294,7 @@ const PostOptions = (props: Props) => {
                 <Controller
                   name='timezone'
                   control={control}
-                  defaultValue={account?.timezone ?? ''}
+                  defaultValue={account?.timezone || ''}
                   render={({field}) => (
                     <FormControl fullWidth>
                       <InputLabel>Timezone</InputLabel>
@@ -318,20 +320,20 @@ const PostOptions = (props: Props) => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid container alignItems='center' justifyContent='space-between' mt={2}>
-            <Grid item container alignItems='center' md={5}>
-              <Grid item md={3}>
+          <Grid container alignItems='center' mt={2}>
+            <Grid item container alignItems='center' md={6} gap={2}>
+              <Grid item>
                 <Typography>Start Date</Typography>
               </Grid>
-              <Grid item md={9} container justifyContent='flex-end'>
+              <Grid item md='auto' container justifyContent='flex-end'>
                 <Controller
                   name='start'
                   control={control}
                   defaultValue={dayjs('2022-04-17')}
                   render={({field: {onChange, value}}) => (
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={['DatePicker']}>
-                        <DatePicker
+                      <DemoContainer components={['DateTimePicker']}>
+                        <DateTimePicker
                           defaultValue=''
                           value={value}
                           onChange={(value) => {
@@ -345,19 +347,20 @@ const PostOptions = (props: Props) => {
                 />
               </Grid>
             </Grid>
-            <Grid item container alignItems='center' md={5}>
-              <Grid item md={3}>
+            <Grid item container alignItems='center' md={6} justifyContent='flex-end' gap={2}>
+              <Grid item>
                 <Typography>End Date</Typography>
               </Grid>
-              <Grid item md={9} container justifyContent='flex-end'>
+              <Grid item md='auto' container justifyContent='flex-end'>
                 <Controller
                   name='end'
                   control={control}
-                  defaultValue={dayjs('2022-04-17')}
+                  defaultValue={dayjs('2022-04-18')}
                   render={({field: {onChange, value}}) => (
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={['DatePicker']}>
-                        <DatePicker
+                      <DemoContainer components={['DateTimePicker']}>
+                        <DateTimePicker
+                          minDate={start}
                           value={value}
                           onChange={(value) => {
                             onChange(value)

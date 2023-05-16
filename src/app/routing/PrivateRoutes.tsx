@@ -8,17 +8,18 @@ import {getCSSVariableValue} from '../../_metronic/assets/ts/_utils'
 import {WithChildren} from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
 import {useAppSelector} from '../store/hook'
-// import Account from '../pages/dashboard/Account'
+import Account from '../pages/dashboard/Account'
+import AccountPage from '../modules/accounts/AccountPage'
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
   const WizardsPage = lazy(() => import('../modules/wizards/WizardsPage'))
-  const AccountPage = lazy(() => import('../modules/accounts/AccountPage'))
+  // const AccountPage = lazy(() => import('../modules/accounts/AccountPage'))
   const WidgetsPage = lazy(() => import('../modules/widgets/WidgetsPage'))
   const ChatPage = lazy(() => import('../modules/apps/chat/ChatPage'))
   const UsersPage = lazy(() => import('../modules/apps/user-management/UsersPage'))
   const Subscription = lazy(() => import('../pages/dashboard/Subscription/index'))
-  const Account = lazy(() => import('../pages/dashboard/Account'))
+  // const Account = lazy(() => import('../pages/dashboard/Account'))
 
   const user = useAppSelector(({user}) => {
     return user.user
@@ -39,9 +40,9 @@ const PrivateRoutes = () => {
               <Route
                 path='account/*'
                 element={
-                  <SuspensedView>
-                    <Account />
-                  </SuspensedView>
+                  // <SuspensedView>
+                  <Account />
+                  // </SuspensedView>
                 }
               />
               <Route
@@ -80,9 +81,9 @@ const PrivateRoutes = () => {
               <Route
                 path='crafted/account/*'
                 element={
-                  <SuspensedView>
-                    <AccountPage />
-                  </SuspensedView>
+                  // <SuspensedView>
+                  <AccountPage />
+                  // </SuspensedView>
                 }
               />
               <Route

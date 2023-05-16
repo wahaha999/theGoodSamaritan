@@ -9,6 +9,7 @@ import {CKEditor} from '@ckeditor/ckeditor5-react'
 // import CustomizeClassicEditor from 'src/app/modules/core/CKeditor/CustomizeClassicEditor'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import {uploadAdapter} from 'src/app/helpers/image-upload'
+import './editor.css'
 // import {SimpleUploadAdapter} from '@ckeditor/ckeditor5-upload'
 // import CustomizeClassicEditor from 'src/app/modules/core/CKeditor/CustomizeClassicEditor'
 // import SimpleUploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter'
@@ -97,7 +98,7 @@ const AboutNonProfit = (props: Props) => {
           //     onChange(e)
           //   }}
           // />
-          <div id='editor-container'>
+          <div id='editor-container' style={{height: '300px'}}>
             <CKEditor
               config={{extraPlugins: [uploadPlugin]}}
               editor={ClassicEditor}

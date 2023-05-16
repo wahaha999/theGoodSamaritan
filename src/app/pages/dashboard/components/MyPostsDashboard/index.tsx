@@ -43,7 +43,7 @@ import {Controller, FormProvider, useForm} from 'react-hook-form'
 import * as yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
-import {createPost} from '../../store/postSlice'
+import {createPost, deletePost} from '../../store/postSlice'
 import {showMessage} from 'src/app/store/fuse/messageSlice'
 import withReducer from 'src/app/store/withReducer'
 import reducer from '../../store'
@@ -159,7 +159,7 @@ function CustomizedInputBase(props: ICustomizedInputBase & InputBaseProps) {
 
 const schema: any = yup.object().shape({
   purpose: yup.number().required('Purpose is required'),
-  title: yup.string().required('Title is required'),
+  // title: yup.string().required('Title is required'),
   event_name: yup
     .string()
     .test(
@@ -197,11 +197,13 @@ function MyPostsDashboard() {
   const [expanded, setExpanded] = React.useState(false)
   const [loading, setLoading] = React.useState(true)
   const [popup, setPopup] = React.useState(false)
+  const [postId, setPostId] = React.useState<number>(0)
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>, id: number) => {
     setAnchorEl(event.currentTarget)
+    setPostId(id)
   }
   const handleClose = () => {
     setAnchorEl(null)
@@ -237,9 +239,21 @@ function MyPostsDashboard() {
   React.useEffect(() => {
     if (user.account) {
       const {address, state, city, zip_code} = user.account
-      reset({address, state, city, zip_code, location: {lat: 10.99835602, lng: 77.01502627}})
+      reset({
+        content: '',
+        event_name: undefined,
+        category: undefined,
+        images: [],
+        timezone: '',
+        purpose: undefined,
+        address,
+        state,
+        city,
+        zip_code,
+        location: {lat: 10.99835602, lng: 77.01502627},
+      })
     }
-  }, [user, reset])
+  }, [user, popup, reset])
 
   // const descriptionElementRef = React.useRef<HTMLElement>(null)
   // React.useEffect(() => {
@@ -253,7 +267,7 @@ function MyPostsDashboard() {
   return (
     <>
       <DashboardPaper>
-        <AppBar position='sticky' color='inherit' sx={{boxShadow: 'none'}}>
+        <AppBar position='sticky' color='inherit' sx={{boxShadow: 'none', zIndex: 999}}>
           <motion.div
             initial={{scale: 1.1}}
             animate={{scale: 1}}
@@ -287,7 +301,7 @@ function MyPostsDashboard() {
                     </Button>
                     {post?.user?.account_dbkey == user.account_dbkey && (
                       <>
-                        <IconButton aria-label='settings' onClick={handleClick}>
+                        <IconButton aria-label='settings' onClick={(e) => handleClick(e, post?.id)}>
                           <MoreVertIcon />
                         </IconButton>
                         <Menu
@@ -308,7 +322,14 @@ function MyPostsDashboard() {
                             'aria-labelledby': 'basic-button',
                           }}
                         >
-                          <MenuItem onClick={handleClose}>Delete</MenuItem>
+                          <MenuItem
+                            onClick={() => {
+                              dispatch(deletePost(postId))
+                              handleClose()
+                            }}
+                          >
+                            Delete
+                          </MenuItem>
                           <MenuItem onClick={handleClose}>Edit</MenuItem>
                         </Menu>
                       </>
@@ -363,7 +384,14 @@ function MyPostsDashboard() {
                 <Grid container alignItems='center' sx={{mb: 2}}>
                   <LocationOnIcon color='primary' sx={{mr: 2}} />
                   {post?.address ? (
-                    <Typography color='purple'>{post?.address}</Typography>
+                    <Typography
+                      color='purple'
+                      component='a'
+                      target='_blank'
+                      href={`https://www.google.com/maps/place/${post?.address}`}
+                    >
+                      {post?.address}
+                    </Typography>
                   ) : (
                     <Typography color='purple'>
                       lat: {post?.lat} lng: {post?.lng}
@@ -443,7 +471,16 @@ function MyPostsDashboard() {
           </motion.div>
         ))}
       </DashboardPaper>
-      <AnimatedDialog open={popup} scroll='paper' maxWidth='md' fullWidth>
+      <AnimatedDialog
+        open={popup}
+        scroll='paper'
+        maxWidth='md'
+        fullWidth
+        disableEnforceFocus
+        disableRestoreFocus
+        disablePortal
+        sx={{zIndex: 1000}}
+      >
         <FormProvider {...methods}>
           <DialogTitle>
             <>
@@ -489,7 +526,7 @@ function MyPostsDashboard() {
                   </IconButton>
                 </motion.div>
               </Stack>
-              <motion.div
+              {/* <motion.div
                 initial={{scale: 1.1}}
                 animate={{scale: 1}}
                 transition={{type: 'spring', damping: 10, stiffness: 100}}
@@ -506,7 +543,7 @@ function MyPostsDashboard() {
                     />
                   )}
                 />
-              </motion.div>
+              </motion.div> */}
             </>
           </DialogTitle>
           <DialogContent tabIndex={-1}>

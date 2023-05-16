@@ -10,20 +10,24 @@ export const updateProfile = createAsyncThunk(
     try {
       const formData = new FormData()
       Object.keys(data).map((item) => {
-          if (item == 'doc') {
-              let temp_doc = [];
-              if (typeof data['doc'] == 'string') {
-                   temp_doc = JSON.parse(data['doc'])
-              } else {
-                  temp_doc = data['doc'];
-              }
-              temp_doc.forEach((item: any, index: number) => {
-                  if (typeof item !== 'string') {
-                      formData.append(`files[${index}]`, item.file)
-                    } else {
-              formData.append(`docs[${index}]`, item)
+        if (item == 'doc') {
+          if (data['doc']) {
+              
+            let temp_doc = [];
+            if (typeof data['doc'] == 'string') {
+              temp_doc = JSON.parse(data['doc'])
+            } else {
+              temp_doc = data['doc'];
             }
-        })
+            temp_doc.forEach((item: any, index: number) => {
+              if (typeof item !== 'string') {
+                formData.append(`files[${index}]`, item.file)
+              } else {
+                formData.append(`docs[${index}]`, item)
+         
+              }
+            })
+          }
     } else {
         formData.append(item, data[item])
     }
