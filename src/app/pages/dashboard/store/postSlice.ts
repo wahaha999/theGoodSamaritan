@@ -17,6 +17,7 @@ export interface IPostData {
 const initialState:any = [];
 
 export const createPost = createAsyncThunk('dashboard/post/create', async (post: any, { getState, dispatch }) => {
+    console.log("🚀 ~ file: postSlice.ts:20 ~ createPost ~ post:", post)
     const formData = new FormData();
     try {
         Object.keys(post).map((item, index) => {
@@ -33,8 +34,13 @@ export const createPost = createAsyncThunk('dashboard/post/create', async (post:
                     formData.append('lat',post['location'].lat)
                     formData.append('lng',post['location'].lng)
                 } else {
+                    if (item == "category") {
+                        formData.append('category',JSON.stringify(post['category']))
+                    } else {
+                        
+                        formData.append(item, post[item]);
+                    }
                     
-                    formData.append(item, post[item]);
                 }
                 
             }

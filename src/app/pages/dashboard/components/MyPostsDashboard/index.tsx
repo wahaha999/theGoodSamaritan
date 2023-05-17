@@ -173,7 +173,7 @@ const schema: any = yup.object().shape({
         return true
       }
     ),
-  category: yup.array().required('Category is required'),
+  category: yup.array().min(1, 'Category is required and must contain at least one item'),
 })
 
 const initValue = {
@@ -197,16 +197,20 @@ function MyPostsDashboard() {
   const [expanded, setExpanded] = React.useState(false)
   const [loading, setLoading] = React.useState(true)
   const [popup, setPopup] = React.useState(false)
-  const [postId, setPostId] = React.useState<number>(0)
+  const [edit, setEdit] = React.useState(false)
+  const [postData, setPostData] = React.useState<any>({})
+  const [confirm, setConfirm] = React.useState(false)
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>, id: number) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>, post: any) => {
     setAnchorEl(event.currentTarget)
-    setPostId(id)
+    console.log('post==', post)
+    setPostData(post)
   }
   const handleClose = () => {
     setAnchorEl(null)
+    setEdit(false)
   }
   const methods = useForm({
     mode: 'onChange',
@@ -228,6 +232,8 @@ function MyPostsDashboard() {
       .catch(() => {})
       .finally(() => {
         setPopup(false)
+        setEdit(false)
+        setPostData({})
       })
   }
   React.useEffect(() => {
@@ -238,23 +244,36 @@ function MyPostsDashboard() {
 
   React.useEffect(() => {
     if (user.account) {
-      const {address, state, city, zip_code} = user.account
-      reset({
-        content: '',
-        event_name: undefined,
-        category: undefined,
-        images: [],
-        timezone: '',
-        purpose: undefined,
-        address,
-        state,
-        city,
-        zip_code,
-        location: {lat: 10.99835602, lng: 77.01502627},
-      })
+      if (edit && postData) {
+        reset({
+          ...postData,
+        })
+      } else {
+        const {address, state, city, zip_code} = user.account
+        reset({
+          content: '',
+          event_name: undefined,
+          category: undefined,
+          images: [],
+          timezone: '',
+          purpose: undefined,
+          address,
+          state,
+          city,
+          zip_code,
+          location: {lat: 10.99835602, lng: 77.01502627},
+        })
+      }
     }
-  }, [user, popup, reset])
+  }, [user, popup, reset, edit])
 
+  // React.useEffect(() => {
+  //   if (edit && postData) {
+  //     reset({
+  //       ...postData,
+  //     })
+  //   }
+  // }, [edit, reset])
   // const descriptionElementRef = React.useRef<HTMLElement>(null)
   // React.useEffect(() => {
   //   if (popup) {
@@ -287,13 +306,10 @@ function MyPostsDashboard() {
           <motion.div variants={itemVariants} key={index}>
             <Card sx={{width: '100%', margin: '16px 0px', border: '1px solid #D5DBDB'}}>
               <CardHeader
-                avatar={
-                  <Avatar
-                    sx={{bgcolor: red[500]}}
-                    aria-label='recipe'
-                    src={toServerUrl('/media/account/avatar/' + post?.user?.account.avatar)}
-                  />
-                }
+                // avatar={
+
+                // }
+
                 action={
                   <>
                     <Button variant='outlined' sx={{mr: 4}}>
@@ -301,7 +317,7 @@ function MyPostsDashboard() {
                     </Button>
                     {post?.user?.account_dbkey == user.account_dbkey && (
                       <>
-                        <IconButton aria-label='settings' onClick={(e) => handleClick(e, post?.id)}>
+                        <IconButton aria-label='settings' onClick={(e) => handleClick(e, post)}>
                           <MoreVertIcon />
                         </IconButton>
                         <Menu
@@ -324,27 +340,62 @@ function MyPostsDashboard() {
                         >
                           <MenuItem
                             onClick={() => {
-                              dispatch(deletePost(postId))
+                              setConfirm(true)
                               handleClose()
                             }}
                           >
                             Delete
                           </MenuItem>
-                          <MenuItem onClick={handleClose}>Edit</MenuItem>
+                          <MenuItem
+                            onClick={() => {
+                              handleClose()
+                              setEdit(true)
+                              setPopup(true)
+                            }}
+                          >
+                            Edit
+                          </MenuItem>
                         </Menu>
                       </>
                     )}
                   </>
                 }
-                title={<Typography>{post?.user?.account.non_profit_name}</Typography>}
+                title={
+                  <Grid container direction='row' alignItems='center'>
+                    {/* <Grid container item alignItems='center'> */}
+                    <Avatar
+                      sx={{bgcolor: red[500], mr: 2}}
+                      aria-label='recipe'
+                      src={toServerUrl('/media/account/avatar/' + post?.user?.account.avatar)}
+                    />
+                    <Typography>{post?.user?.account.non_profit_name}</Typography>
+                    {/* </Grid> */}
+                    <Divider
+                      orientation='vertical'
+                      flexItem
+                      sx={{border: '1px solid black', mx: 2, my: 1}}
+                    />
+                    {/* <Grid container item alignItems='center'> */}
+                    <Avatar
+                      sx={{mr: 2}}
+                      src={toServerUrl('/media/user/avatar/' + post?.user?.avatar)}
+                    />
+                    <Typography>
+                      {`${post?.user?.first_name} ${post?.user?.last_name}`} posted on{' '}
+                      {moment(post?.created_at).format('MM/DD/YY')} at{' '}
+                      {moment(post?.created_at).format('h:mm A')}
+                    </Typography>
+                    {/* </Grid> */}
+                  </Grid>
+                }
                 subheader={
                   post?.event_name && (
-                    <Grid container>
-                      <Typography sx={{mr: 2}}>Event Name:{post?.event_name}</Typography>
+                    <Grid container mt={1}>
+                      <Typography sx={{mr: 2}}>Event Name: {post?.event_name}</Typography>
                       <Typography>
-                        Starts on {moment(post?.start).format('DD/MM/YY')} at{' '}
+                        Starts on {moment(post?.start).format('MM/DD/YY')} at{' '}
                         {moment(post?.start).format('h:mm A')} and end on{' '}
-                        {moment(post?.end).format('DD/MM/YY')} at{' '}
+                        {moment(post?.end).format('MM/DD/YY')} at{' '}
                         {moment(post?.end).format('h:mm A')}
                       </Typography>
                     </Grid>
@@ -388,7 +439,7 @@ function MyPostsDashboard() {
                       color='purple'
                       component='a'
                       target='_blank'
-                      href={`https://www.google.com/maps/place/${post?.address}`}
+                      href={`https://www.google.com/maps/place/${post?.address} ${post?.city} ${post?.state} ${post?.zip_code}`}
                     >
                       {post?.address}
                     </Typography>
@@ -398,17 +449,7 @@ function MyPostsDashboard() {
                     </Typography>
                   )}
                 </Grid>
-                <Grid container alignItems='center'>
-                  <Avatar
-                    sx={{mr: 2}}
-                    src={toServerUrl('/media/user/avatar/' + post?.user?.avatar)}
-                  />
-                  <Typography>
-                    {`${post?.user?.first_name} ${post?.user?.last_name}`} posted on{' '}
-                    {moment(post?.created_at).format('DD/MM/YY')} at{' '}
-                    {moment(post?.created_at).format('h:mm A')}
-                  </Typography>
-                </Grid>
+
                 {/* <Typography variant='body2' color='text.secondary'>
                 This impressive paella is a perfect party dish and a fun meal to cook together with
                 your guests. Add 1 cup of frozen peas along with the mussels, if you like.
@@ -519,6 +560,8 @@ function MyPostsDashboard() {
                 >
                   <IconButton
                     onClick={() => {
+                      setPostData({})
+                      setEdit(false)
                       setPopup(false)
                     }}
                   >
@@ -551,6 +594,37 @@ function MyPostsDashboard() {
           </DialogContent>
         </FormProvider>
       </AnimatedDialog>
+      <Dialog
+        open={confirm}
+        onClose={() => {
+          setConfirm(false)
+        }}
+      >
+        <DialogTitle>Notice</DialogTitle>
+        <DialogContent>
+          <Typography>Are you sure?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant='outlined'
+            color='error'
+            onClick={() => {
+              dispatch(deletePost(postData?.id))
+              setConfirm(false)
+            }}
+          >
+            Yes
+          </Button>
+          <Button
+            variant='outlined'
+            onClick={() => {
+              setConfirm(false)
+            }}
+          >
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
       {/* <AnimatePresence>
           {popup && (
             <Dialog PaperComponent={motion.div} open={popup}> */}
