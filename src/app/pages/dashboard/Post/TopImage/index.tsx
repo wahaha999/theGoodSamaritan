@@ -7,7 +7,8 @@ import Box from '@mui/material/Box'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 import {generateGUID} from 'src/app/helpers/generate_id'
 import {Typography} from '@mui/material'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
+import {toServerUrl} from 'src/_metronic/helpers'
 
 const Root = styled('div')(({theme}) => ({
   margin: 4,
@@ -50,9 +51,19 @@ const Root = styled('div')(({theme}) => ({
 function TopImage() {
   const methods = useFormContext()
   const [preview, setPreview] = useState<any>([])
-  const {control, watch} = methods
+  const [isPreviewSet, setIsPreviewSet] = useState<boolean>(false)
+  const {control, watch, setValue} = methods
 
-  // const images = watch('images')
+  const images = watch('images')
+  useEffect(() => {
+    if (images.length > 0 && !isPreviewSet) {
+      if (typeof images == 'string') {
+        setPreview([...JSON.parse(images ? images : '[]')])
+        setValue('images', [...JSON.parse(images ? images : '[]')])
+        setIsPreviewSet(true)
+      }
+    }
+  }, [images, isPreviewSet])
 
   return (
     <>
@@ -102,8 +113,12 @@ function TopImage() {
                         })
                       }
                       const newImage = await readFileAsync()
+                      // console.log('imagevalue==', value)
                       setPreview([newImage, ...preview])
-                      onChange([e.target.files[0], ...(value ? value : [])])
+                      onChange([
+                        e.target.files[0],
+                        ...(typeof value == 'string' ? JSON.parse(value) : value),
+                      ])
                     }}
                   />
                   <FuseSvgIcon size={32} color='action'>
@@ -114,23 +129,36 @@ function TopImage() {
                   <div
                     onClick={() => {
                       preview.splice(index, 1)
-                      value.splice(index, 1)
+                      let temp
+                      if (typeof value == 'string') {
+                        temp = JSON.parse(value)
+                        temp.splice(index, 1)
+                        onChange(temp)
+                      } else {
+                        value.splice(index, 1)
+                        onChange(value)
+                      }
+                      // console.log('splice==', temp)
                       setPreview(preview)
-                      onChange(value)
                     }}
                     // onKeyDown={() => onChange(media.id)}
                     role='button'
                     tabIndex={0}
-                    className={clsx(
-                      'productImageItem flex items-center justify-center relative w-128 h-128 rounded-16 mx-12 mb-24 overflow-hidden cursor-pointer outline-none shadow hover:shadow-lg',
-                      media.id === value && 'featured'
-                    )}
-                    key={media.id}
+                    className='productImageItem flex items-center justify-center relative w-128 h-128 rounded-16 mx-12 mb-24 overflow-hidden cursor-pointer outline-none shadow hover:shadow-lg'
+                    key={index}
                   >
                     <FuseSvgIcon className='productImageFeaturedStar'>
                       heroicons-solid:trash
                     </FuseSvgIcon>
-                    <img className='max-w-none w-auto h-full' src={media.url} alt='product' />
+                    <img
+                      className='max-w-none w-auto h-full'
+                      src={
+                        typeof media == 'string'
+                          ? toServerUrl('/media/post/image/' + media)
+                          : media.url
+                      }
+                      alt='product'
+                    />
                   </div>
                 ))}
               </>

@@ -1,5 +1,11 @@
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-import {Image, ImageResize, ImageResizeEditing, ImageResizeHandles} from '@ckeditor/ckeditor5-image'
+import {
+  Image,
+  ImageEditing,
+  ImageResize,
+  ImageResizeEditing,
+  ImageResizeHandles,
+} from '@ckeditor/ckeditor5-image'
 import {MediaEmbed} from '@ckeditor/ckeditor5-media-embed'
 // import {ImageResizeEditing} from '@ckeditor/ckeditor5-image'
 import {CKEditor} from '@ckeditor/ckeditor5-react'

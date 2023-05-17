@@ -129,9 +129,9 @@ function SidebarMenuMain() {
     if (category.length > 0) {
       const initialValues: Record<string, boolean> = category.reduce((acc: any, item: any) => {
         acc[item.name.toLowerCase()] = false
-        item.subcategories.forEach((sub: any) => {
-          acc[sub.name.toLowerCase()] = false
-        })
+        // item.subcategories.forEach((sub: any) => {
+        //   acc[sub.name.toLowerCase()] = false
+        // })
         return acc
       }, {})
 
@@ -157,34 +157,34 @@ function SidebarMenuMain() {
       // Iterate through the category data and set the related fields to the value of all_select
       category.forEach((item: any) => {
         setValue(item.name.toLowerCase(), allSelect)
-        item.subcategories.forEach((sub: any) => {
-          setValue(sub.name.toLowerCase(), allSelect)
-        })
+        // item.subcategories.forEach((sub: any) => {
+        //   setValue(sub.name.toLowerCase(), allSelect)
+        // })
       })
     }
   }, [category, setValue, allSelect])
 
   const watchedFields = watch()
 
-  React.useEffect(() => {
-    if (category.length > 0) {
-      // Iterate through the category data and check for changes in the related fields
-      category.forEach((item: any) => {
-        let allSubcategoriesChecked = true
+  // React.useEffect(() => {
+  //   if (category.length > 0) {
+  //     // Iterate through the category data and check for changes in the related fields
+  //     category.forEach((item: any) => {
+  //       let allSubcategoriesChecked = true
 
-        // If the category field is true, set all related subcategory fields to true
-        if (watchedFields[item.name.toLowerCase()]) {
-          item.subcategories.forEach((sub: any) => {
-            setValue(sub.name.toLowerCase(), true)
-          })
-        } else {
-          item.subcategories.forEach((sub: any) => {
-            setValue(sub.name.toLowerCase(), false)
-          })
-        }
-      })
-    }
-  }, [category, setValue, watchedFields])
+  //       // If the category field is true, set all related subcategory fields to true
+  //       if (watchedFields[item.name.toLowerCase()]) {
+  //         item.subcategories.forEach((sub: any) => {
+  //           setValue(sub.name.toLowerCase(), true)
+  //         })
+  //       } else {
+  //         item.subcategories.forEach((sub: any) => {
+  //           setValue(sub.name.toLowerCase(), false)
+  //         })
+  //       }
+  //     })
+  //   }
+  // }, [category, setValue, watchedFields])
 
   // React.useEffect(() => {
   //   if (category.length > 0) {
@@ -330,17 +330,7 @@ function SidebarMenuMain() {
             labelIcon={Label}
             key={index}
             name={item.name.toLowerCase()}
-          >
-            {item.subcategories?.map((item1: any, index: number) => (
-              <StyledTreeItem
-                name={item1.name.toLowerCase()}
-                nodeId={item1.name}
-                labelText={item1.name}
-                labelIcon={Label}
-                key={index}
-              />
-            ))}
-          </StyledTreeItem>
+          />
         ))}
       </TreeView>
     </FormProvider>
