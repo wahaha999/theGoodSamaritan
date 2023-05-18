@@ -10,6 +10,7 @@ import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
 import {useAppSelector} from '../store/hook'
 import Account from '../pages/dashboard/Account'
 import AccountPage from '../modules/accounts/AccountPage'
+import Billing from '../pages/dashboard/Billing'
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
@@ -42,6 +43,14 @@ const PrivateRoutes = () => {
                 element={
                   // <SuspensedView>
                   <Account />
+                  // </SuspensedView>
+                }
+              />
+              <Route
+                path='account/billing'
+                element={
+                  // <SuspensedView>
+                  <Billing />
                   // </SuspensedView>
                 }
               />
