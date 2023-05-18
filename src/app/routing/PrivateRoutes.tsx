@@ -38,7 +38,7 @@ const PrivateRoutes = () => {
               <Route path='builder' element={<BuilderPageWrapper />} />
               <Route path='menu-test' element={<MenuTestPage />} />
               <Route
-                path='account/*'
+                path='account/info'
                 element={
                   // <SuspensedView>
                   <Account />

@@ -44,6 +44,7 @@ export function MenuInner() {
             menuTrigger={`{default:'click', lg: 'hover'}`}
           >
             <MenuItem title='Account Information' to='/account/info' />
+            <MenuItem title='Billing' to='/account/billing' />
             {/* <MenuItem title='About Your Non-Profit' to='/account/about_non_profit' />
             <MenuItem title='Noe-Profit Verification' to='/account/verification' />
             <MenuItem title='Address' to='/account/location' /> */}
