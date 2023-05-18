@@ -37,8 +37,14 @@ export const createPost = createAsyncThunk('dashboard/post/create', async (post:
                     if (item == "category") {
                         formData.append('category',JSON.stringify(post['category']))
                     } else {
+                        if (item == "keyword") {
+                            formData.append('keyword',JSON.stringify(post['keyword']))
+                            
+                        } else {
+                            
+                            formData.append(item, post[item]);
+                        }
                         
-                        formData.append(item, post[item]);
                     }
                     
                 }

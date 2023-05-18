@@ -4,9 +4,6 @@
   "private": true,
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^37.1.0",
-    "@ckeditor/ckeditor5-image": "^37.1.0",
-    "@ckeditor/ckeditor5-media-embed": "^37.1.0",
-    "@ckeditor/ckeditor5-paragraph": "^37.1.0",
     "@ckeditor/ckeditor5-react": "^6.0.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
