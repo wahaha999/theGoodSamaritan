@@ -104,7 +104,8 @@
     "eject": "react-scripts eject",
     "lint": "prettier --check .",
     "format": "prettier --write .",
-    "rtl": "webpack --config=rtl.config.js"
+    "rtl": "webpack --config=rtl.config.js",
+    "deploy:build":"node --max-old-space-size=4096 ./node_modules/.bin/react-scripts build"
   },
   "eslintConfig": {
     "extends": [
