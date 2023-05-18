@@ -9,6 +9,7 @@ import {
   AppBar,
   Box,
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -448,6 +449,12 @@ function MyPostsDashboard() {
                       lat: {post?.lat} lng: {post?.lng}
                     </Typography>
                   )}
+                </Grid>
+                <Grid container alignItems='center' gap={2}>
+                  {post?.keyword != 'null' &&
+                    JSON.parse(post?.keyword ? post?.keyword : '[]').map(
+                      (item: string, index: number) => <Chip label={item} key={index} />
+                    )}
                 </Grid>
 
                 {/* <Typography variant='body2' color='text.secondary'>
