@@ -289,21 +289,15 @@ function MyPostsDashboard() {
   return (
     <>
       <DashboardPaper>
-        <AppBar
-          position='sticky'
-          color='inherit'
-          sx={{boxShadow: 'none', zIndex: 999, backgroundColor: 'transparent'}}
+        <motion.div
+          initial={{scale: 1.1}}
+          animate={{scale: 1}}
+          transition={{type: 'spring', damping: 10, stiffness: 100}}
         >
-          <motion.div
-            initial={{scale: 1.1}}
-            animate={{scale: 1}}
-            transition={{type: 'spring', damping: 10, stiffness: 100}}
-          >
-            <CustomizedInputBase user={user} layoutId='1' popup={popup} setPopup={setPopup} />
-          </motion.div>
-          {/* <Toolbar > */}
-          {/* </Toolbar> */}
-        </AppBar>
+          <CustomizedInputBase user={user} layoutId='1' popup={popup} setPopup={setPopup} />
+        </motion.div>
+        {/* <Toolbar > */}
+        {/* </Toolbar> */}
         {/* {!popup && ( */}
         {/* )} */}
         {/* {popup && (
@@ -471,15 +465,14 @@ function MyPostsDashboard() {
                 </Grid>
                 <Grid container alignItems='center' gap={2}>
                   {post?.keyword != 'null' &&
+                    JSON.parse(post?.keyword ? post?.keyword : '[]').length > 0 && (
+                      <Typography variant='caption'>Keyword: </Typography>
+                    )}
+                  {post?.keyword != 'null' &&
                     JSON.parse(post?.keyword ? post?.keyword : '[]').map(
                       (item: string, index: number) => <Chip label={item} key={index} />
                     )}
                 </Grid>
-
-                {/* <Typography variant='body2' color='text.secondary'>
-                This impressive paella is a perfect party dish and a fun meal to cook together with
-                your guests. Add 1 cup of frozen peas along with the mussels, if you like.
-              </Typography> */}
               </CardContent>
               <CardActions disableSpacing>
                 <Grid container flexDirection='row-reverse'>
