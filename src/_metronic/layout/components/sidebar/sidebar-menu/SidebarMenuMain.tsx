@@ -283,7 +283,7 @@ function SidebarMenuMain() {
         />
         <StyledTreeItem
           nodeId='4'
-          labelText='With Resources to Share'
+          labelText='Resources to Share'
           name='resource_to_share'
           labelIcon={Label}
           labelInfo='3,566'
@@ -297,7 +297,7 @@ function SidebarMenuMain() {
         />
         <StyledTreeItem
           nodeId='6'
-          labelText='That have an Event'
+          labelText='Event'
           name='have_event'
           labelIcon={Label}
           labelInfo='1037'

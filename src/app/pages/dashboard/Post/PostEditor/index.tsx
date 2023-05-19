@@ -33,6 +33,20 @@ const PostEditor = (props: Props) => {
           <CKEditor
             config={{
               extraPlugins: [uploadPlugin],
+              link: {
+                defaultProtocol: 'https://',
+                decorators: {
+                  openInNewTab: {
+                    mode: 'manual',
+                    label: 'Open in a new tab',
+                    attributes: {
+                      target: '_blank',
+                      rel: 'noopener noreferrer',
+                    },
+                    defaultValue: true,
+                  },
+                },
+              },
               toolbar: [
                 'heading',
                 '|',

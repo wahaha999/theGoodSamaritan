@@ -22,13 +22,31 @@ import ShareIcon from '@mui/icons-material/Share'
 import {useAppSelector} from 'src/app/store/hook'
 import PasswordIcon from '@mui/icons-material/Password'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-
+import SendTimeExtensionOutlinedIcon from '@mui/icons-material/SendTimeExtensionOutlined'
+import HomeRepairServiceOutlinedIcon from '@mui/icons-material/HomeRepairServiceOutlined'
+import AssistWalkerOutlinedIcon from '@mui/icons-material/AssistWalkerOutlined'
+import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined'
 type Props = {}
-const labels = [
-  {id: 1, color: 'red', title: 'Sharing Message'},
-  {id: 2, color: 'green', title: 'With Resources to Share'},
-  {id: 3, color: 'yellow', title: 'In need of Resources'},
-  {id: 4, color: 'grey', title: 'That have an Event'},
+export const labels = [
+  {
+    id: 1,
+    color: 'red',
+    title: 'Sharing Message',
+    icon: <SendTimeExtensionOutlinedIcon sx={{ml: 2}} />,
+  },
+  {
+    id: 2,
+    color: 'green',
+    title: 'Resources to Share ',
+    icon: <HomeRepairServiceOutlinedIcon sx={{ml: 2}} />,
+  },
+  {
+    id: 3,
+    color: 'yellow',
+    title: 'In need of Resources',
+    icon: <AssistWalkerOutlinedIcon sx={{ml: 2}} />,
+  },
+  {id: 4, color: 'grey', title: 'Event', icon: <EmojiEventsOutlinedIcon sx={{ml: 2}} />},
 ]
 
 const Post = (props: Props) => {
@@ -43,8 +61,6 @@ const Post = (props: Props) => {
   const [word, setWord] = useState<string>('')
   const [isKeywordSet, SetIsKeywordSet] = useState(false)
   const keyword = watch('keyword')
-  const categoryyy = watch('category')
-  console.log('categoryyy==', categoryyy)
   useEffect(() => {
     if (!isKeywordSet && keyword != null) {
       if (typeof keyword == 'string') {
@@ -53,7 +69,6 @@ const Post = (props: Props) => {
         } else {
           setValue('keyword', [...JSON.parse(keyword ? keyword : '[]')])
         }
-        // setPreview([...JSON.parse(images ? images : '[]')])
         SetIsKeywordSet(true)
       }
     }
@@ -102,10 +117,7 @@ const Post = (props: Props) => {
                 >
                   {labels.map((label) => (
                     <MenuItem value={label.id} key={label.id} className='space-x-12'>
-                      <Box
-                        className='w-12 h-12 shrink-0 rounded-full'
-                        sx={{backgroundColor: label.color}}
-                      />
+                      {label.icon}
                       <span>{label.title}</span>
                     </MenuItem>
                   ))}
