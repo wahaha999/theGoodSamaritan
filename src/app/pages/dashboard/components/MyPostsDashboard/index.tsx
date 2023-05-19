@@ -57,7 +57,7 @@ const DashboardPaper = styled(Paper)(() => ({
   width: '100%',
   height: '80vh',
   overflow: 'auto',
-  padding: 12,
+  padding: 24,
 }))
 
 const itemVariants: Variants = {
@@ -206,8 +206,9 @@ function MyPostsDashboard() {
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>, post: any) => {
     setAnchorEl(event.currentTarget)
-    console.log('post==', post)
-    setPostData(post)
+    let tempPost = {...post}
+    tempPost.category = JSON.parse(tempPost.category)
+    setPostData(tempPost)
   }
   const handleClose = () => {
     setAnchorEl(null)
@@ -221,11 +222,10 @@ function MyPostsDashboard() {
   const {
     control,
     reset,
-    formState: {isValid},
+    formState: {isValid, errors},
   } = methods
   const {handleSubmit} = methods
   const onSubmit = (data: any) => {
-    console.log('data==', data)
     dispatch(createPost(data))
       .then(() => {
         // dispatch(showMessage({message: 'Successful posted', variant: 'success'}))
@@ -250,13 +250,13 @@ function MyPostsDashboard() {
           ...postData,
         })
       } else {
-        const {address, state, city, zip_code} = user.account
+        const {address, state, city, zip_code, timezone} = user.account
         reset({
           content: '',
           event_name: undefined,
           category: undefined,
           images: [],
-          timezone: '',
+          timezone,
           purpose: undefined,
           address,
           state,
@@ -287,7 +287,11 @@ function MyPostsDashboard() {
   return (
     <>
       <DashboardPaper>
-        <AppBar position='sticky' color='inherit' sx={{boxShadow: 'none', zIndex: 999}}>
+        <AppBar
+          position='sticky'
+          color='inherit'
+          sx={{boxShadow: 'none', zIndex: 999, backgroundColor: 'transparent'}}
+        >
           <motion.div
             initial={{scale: 1.1}}
             animate={{scale: 1}}
@@ -415,14 +419,14 @@ function MyPostsDashboard() {
                 // alt='Paella dish'
               >
                 {loading ? (
-                  <Skeleton height={200} animation='wave' variant='rectangular' />
+                  <Skeleton height={500} animation='wave' variant='rectangular' />
                 ) : (
-                  <Carousel showThumbs={false} autoPlay infiniteLoop dynamicHeight>
+                  <Carousel showThumbs={false} infiniteLoop dynamicHeight>
                     {JSON.parse(post?.images).map((item: any, index: number) => (
                       <div key={index}>
                         <img
                           src={toServerUrl('/media/post/image/' + item)}
-                          style={{maxHeight: '500px', objectFit: 'cover'}}
+                          style={{height: 'unset', objectFit: 'cover'}}
                         />
                       </div>
                     ))}
@@ -440,7 +444,9 @@ function MyPostsDashboard() {
                       color='purple'
                       component='a'
                       target='_blank'
-                      href={`https://www.google.com/maps/place/${post?.address} ${post?.city} ${post?.state} ${post?.zip_code}`}
+                      href={`https://www.google.com/maps/place/${post?.address || ''} ${
+                        post?.city || ''
+                      } ${post?.state || ''} ${post?.zip_code || ''}`}
                     >
                       {post?.address}
                     </Typography>

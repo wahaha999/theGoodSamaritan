@@ -43,7 +43,8 @@ const Post = (props: Props) => {
   const [word, setWord] = useState<string>('')
   const [isKeywordSet, SetIsKeywordSet] = useState(false)
   const keyword = watch('keyword')
-
+  const categoryyy = watch('category')
+  console.log('categoryyy==', categoryyy)
   useEffect(() => {
     if (!isKeywordSet && keyword != null) {
       if (typeof keyword == 'string') {
@@ -116,7 +117,7 @@ const Post = (props: Props) => {
         </Grid>
       </Grid>
       <Grid container spacing={4}>
-        <Grid item md={8}>
+        <Grid item md={7}>
           <Controller
             name='category'
             defaultValue={[]}
@@ -158,7 +159,7 @@ const Post = (props: Props) => {
             }}
           />
         </Grid>
-        <Grid item md={4}>
+        <Grid item md={5}>
           <Controller
             name='keyword'
             control={control}

@@ -54,6 +54,7 @@ const AboutNonProfit = (props: Props) => {
       <Grid container justifyContent='space-between' gap={4} sx={{my: 3}}>
         <Controller
           name='organize'
+          defaultValue={-1}
           control={control}
           render={({field: {onChange, value}}) => {
             return (
