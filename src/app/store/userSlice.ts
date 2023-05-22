@@ -31,7 +31,8 @@ export interface UserState {
 }
 export interface IAuthState {
   user: UserState,
-  access_token?:string|null
+  access_token?: string | null,
+  states:object
 }
 
 const initialState: IAuthState = {
@@ -43,7 +44,8 @@ const initialState: IAuthState = {
     non_profit_name: '',
     id: 0,
   },
-  access_token: sessionStorage.getItem('access_token')
+  access_token: sessionStorage.getItem('access_token'),
+  states:{}
 };
 
 export const setUser = createAsyncThunk('user/setUser', async (user: IAuthState, { dispatch, getState }) => {
