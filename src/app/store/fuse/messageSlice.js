@@ -10,6 +10,7 @@ const initialState = {
     autoHideDuration: 2000,
     message: 'Hi',
     variant: null,
+    node:null
   },
 };
 const messageSlice = createSlice({

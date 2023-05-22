@@ -12,6 +12,7 @@ import {
   selectFuseMessageState,
 } from '../../../store/fuse/messageSlice';
 import FuseSvgIcon from '../FuseSvgIcon/FuseSvgIcon';
+import { Button } from '@mui/material';
 
 const StyledSnackbar = styled(Snackbar)(({ theme, variant }) => ({
   '& .FuseMessage-content': {
@@ -65,12 +66,19 @@ function FuseMessage(props) {
       <SnackbarContent
         className="FuseMessage-content"
         message={
+          <>
           <div className="flex items-center">
             {variantIcon[options.variant] && (
               <FuseSvgIcon color="inherit">{variantIcon[options.variant]}</FuseSvgIcon>
             )}
             <Typography className="mx-8">{options.message}</Typography>
-          </div>
+            </div>{
+              options.node &&
+              <div className='flex flex-row-reverse'>
+                {options.node}
+              </div>
+          }
+          </>
         }
         action={[
           <IconButton
