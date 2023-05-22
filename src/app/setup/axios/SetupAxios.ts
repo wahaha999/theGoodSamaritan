@@ -1,3 +1,4 @@
+import { showMessage } from "src/app/store/fuse/messageSlice"
 import { logoutUser } from "src/app/store/userSlice"
 
 export default function setupAxios(axios: any, store: any) {
@@ -22,7 +23,12 @@ export default function setupAxios(axios: any, store: any) {
 
       if (status === 401) {
         delete axios.defaults.headers.common.Authorization;
-        logoutUser();
+        
+        return Promise.all([
+          Promise.reject(error),
+          store.dispatch(logoutUser()),
+          store.dispatch(showMessage({message:'Token is expired'}))
+        ])
         // forceLogout() //TODO: force logout
       }
 

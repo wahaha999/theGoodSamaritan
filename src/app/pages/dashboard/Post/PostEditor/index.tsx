@@ -18,10 +18,6 @@ type Props = {}
 
 const PostEditor = (props: Props) => {
   const {control} = useFormContext()
-  console.log(
-    'plugin==',
-    ClassicEditor.builtinPlugins.map((plugin) => plugin.pluginName)
-  )
 
   function uploadPlugin(editor: any) {
     editor.plugins.get('FileRepository').createUploadAdapter = (loader: any) => {
@@ -37,6 +33,20 @@ const PostEditor = (props: Props) => {
           <CKEditor
             config={{
               extraPlugins: [uploadPlugin],
+              link: {
+                defaultProtocol: 'https://',
+                decorators: {
+                  openInNewTab: {
+                    mode: 'manual',
+                    label: 'Open in a new tab',
+                    attributes: {
+                      target: '_blank',
+                      rel: 'noopener noreferrer',
+                    },
+                    defaultValue: true,
+                  },
+                },
+              },
               toolbar: [
                 'heading',
                 '|',

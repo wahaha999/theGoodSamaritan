@@ -87,9 +87,8 @@ export const setUser = createAsyncThunk('user/setUser', async (user: IAuthState,
 //   }
 // );
 
-export const logoutUser = () => async (dispatch: any, getState: () => RootState) => {
-  const { user }:any = getState();
-
+export const logoutUser = createAsyncThunk('user/logout', async (_, { dispatch, getState }) => {
+  
   // if (!user.role || user.role.length === 0) {
   //   // is guest
   //   return null;
@@ -103,7 +102,7 @@ export const logoutUser = () => async (dispatch: any, getState: () => RootState)
   // dispatch(setInitialSettings());
 
   return dispatch(userLoggedOut());
-};
+})
 
 // export const updateUserData = (user) => async (dispatch, getState) => {
 //   if (!user.role || user.role.length === 0) {

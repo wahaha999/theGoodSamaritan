@@ -23,6 +23,7 @@ import {
   Skeleton,
   Stack,
   Toolbar,
+  Tooltip,
 } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import Card from '@mui/material/Card'
@@ -39,7 +40,7 @@ import {styled} from '@mui/material/styles'
 import * as React from 'react'
 import {toAbsoluteUrl, toServerUrl} from '../../../../../_metronic/helpers'
 import {AnimatePresence, Variants, motion} from 'framer-motion'
-import Post from '../../Post'
+import Post, {labels} from '../../Post'
 import {Controller, FormProvider, useForm} from 'react-hook-form'
 import * as yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'
@@ -53,11 +54,12 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css' // requires a loa
 import {Carousel} from 'react-responsive-carousel'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import dayjs from 'dayjs'
+import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 const DashboardPaper = styled(Paper)(() => ({
   width: '100%',
   height: '80vh',
   overflow: 'auto',
-  padding: 12,
+  padding: 24,
 }))
 
 const itemVariants: Variants = {
@@ -206,8 +208,9 @@ function MyPostsDashboard() {
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>, post: any) => {
     setAnchorEl(event.currentTarget)
-    console.log('post==', post)
-    setPostData(post)
+    let tempPost = {...post}
+    tempPost.category = JSON.parse(tempPost.category)
+    setPostData(tempPost)
   }
   const handleClose = () => {
     setAnchorEl(null)
@@ -221,11 +224,10 @@ function MyPostsDashboard() {
   const {
     control,
     reset,
-    formState: {isValid},
+    formState: {isValid, errors},
   } = methods
   const {handleSubmit} = methods
   const onSubmit = (data: any) => {
-    console.log('data==', data)
     dispatch(createPost(data))
       .then(() => {
         // dispatch(showMessage({message: 'Successful posted', variant: 'success'}))
@@ -250,13 +252,13 @@ function MyPostsDashboard() {
           ...postData,
         })
       } else {
-        const {address, state, city, zip_code} = user.account
+        const {address, state, city, zip_code, timezone} = user.account
         reset({
           content: '',
           event_name: undefined,
           category: undefined,
           images: [],
-          timezone: '',
+          timezone,
           purpose: undefined,
           address,
           state,
@@ -287,17 +289,15 @@ function MyPostsDashboard() {
   return (
     <>
       <DashboardPaper>
-        <AppBar position='sticky' color='inherit' sx={{boxShadow: 'none', zIndex: 999}}>
-          <motion.div
-            initial={{scale: 1.1}}
-            animate={{scale: 1}}
-            transition={{type: 'spring', damping: 10, stiffness: 100}}
-          >
-            <CustomizedInputBase user={user} layoutId='1' popup={popup} setPopup={setPopup} />
-          </motion.div>
-          {/* <Toolbar > */}
-          {/* </Toolbar> */}
-        </AppBar>
+        <motion.div
+          initial={{scale: 1.1}}
+          animate={{scale: 1}}
+          transition={{type: 'spring', damping: 10, stiffness: 100}}
+        >
+          <CustomizedInputBase user={user} layoutId='1' popup={popup} setPopup={setPopup} />
+        </motion.div>
+        {/* <Toolbar > */}
+        {/* </Toolbar> */}
         {/* {!popup && ( */}
         {/* )} */}
         {/* {popup && (
@@ -307,10 +307,6 @@ function MyPostsDashboard() {
           <motion.div variants={itemVariants} key={index}>
             <Card sx={{width: '100%', margin: '16px 0px', border: '1px solid #D5DBDB'}}>
               <CardHeader
-                // avatar={
-
-                // }
-
                 action={
                   <>
                     <Button variant='outlined' sx={{mr: 4}}>
@@ -345,6 +341,9 @@ function MyPostsDashboard() {
                               handleClose()
                             }}
                           >
+                            <FuseSvgIcon sx={{mr: 1}} size={16}>
+                              heroicons-outline:trash
+                            </FuseSvgIcon>
                             Delete
                           </MenuItem>
                           <MenuItem
@@ -354,6 +353,9 @@ function MyPostsDashboard() {
                               setPopup(true)
                             }}
                           >
+                            <FuseSvgIcon sx={{mr: 1}} size={16}>
+                              heroicons-outline:pencil
+                            </FuseSvgIcon>
                             Edit
                           </MenuItem>
                         </Menu>
@@ -362,47 +364,56 @@ function MyPostsDashboard() {
                   </>
                 }
                 title={
-                  <Grid container direction='row' alignItems='center'>
-                    {/* <Grid container item alignItems='center'> */}
-                    <Avatar
-                      sx={{bgcolor: red[500], mr: 2}}
-                      aria-label='recipe'
-                      src={toServerUrl('/media/account/avatar/' + post?.user?.account.avatar)}
-                    />
-                    <Typography>{post?.user?.account.non_profit_name}</Typography>
-                    {/* </Grid> */}
-                    <Divider
-                      orientation='vertical'
-                      flexItem
-                      sx={{border: '1px solid black', mx: 2, my: 1}}
-                    />
-                    {/* <Grid container item alignItems='center'> */}
-                    <Avatar
-                      sx={{mr: 2}}
-                      src={toServerUrl('/media/user/avatar/' + post?.user?.avatar)}
-                    />
-                    <Typography>
-                      {`${post?.user?.first_name} ${post?.user?.last_name}`} posted on{' '}
-                      {moment(post?.created_at).format('MM/DD/YY')} at{' '}
-                      {moment(post?.created_at).format('h:mm A')}
-                    </Typography>
-                    {/* </Grid> */}
-                  </Grid>
+                  <>
+                    <Grid container direction='row' alignItems='center'>
+                      <Avatar
+                        sx={{bgcolor: red[500], mr: 2}}
+                        aria-label='recipe'
+                        src={toServerUrl('/media/account/avatar/' + post?.user?.account.avatar)}
+                      />
+                      <Typography>{post?.user?.account.non_profit_name}</Typography>
+                      <Divider
+                        orientation='vertical'
+                        flexItem
+                        sx={{border: '1px solid black', mx: 2, my: 1}}
+                      />
+                      <Avatar
+                        sx={{mr: 2}}
+                        src={toServerUrl('/media/user/avatar/' + post?.user?.avatar)}
+                      />
+                      <Typography>
+                        {`${post?.user?.first_name} ${post?.user?.last_name}`} posted on{' '}
+                        {moment(post?.created_at).format('MM/DD/YY')} at{' '}
+                        {moment(post?.created_at).format('h:mm A')}
+                      </Typography>
+                      <Tooltip title={labels[Number(post?.purpose) - 1].title} arrow>
+                        {post?.purpose && labels[Number(post?.purpose) - 1].icon}
+                      </Tooltip>
+                    </Grid>
+                    {/* <Grid container direction='row' alignItems='center'>
+                      <Chip label='Event' />
+                    </Grid> */}
+                  </>
                 }
                 subheader={
-                  post?.event_name && (
-                    <Grid container mt={1}>
-                      <Typography sx={{mr: 2}}>Event Name: {post?.event_name}</Typography>
-                      <Typography>
-                        Starts on {moment(post?.start).format('MM/DD/YY')} at{' '}
-                        {moment(post?.start).format('h:mm A')} and end on{' '}
-                        {moment(post?.end).format('MM/DD/YY')} at{' '}
-                        {moment(post?.end).format('h:mm A')}
-                      </Typography>
-                    </Grid>
-                  )
+                  <>
+                    {post?.event_name && (
+                      <Grid container mt={1}>
+                        <Typography sx={{mr: 2}}>Event Name: {post?.event_name}</Typography>
+                        <Typography>
+                          Starts on {moment(post?.start).format('MM/DD/YY')} at{' '}
+                          {moment(post?.start).format('h:mm A')} and end on{' '}
+                          {moment(post?.end).format('MM/DD/YY')} at{' '}
+                          {moment(post?.end).format('h:mm A')}
+                        </Typography>
+                      </Grid>
+                    )}
+                    <Box sx={{my: 2}} />
+                    <div dangerouslySetInnerHTML={{__html: post?.content}}></div>
+                  </>
                 }
               />
+
               {/* {!loading ? (
           <Skeleton sx={{height: 194}} animation='wave' variant='rectangular' />
         ) : ( */}
@@ -414,25 +425,25 @@ function MyPostsDashboard() {
                 // image={toServerUrl('/media/post/image/' + JSON.parse(post?.images)[0])}
                 // alt='Paella dish'
               >
-                {loading ? (
-                  <Skeleton height={200} animation='wave' variant='rectangular' />
-                ) : (
-                  <Carousel showThumbs={false} autoPlay infiniteLoop dynamicHeight>
-                    {JSON.parse(post?.images).map((item: any, index: number) => (
-                      <div key={index}>
-                        <img
-                          src={toServerUrl('/media/post/image/' + item)}
-                          style={{maxHeight: '500px', objectFit: 'cover'}}
-                        />
-                      </div>
-                    ))}
-                  </Carousel>
-                )}
+                <>
+                  {loading ? (
+                    <Skeleton height={500} animation='wave' variant='rectangular' />
+                  ) : (
+                    <Carousel showThumbs={false} infiniteLoop dynamicHeight>
+                      {JSON.parse(post?.images).map((item: any, index: number) => (
+                        <div key={index}>
+                          <img
+                            src={toServerUrl('/media/post/image/' + item)}
+                            style={{height: 'unset', objectFit: 'cover'}}
+                          />
+                        </div>
+                      ))}
+                    </Carousel>
+                  )}
+                </>
               </CardMedia>
               {/* )} */}
               <CardContent>
-                <div dangerouslySetInnerHTML={{__html: post?.content}}></div>
-                <Divider sx={{m: 4, border: '1px solid'}} />
                 <Grid container alignItems='center' sx={{mb: 2}}>
                   <LocationOnIcon color='primary' sx={{mr: 2}} />
                   {post?.address ? (
@@ -440,7 +451,9 @@ function MyPostsDashboard() {
                       color='purple'
                       component='a'
                       target='_blank'
-                      href={`https://www.google.com/maps/place/${post?.address} ${post?.city} ${post?.state} ${post?.zip_code}`}
+                      href={`https://www.google.com/maps/place/${post?.address || ''} ${
+                        post?.city || ''
+                      } ${post?.state || ''} ${post?.zip_code || ''}`}
                     >
                       {post?.address}
                     </Typography>
@@ -452,15 +465,14 @@ function MyPostsDashboard() {
                 </Grid>
                 <Grid container alignItems='center' gap={2}>
                   {post?.keyword != 'null' &&
+                    JSON.parse(post?.keyword ? post?.keyword : '[]').length > 0 && (
+                      <Typography variant='caption'>Keyword: </Typography>
+                    )}
+                  {post?.keyword != 'null' &&
                     JSON.parse(post?.keyword ? post?.keyword : '[]').map(
                       (item: string, index: number) => <Chip label={item} key={index} />
                     )}
                 </Grid>
-
-                {/* <Typography variant='body2' color='text.secondary'>
-                This impressive paella is a perfect party dish and a fun meal to cook together with
-                your guests. Add 1 cup of frozen peas along with the mussels, if you like.
-              </Typography> */}
               </CardContent>
               <CardActions disableSpacing>
                 <Grid container flexDirection='row-reverse'>

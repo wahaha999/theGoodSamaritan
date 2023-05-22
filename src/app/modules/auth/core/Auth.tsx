@@ -66,8 +66,6 @@ const AuthInit = ({children}: any) => {
           // delete temp.account
           if (temp.email) {
             dispatch(setUser({user: temp}))
-          } else {
-            dispatch(logoutUser())
           }
         }
       } catch (error) {

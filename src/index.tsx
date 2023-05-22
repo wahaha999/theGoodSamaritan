@@ -42,13 +42,10 @@ const queryClient = new QueryClient()
 const container = document.getElementById('root')
 if (container) {
   createRoot(container).render(
-    <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
-        <MetronicI18nProvider>
-          <AppRoutes />
-        </MetronicI18nProvider>
-      </Provider>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <Provider store={store}>
+      <MetronicI18nProvider>
+        <AppRoutes />
+      </MetronicI18nProvider>
+    </Provider>
   )
 }
