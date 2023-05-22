@@ -46,7 +46,7 @@ export function Login() {
       setLoading(true)
       try {
         const {data: auth} = await login(values.email, values.password)
-        // console.log('🚀 ~ file: Login.tsx:49 ~ onSubmit: ~ auth:', auth)
+        console.log('🚀 ~ file: Login.tsx:49 ~ onSubmit: ~ auth:', auth)
 
         if (auth.access_token) {
           sessionStorage.setItem('access_token', auth.access_token)
@@ -55,7 +55,12 @@ export function Login() {
         // console.log('🚀 ~ file: Login.tsx:54 ~ onSubmit: ~ temp:', temp)
         // delete temp.account
         // if (temp.email) {
-        dispatch(setUser({user: temp}))
+        dispatch(
+          setUser({
+            user: temp,
+            states: {...auth.states},
+          })
+        )
         // }
         // dispatch(setUser(auth))
         dispatch(showMessage({message: 'Successful login', variant: 'success'}))

@@ -62,10 +62,11 @@ const AuthInit = ({children}: any) => {
       try {
         if (!didRequest.current) {
           const {data} = await getUserByToken()
-          const temp = {...data}
+          console.log('🚀 ~ file: Auth.tsx:65 ~ requestUser ~ data:', data)
+          const temp = {...data.user}
           // delete temp.account
           if (temp.email) {
-            dispatch(setUser({user: temp}))
+            dispatch(setUser({user: temp, states: data.states}))
           }
         }
       } catch (error) {

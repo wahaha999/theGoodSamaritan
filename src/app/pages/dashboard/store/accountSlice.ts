@@ -36,7 +36,7 @@ export const updateProfile = createAsyncThunk(
       const temp = {...response.data}
         // delete temp.account;
         Promise.all([
-            dispatch(setUser({user: temp})),
+            dispatch(setUser({user: temp.user,states:temp.states})),
             dispatch(showMessage({message: 'Successfully updated', variant: 'success'}))
         ])
 
@@ -62,7 +62,7 @@ export const updateUser = createAsyncThunk(
       })
       const response = await axios.post(`${API_URL}/users/update`, formData)
       const temp = {...response.data}
-      dispatch(setUser({user: temp}))
+      dispatch(setUser({ user: temp.user, states: temp.states }));
       return temp
     } catch (error) {
       dispatch(showMessage({message: 'Something wrong', variant: 'error'}))

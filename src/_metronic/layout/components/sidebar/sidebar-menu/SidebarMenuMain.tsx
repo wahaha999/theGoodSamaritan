@@ -14,14 +14,16 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowRightIcon from '@mui/icons-material/ArrowRight'
 import {SvgIconProps} from '@mui/material/SvgIcon'
-import {Checkbox} from '@mui/material'
+import {Button, Checkbox} from '@mui/material'
 import CheckBoxOutlineBlankOutlinedIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined'
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
-import {useAppSelector} from 'src/app/store/hook'
+import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import withReducer from 'src/app/store/withReducer'
 import reducer from '../store'
 import {Controller, FormProvider, useForm, useFormContext} from 'react-hook-form'
+import _ from 'src/app/modules/@lodash/@lodash'
+import {showMessage} from 'src/app/store/fuse/messageSlice'
 
 declare module 'react' {
   interface CSSProperties {
@@ -71,24 +73,63 @@ const StyledTreeItemRoot = styled(TreeItem)(({theme}) => ({
 }))
 
 function StyledTreeItem(props: StyledTreeItemProps) {
-  const {bgColor, color, labelIcon: LabelIcon, labelInfo, labelText, name, ...other} = props
+  const {
+    bgColor,
+    color,
+    labelIcon: LabelIcon,
+    labelInfo,
+    labelText,
+    name,
+    disabled,
+    ...other
+  } = props
   const methods = useFormContext()
   const {control, watch} = methods
   const value = watch(`${name}`)
+  const {account} = useAppSelector(({user}) => user.user)
+  const dispatch = useAppDispatch()
   return (
     <Controller
       name={name}
       control={control}
-      render={({field}) => (
+      render={({field: {value, onChange}}) => (
         <StyledTreeItemRoot
           label={
             <Box sx={{display: 'flex', alignItems: 'center', p: 0.5, pr: 0}}>
               <Checkbox
-                {...field}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  if (disabled) {
+                    dispatch(
+                      showMessage({
+                        message: 'This state is not your plan',
+                        variant: 'info',
+                        anchorOrigin: {
+                          vertical: 'bottom',
+                          horizontal: 'left',
+                        },
+                        autoHideDuration: 5000,
+                        node: (
+                          <form
+                            action='http://www.webhookstest.samaritanmarketplace.com/billing.php'
+                            method='post'
+                            data-turbo='false'
+                          >
+                            <input type='hidden' name='customer_id' value={account?.customer_id} />
+                            <Button type='submit' variant='contained' color='primary' sx={{mt: 3}}>
+                              Upgrade your Subscription
+                            </Button>
+                          </form>
+                        ),
+                      })
+                    )
+                  } else {
+                    onChange(e.target.checked)
+                  }
+                }}
                 checked={value !== undefined ? value : false}
-                color='secondary'
-                icon={<CheckBoxOutlineBlankIcon color='secondary' />}
-                checkedIcon={<CheckBoxIcon />}
+                color={disabled ? 'default' : 'secondary'}
+                icon={<CheckBoxOutlineBlankIcon color={disabled ? 'inherit' : 'secondary'} />}
+                checkedIcon={<CheckBoxIcon color={disabled ? 'inherit' : 'secondary'} />}
                 // sx={{'& .MuiSvgIcon-root': {bgcolor: 'white'}}}
                 size='medium'
               />
@@ -96,7 +137,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
 
               <Typography
                 variant='subtitle1'
-                color='secondary'
+                color={disabled ? 'gray' : 'secondary'}
                 sx={{fontWeight: 'inherit', flexGrow: 1}}
               >
                 {labelText}
@@ -120,13 +161,16 @@ function StyledTreeItem(props: StyledTreeItemProps) {
 
 function SidebarMenuMain() {
   const category = useAppSelector(({sidebar}) => sidebar.category)
+  const {state} = useAppSelector(({post}) => post.plan)
+  const {states} = useAppSelector(({user}) => user)
+
   const methods = useForm({
     mode: 'onChange',
   })
   const {getValues, watch, reset, setValue} = methods
 
   React.useEffect(() => {
-    if (category.length > 0) {
+    if (category.length > 0 && state != undefined && state.length > 0 && states) {
       const initialValues: Record<string, boolean> = category.reduce((acc: any, item: any) => {
         acc[item.name.toLowerCase()] = false
         // item.subcategories.forEach((sub: any) => {
@@ -134,6 +178,22 @@ function SidebarMenuMain() {
         // })
         return acc
       }, {})
+
+      const initialStates: Record<string, boolean> = state.reduce((acc: any, item: any) => {
+        acc[item.State] = false
+        Object.keys(states).map((state_item) => {
+          if (item.State == state_item) {
+            acc[item.State] = true
+          }
+        })
+        return acc
+      }, {})
+      // console.log(
+      //   '🚀 ~ file: SidebarMenuMain.tsx:144 ~ constinitialStates:Record<string,boolean>=state.reduce ~ initialStates:',
+      //   initialStates
+      // )
+
+      // initialValues = { ...initialStates };
 
       // Add other static fields to initialValues
       initialValues.my_posts = false
@@ -146,9 +206,9 @@ function SidebarMenuMain() {
       initialValues.all_select = false
 
       // Reset the form with the new initialValues when category data is available
-      reset(initialValues)
+      reset({...initialValues, ...initialStates})
     }
-  }, [category, reset])
+  }, [category, reset, state, states])
 
   const allSelect = watch('all_select') // Watch the all_select field
 
@@ -165,7 +225,20 @@ function SidebarMenuMain() {
   }, [category, setValue, allSelect])
 
   const watchedFields = watch()
-
+  const state_with_plan = React.useMemo(() => {
+    if (state && state.length > 0 && states) {
+      return state.map((item1: any, index: number) => {
+        let temp = {...item1}
+        temp.available = false
+        Object.keys(states).map((item2) => {
+          if (item1.State == item2) {
+            temp.available = true
+          }
+        })
+        return temp
+      })
+    }
+  }, [state, states])
   // React.useEffect(() => {
   //   if (category.length > 0) {
   //     // Iterate through the category data and check for changes in the related fields
@@ -240,40 +313,6 @@ function SidebarMenuMain() {
             </span>
           </div>
         </div>
-        {/* <StyledTreeItem nodeId='3' labelText='Categories' labelIcon={Label}>
-          <StyledTreeItem
-            nodeId='5'
-            labelText='Social'
-            labelIcon={SupervisorAccountIcon}
-            labelInfo='90'
-            // color='#1a73e8'
-            // bgColor='#e8f0fe'
-          />
-          <StyledTreeItem
-            nodeId='6'
-            labelText='Updates'
-            labelIcon={InfoIcon}
-            labelInfo='2,294'
-            // color='#e3742f'
-            // bgColor='#fcefe3'
-          />
-          <StyledTreeItem
-            nodeId='7'
-            labelText='Forums'
-            labelIcon={ForumIcon}
-            labelInfo='3,566'
-            // color='#a250f5'
-            // bgColor='#f3e8fd'
-          />
-          <StyledTreeItem
-            nodeId='8'
-            labelText='Promotions'
-            labelIcon={LocalOfferIcon}
-            labelInfo='733'
-            // color='primary'
-            // bgColor='#e6f4ea'
-          />
-        </StyledTreeItem> */}
         <StyledTreeItem
           nodeId='3'
           labelText='Sharing a Message'
@@ -309,7 +348,18 @@ function SidebarMenuMain() {
             </span>
           </div>
         </div>
-        <StyledTreeItem nodeId='4' labelText='States' name='states' labelIcon={Label} />
+        <StyledTreeItem nodeId='4' labelText='States' name='states' labelIcon={Label}>
+          {state_with_plan?.map((item: any, index: number) => (
+            <StyledTreeItem
+              disabled={!item.available}
+              nodeId={item.State}
+              labelText={item.Description}
+              labelIcon={Label}
+              name={item.State}
+              key={index}
+            />
+          ))}
+        </StyledTreeItem>
         <div className='menu-item'>
           <div className='menu-content pt-8 pb-2'>
             <span className='menu-section text-muted text-uppercase fs-8 ls-1 ps-4'>
