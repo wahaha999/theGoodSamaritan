@@ -6,26 +6,18 @@ import {
   TextField,
   InputAdornment,
   Autocomplete,
-  CircularProgress,
   FormControl,
   Select,
   MenuItem,
   InputLabel,
   FormHelperText,
 } from '@mui/material'
-import {Controller, useForm, useFormContext} from 'react-hook-form'
-import {yupResolver} from '@hookform/resolvers/yup'
-import * as yup from 'yup'
+import {Controller, useFormContext} from 'react-hook-form'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
-import axios from 'axios'
-import {API_URL} from 'src/app/modules/auth/core/_requests'
 import {IState} from '../../store/planSlice'
-import withReducer from 'src/app/store/withReducer'
-import reducer from '../../store'
 import {useAppSelector} from 'src/app/store/hook'
 import {ITimezone, timezone} from 'src/app/constants/timezone'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
-import {error} from 'console'
 
 type Props = {}
 

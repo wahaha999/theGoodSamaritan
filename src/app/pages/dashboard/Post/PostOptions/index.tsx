@@ -1,36 +1,25 @@
+import AccessTimeIcon from '@mui/icons-material/AccessTime'
+import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined'
 import {
-  Autocomplete,
-  Box,
   FormControl,
-  FormHelperText,
   Grid,
   InputAdornment,
   InputLabel,
   MenuItem,
   Select,
   TextField,
-  Tooltip,
   Typography,
 } from '@mui/material'
-import {DemoContainer} from '@mui/x-date-pickers/internals/demo'
+import {DateTimePicker} from '@mui/x-date-pickers'
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs'
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider'
-import {DatePicker} from '@mui/x-date-pickers/DatePicker'
-import React, {useMemo} from 'react'
-import {Controller, useFormContext} from 'react-hook-form'
-import {useAppSelector} from 'src/app/store/hook'
-import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
-import AccessTimeIcon from '@mui/icons-material/AccessTime'
-import ShareIcon from '@mui/icons-material/Share'
-import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined'
-import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined'
-import moment from 'moment'
-import dayjs, {Dayjs} from 'dayjs'
-import GoogleMap from 'google-map-react'
-import MapContainer from '../GoogleMap'
+import {DemoContainer} from '@mui/x-date-pickers/internals/demo'
+import dayjs from 'dayjs'
 import {motion} from 'framer-motion'
+import {Controller, useFormContext} from 'react-hook-form'
 import {ITimezone, timezone} from 'src/app/constants/timezone'
-import {DateTimePicker} from '@mui/x-date-pickers'
+import {useAppSelector} from 'src/app/store/hook'
+import MapContainer from '../GoogleMap'
 type Props = {}
 
 const PostOptions = (props: Props) => {

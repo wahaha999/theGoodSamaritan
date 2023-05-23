@@ -1,18 +1,8 @@
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-import {
-  Image,
-  ImageEditing,
-  ImageResize,
-  ImageResizeEditing,
-  ImageResizeHandles,
-} from '@ckeditor/ckeditor5-image'
-import {MediaEmbed} from '@ckeditor/ckeditor5-media-embed'
 // import {ImageResizeEditing} from '@ckeditor/ckeditor5-image'
 import {CKEditor} from '@ckeditor/ckeditor5-react'
-import React from 'react'
 import {Controller, useFormContext} from 'react-hook-form'
 import {uploadAdapter} from 'src/app/helpers/image-upload'
-import {API_URL, APP_PUBLIC_URL} from 'src/app/modules/auth/core/_requests'
 // import {ImageResizeEditing, ImageResizeHandles} from '@ckeditor/ckeditor5-image'
 type Props = {}
 

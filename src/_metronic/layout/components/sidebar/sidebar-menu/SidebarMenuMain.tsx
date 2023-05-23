@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Theme, styled} from '@mui/material/styles'
+import {styled} from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import TreeView from '@mui/lab/TreeView'
 import TreeItem, {TreeItemProps, treeItemClasses} from '@mui/lab/TreeItem'
@@ -7,22 +7,16 @@ import Typography from '@mui/material/Typography'
 import MailIcon from '@mui/icons-material/Mail'
 import DeleteIcon from '@mui/icons-material/Delete'
 import Label from '@mui/icons-material/Label'
-import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount'
-import InfoIcon from '@mui/icons-material/Info'
-import ForumIcon from '@mui/icons-material/Forum'
-import LocalOfferIcon from '@mui/icons-material/LocalOffer'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowRightIcon from '@mui/icons-material/ArrowRight'
 import {SvgIconProps} from '@mui/material/SvgIcon'
 import {Button, Checkbox} from '@mui/material'
-import CheckBoxOutlineBlankOutlinedIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined'
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import withReducer from 'src/app/store/withReducer'
 import reducer from '../store'
 import {Controller, FormProvider, useForm, useFormContext} from 'react-hook-form'
-import _ from 'src/app/modules/@lodash/@lodash'
 import {showMessage} from 'src/app/store/fuse/messageSlice'
 
 declare module 'react' {
@@ -224,7 +218,6 @@ function SidebarMenuMain() {
     }
   }, [category, setValue, allSelect])
 
-  const watchedFields = watch()
   const state_with_plan = React.useMemo(() => {
     if (state && state.length > 0 && states) {
       return state.map((item1: any, index: number) => {
