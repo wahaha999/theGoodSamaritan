@@ -27,7 +27,6 @@ import * as yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'
 import _ from 'src/app/modules/@lodash/@lodash'
 import FuseLoading from 'src/app/modules/core/FuseLoading/FuseLoading'
-import {getStates} from '../store/planSlice'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 
@@ -194,10 +193,6 @@ export default function Account() {
   const {reset, watch, control, formState, getValues, handleSubmit} = methods
   const form = watch()
   const {errors, isValid} = formState
-
-  React.useEffect(() => {
-    dispatch(getStates())
-  }, [])
 
   React.useEffect(() => {
     reset({...user.account})

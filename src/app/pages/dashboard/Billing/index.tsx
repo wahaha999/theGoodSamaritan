@@ -15,6 +15,8 @@ import React, {useEffect} from 'react'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {getBillingInfo} from '../store/billingSlice'
 import moment from 'moment'
+import BillingManage from './BillingManage'
+import UsaMap from './UsaMap'
 
 type Props = {}
 
@@ -41,7 +43,6 @@ const Billing = (props: Props) => {
               <TableRow>
                 <TableCell colSpan={2}>
                   <Typography>Billing Information</Typography>
-                  <Typography variant='body2'>Personal details and application.</Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -151,37 +152,21 @@ const Billing = (props: Props) => {
                   <Typography>Manage</Typography>
                 </TableCell>
                 <TableCell>
-                  <form
-                    action='http://www.webhookstest.samaritanmarketplace.com/billing.php'
-                    method='post'
-                    data-turbo='false'
-                  >
-                    <input
-                      type='hidden'
-                      name='customer_id'
-                      value={subscription?.data[0].customer}
-                    />
-                    <Button type='submit' variant='outlined'>
-                      Manage
-                    </Button>
-                  </form>
+                  <BillingManage
+                    color='primary'
+                    variant='outlined'
+                    customer_id={subscription?.data[0].customer}
+                    title='Manage'
+                  />
                 </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>
-                  <Typography>Available Region</Typography>
+                  <Typography>Available States in your Plan</Typography>
                 </TableCell>
                 <TableCell>
                   <div className='flex flex-row space-x-2 space-y-2 d-flex align-items-center max-w-400 flex-wrap overflow-x-auto'>
-                    {states
-                      ? Object.keys(states).map((item: string, index: number) => (
-                          <Chip key={index} label={states[item]} variant='outlined' color='info' />
-                        ))
-                      : Array(8)
-                          .fill(8)
-                          .map((item: number, index: number) => (
-                            <Skeleton variant='rounded' width={60} height={30} key={index} />
-                          ))}
+                    <UsaMap states={states} />
                   </div>
                 </TableCell>
               </TableRow>

@@ -18,6 +18,8 @@ import withReducer from 'src/app/store/withReducer'
 import reducer from '../store'
 import {Controller, FormProvider, useForm, useFormContext} from 'react-hook-form'
 import {showMessage} from 'src/app/store/fuse/messageSlice'
+import {getStates} from 'src/app/pages/dashboard/store/planSlice'
+import BillingManage from 'src/app/pages/dashboard/Billing/BillingManage'
 
 declare module 'react' {
   interface CSSProperties {
@@ -103,16 +105,12 @@ function StyledTreeItem(props: StyledTreeItemProps) {
                         },
                         autoHideDuration: 5000,
                         node: (
-                          <form
-                            action='http://www.webhookstest.samaritanmarketplace.com/billing.php'
-                            method='post'
-                            data-turbo='false'
-                          >
-                            <input type='hidden' name='customer_id' value={account?.customer_id} />
-                            <Button type='submit' variant='contained' color='primary' sx={{mt: 3}}>
-                              Upgrade your Subscription
-                            </Button>
-                          </form>
+                          <BillingManage
+                            title='Upgrade your subscription'
+                            variant='contained'
+                            color='primary'
+                            customer_id={account?.customer_id}
+                          />
                         ),
                       })
                     )
@@ -157,7 +155,7 @@ function SidebarMenuMain() {
   const category = useAppSelector(({sidebar}) => sidebar.category)
   const {state} = useAppSelector(({post}) => post.plan)
   const {states} = useAppSelector(({user}) => user)
-
+  const dispatch = useAppDispatch()
   const methods = useForm({
     mode: 'onChange',
   })
@@ -217,6 +215,10 @@ function SidebarMenuMain() {
       })
     }
   }, [category, setValue, allSelect])
+
+  React.useEffect(() => {
+    dispatch(getStates())
+  }, [dispatch])
 
   const state_with_plan = React.useMemo(() => {
     if (state && state.length > 0 && states) {
