@@ -1,5 +1,5 @@
-import React, {KeyboardEventHandler, memo, useEffect, useMemo, useState} from 'react'
-import {Controller, FormProvider, useForm, useFormContext} from 'react-hook-form'
+import React, {memo, useEffect, useMemo, useState} from 'react'
+import {Controller, useFormContext} from 'react-hook-form'
 import PostEditor from './PostEditor'
 import PostOptions from './PostOptions'
 import TopImage from './TopImage'
@@ -72,7 +72,7 @@ const Post = (props: Props) => {
         SetIsKeywordSet(true)
       }
     }
-  }, [keyword, isKeywordSet])
+  }, [keyword, isKeywordSet, setValue])
 
   const all_category = useMemo(() => {
     let temp: any = []

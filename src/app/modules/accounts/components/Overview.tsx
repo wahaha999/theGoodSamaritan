@@ -1,14 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useEffect, useState} from 'react'
-import {Link} from 'react-router-dom'
-import {KTIcon, toAbsoluteUrl, toServerUrl} from '../../../../_metronic/helpers'
-import {
-  ChartsWidget1,
-  ListsWidget5,
-  TablesWidget1,
-  TablesWidget5,
-} from '../../../../_metronic/partials/widgets'
-import {Avatar, Button, Grid, IconButton, TextField, Typography, styled} from '@mui/material'
+import {useEffect, useState} from 'react'
+import {toServerUrl} from '../../../../_metronic/helpers'
+import {Button, Grid, IconButton, TextField, Typography} from '@mui/material'
 import {Controller, FormProvider, useForm, useFormContext} from 'react-hook-form'
 import * as yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'

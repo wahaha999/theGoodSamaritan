@@ -74,7 +74,7 @@ function FuseMessage(props) {
             <Typography className="mx-8">{options.message}</Typography>
             </div>{
               options.node &&
-              <div className='flex flex-row-reverse'>
+              <div className='flex flex-row-reverse mt-4'>
                 {options.node}
               </div>
           }

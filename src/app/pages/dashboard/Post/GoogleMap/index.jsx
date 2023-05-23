@@ -1,6 +1,5 @@
-import React, {useMemo, useState} from 'react'
-// import {GoogleMap, LoadScript, Marker} from '@react-google-maps/api'
-// import Autocomplete from 'react-google-places-autocomplete'
+import AddLocationIcon from '@mui/icons-material/AddLocation'
+import EditIcon from '@mui/icons-material/Edit'
 import {
   Autocomplete,
   Button,
@@ -12,18 +11,11 @@ import {
   Grid,
   InputAdornment,
   TextField,
-  Typography,
 } from '@mui/material'
-import AddLocationIcon from '@mui/icons-material/AddLocation'
+import {useMemo, useState} from 'react'
 import {Controller, useFormContext} from 'react-hook-form'
-import {useAppSelector} from 'src/app/store/hook'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
-import EditIcon from '@mui/icons-material/Edit'
-
-const containerStyle = {
-  width: '100%',
-  height: '400px',
-}
+import {useAppSelector} from 'src/app/store/hook'
 
 const center = {
   lat: -3.745,
@@ -31,7 +23,6 @@ const center = {
 }
 
 function MapContainer() {
-  const [mapCenter, setMapCenter] = useState(center)
   const {
     control,
     watch,
@@ -40,17 +31,11 @@ function MapContainer() {
   const [open, setOpen] = useState(false)
   const {state} = useAppSelector(({post}) => post.plan)
   const address = watch('address')
-  const handleSelect = ({value}) => {
-    setMapCenter({
-      lat: value.geometry.location.lat(),
-      lng: value.geometry.location.lng(),
-    })
-  }
 
   const tempState = useMemo(() => {
     if (state) {
       let temp = []
-      Object.keys(state).map((item, index) => {
+      Object.keys(state).map((item) => {
         temp.push(`${state[item].State} - ${state[item].Description}`)
       })
       return temp

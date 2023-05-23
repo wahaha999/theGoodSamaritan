@@ -6,7 +6,6 @@ import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import CloseIcon from '@mui/icons-material/Close'
 import SearchIcon from '@mui/icons-material/Search'
 import {
-  AppBar,
   Box,
   Button,
   Chip,
@@ -22,7 +21,6 @@ import {
   Paper,
   Skeleton,
   Stack,
-  Toolbar,
   Tooltip,
 } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
@@ -31,29 +29,26 @@ import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import CardMedia from '@mui/material/CardMedia'
-import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
 import InputBase, {InputBaseProps} from '@mui/material/InputBase'
 import Typography from '@mui/material/Typography'
 import {red} from '@mui/material/colors'
 import {styled} from '@mui/material/styles'
 import * as React from 'react'
-import {toAbsoluteUrl, toServerUrl} from '../../../../../_metronic/helpers'
+import {toServerUrl} from '../../../../../_metronic/helpers'
 import {AnimatePresence, Variants, motion} from 'framer-motion'
 import Post, {labels} from '../../Post'
-import {Controller, FormProvider, useForm} from 'react-hook-form'
+import {FormProvider, useForm} from 'react-hook-form'
 import * as yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {createPost, deletePost} from '../../store/postSlice'
-import {showMessage} from 'src/app/store/fuse/messageSlice'
 import withReducer from 'src/app/store/withReducer'
 import reducer from '../../store'
 import moment from 'moment'
 import 'react-responsive-carousel/lib/styles/carousel.min.css' // requires a loader
 import {Carousel} from 'react-responsive-carousel'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
-import dayjs from 'dayjs'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 const DashboardPaper = styled(Paper)(() => ({
   width: '100%',
@@ -76,12 +71,6 @@ type AnimatedDialogProps = DialogProps & {
 }
 
 const AnimatedDialog: React.FC<AnimatedDialogProps> = ({open, onClose, children, ...props}) => {
-  const dialogVariants = {
-    hidden: {opacity: 0, scale: 0.9},
-    visible: {opacity: 1, scale: 1},
-    exit: {opacity: 0, scale: 0.9},
-  }
-
   return (
     <AnimatePresence>
       <Dialog
@@ -179,25 +168,12 @@ const schema: any = yup.object().shape({
   category: yup.array().min(1, 'Category is required and must contain at least one item'),
 })
 
-const initValue = {
-  title: '',
-  content: '',
-  event_name: '',
-  start: dayjs('2022-04-17'),
-  end: dayjs('2022-04-17'),
-  category: [],
-  images: [],
-  timezone: '',
-  address: {lat: 23, lng: 12},
-}
-
 function MyPostsDashboard() {
   const user = useAppSelector(({user}) => user.user)
   const posts = useAppSelector(({post}) => {
     return post.post
   })
   const dispatch = useAppDispatch()
-  const [expanded, setExpanded] = React.useState(false)
   const [loading, setLoading] = React.useState(true)
   const [popup, setPopup] = React.useState(false)
   const [edit, setEdit] = React.useState(false)
@@ -222,9 +198,8 @@ function MyPostsDashboard() {
     resolver: yupResolver(schema),
   })
   const {
-    control,
     reset,
-    formState: {isValid, errors},
+    formState: {isValid},
   } = methods
   const {handleSubmit} = methods
   const onSubmit = (data: any) => {
@@ -268,7 +243,7 @@ function MyPostsDashboard() {
         })
       }
     }
-  }, [user, popup, reset, edit])
+  }, [user, popup, reset, edit, postData])
 
   // React.useEffect(() => {
   //   if (edit && postData) {
@@ -435,6 +410,7 @@ function MyPostsDashboard() {
                           <img
                             src={toServerUrl('/media/post/image/' + item)}
                             style={{height: 'unset', objectFit: 'cover'}}
+                            alt={item}
                           />
                         </div>
                       ))}

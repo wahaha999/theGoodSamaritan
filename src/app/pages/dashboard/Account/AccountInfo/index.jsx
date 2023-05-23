@@ -3,22 +3,17 @@ import {
   Grid,
   Avatar,
   TextField,
-  Badge,
   IconButton,
   Box,
-  Icon,
   styled,
   InputAdornment,
 } from '@mui/material'
-import AddAPhotoIcon from '@mui/icons-material/AddAPhoto'
-import React, {HTMLInputTypeAttribute, useState} from 'react'
+import {useState} from 'react'
 import {useAppSelector} from 'src/app/store/hook'
-import {toAbsoluteUrl, toServerUrl} from 'src/_metronic/helpers'
+import {toServerUrl} from 'src/_metronic/helpers'
 import FuseSvgIcon from '../../../../modules/core/FuseSvgIcon/FuseSvgIcon'
-import {Controller, useForm, useFormContext} from 'react-hook-form'
-import { orange } from '@mui/material/colors'
-import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
+import {Controller, useFormContext} from 'react-hook-form'
+import {orange} from '@mui/material/colors'
 
 const Root = styled('div')(({theme}) => ({
   '& .productImageFeaturedStar': {
@@ -57,8 +52,6 @@ const Root = styled('div')(({theme}) => ({
   },
 }))
 
-
-
 const AccountInfo = (props) => {
   const user = useAppSelector(({user}) => {
     return user.user
@@ -67,21 +60,18 @@ const AccountInfo = (props) => {
   const {control, formState, watch} = methods
 
   const {errors} = formState
-  const [preview, setPreview] = useState();
+  const [preview, setPreview] = useState()
   return (
     <Root>
       <Controller
-        name="dbkey"
+        name='dbkey'
         control={control}
         defaultValue='30'
-        render={({field:{value}}) => 
-
-        <Typography >Your Account Number: {value}</Typography>
-        }
+        render={({field: {value}}) => <Typography>Your Account Number: {value}</Typography>}
       />
       <Grid container rowSpacing={4}>
         <Grid item container alignItems='center' justifyContent='space-between'>
-          <Typography >Upload an Image to represent your Non-Profit:</Typography>
+          <Typography>Upload an Image to represent your Non-Profit:</Typography>
           <Grid item md={6} container justifyContent='center'>
             <Controller
               name='avatar'
@@ -123,17 +113,17 @@ const AccountInfo = (props) => {
                               })
                             }
 
-                            const newImage = await readFileAsync();
+                            const newImage = await readFileAsync()
                             setPreview(newImage)
 
-                            onChange(e.target.files[0]);
+                            onChange(e.target.files[0])
                           }}
                         />
                         {/* <Icon>
                           trash
                         </Icon> */}
                         {/* <IconButton> */}
-                          <FuseSvgIcon className='text-white'>heroicons-solid:camera</FuseSvgIcon>
+                        <FuseSvgIcon className='text-white'>heroicons-solid:camera</FuseSvgIcon>
                         {/* </IconButton> */}
                       </label>
                     </div>
@@ -154,11 +144,15 @@ const AccountInfo = (props) => {
                     sx={{
                       backgroundColor: 'background.default',
                       color: 'text.secondary',
-                      width:'100%',
-                      height:'100%'
+                      width: '100%',
+                      height: '100%',
                     }}
                     className='object-cover text-64 font-bold'
-                    src={preview ? preview : toServerUrl('/media/account/avatar/' + user?.account.avatar)}
+                    src={
+                      preview
+                        ? preview
+                        : toServerUrl('/media/account/avatar/' + user?.account.avatar)
+                    }
                     // alt={contact.name}
                   />
                 </Box>
@@ -182,7 +176,7 @@ const AccountInfo = (props) => {
           </Grid> */}
         </Grid>
         <Grid item container alignItems='center' justifyContent='space-between'>
-          <Typography >Name of Non-Profit:</Typography>
+          <Typography>Name of Non-Profit:</Typography>
           <Grid item md={6}>
             <Controller
               control={control}
