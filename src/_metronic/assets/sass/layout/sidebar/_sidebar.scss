@@ -35,6 +35,7 @@
   }
 
   .app-sidebar-menu {
+        overflow-y: auto;
     .menu {
       & > .menu-item {
         margin-left: 0.115rem;
