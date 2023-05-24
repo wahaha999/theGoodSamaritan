@@ -30,7 +30,7 @@ const PrivateRoutes = () => {
     <Routes>
       <Route element={<MasterLayout />}>
         {/* Redirect to Dashboard after success login/registartion */}
-        {user.account?.status ? (
+        {user.account?.customer_id ? (
           user.account?.non_profit_name ? (
             <>
               <Route path='auth/*' element={<Navigate to='/dashboard' />} />
