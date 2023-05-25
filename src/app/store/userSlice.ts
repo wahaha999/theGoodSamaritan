@@ -97,13 +97,11 @@ export const logoutUser = createAsyncThunk('user/logout', async (_, { dispatch, 
   // }
   sessionStorage.removeItem('access_token');
 
-  history.push({
-    pathname: '/auth',
-  });
-
+  
   // dispatch(setInitialSettings());
-
-  return dispatch(userLoggedOut());
+  
+ dispatch(userLoggedOut());
+  window.location.reload()
 })
 
 // export const updateUserData = (user) => async (dispatch, getState) => {
