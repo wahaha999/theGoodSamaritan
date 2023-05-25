@@ -216,7 +216,6 @@ export default function Account() {
 
   const handleNext = () => {
     if (isLastStep() && isValid) {
-      console.log('value===', getValues())
       dispatch(updateProfile(getValues()))
         .then(() => {
           // dispatch(showMessage({ message: 'Successfully updated', variant: 'success' }));
