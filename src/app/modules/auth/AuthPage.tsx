@@ -7,6 +7,7 @@ import {Login} from './components/Login'
 import {toAbsoluteUrl} from '../../../_metronic/helpers'
 import StripePricingTable from './components/StripePricingTable'
 import {ResetPassword} from './components/ResetPassword'
+import VerifyEmail from './components/VerifyEmail'
 
 const AuthLayout = () => {
   useEffect(() => {
@@ -65,6 +66,7 @@ const AuthPage = () => (
       <Route path='registration' element={<Registration />} />
       <Route path='forgot-password' element={<ForgotPassword />} />
       <Route path='reset-password' element={<ResetPassword />} />
+      <Route path='verify' element={<VerifyEmail />} />
       <Route index element={<Login />} />
     </Route>
     <Route path='subscription' element={<StripePricingTable />} />
