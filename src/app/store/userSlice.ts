@@ -49,45 +49,10 @@ const initialState: IAuthState = {
 };
 
 export const setUser = createAsyncThunk('user/setUser', async (user: IAuthState, { dispatch, getState }) => {
-  /*
-    You can redirect the logged-in user to a specific route depending on his role
-    */
-  // if (user.loginRedirectUrl) {
-  //   settingsConfig.loginRedirectUrl = user.loginRedirectUrl; // for example 'apps/academy'
-  // }
-
   return user;
 });
 
-// export const updateUserSettings = createAsyncThunk(
-//   'user/updateSettings',
-//   async (settings, { dispatch, getState }) => {
-//     const { user } = getState();
-//     const newUser = _.merge({}, user, { data: { settings } });
 
-//     dispatch(updateUserData(newUser));
-
-//     return newUser;
-//   }
-// );
-
-// export const updateUserShortcuts = createAsyncThunk(
-//   'user/updateShortucts',
-//   async (shortcuts, { dispatch, getState }) => {
-//     const { user } = getState();
-//     const newUser = {
-//       ...user,
-//       data: {
-//         ...user.data,
-//         shortcuts,
-//       },
-//     };
-
-//     dispatch(updateUserData(newUser));
-
-//     return newUser;
-//   }
-// );
 
 export const logoutUser = createAsyncThunk('user/logout', async (_, { dispatch, getState }) => {
   
@@ -104,21 +69,7 @@ export const logoutUser = createAsyncThunk('user/logout', async (_, { dispatch, 
   window.location.reload()
 })
 
-// export const updateUserData = (user) => async (dispatch, getState) => {
-//   if (!user.role || user.role.length === 0) {
-//     // is guest
-//     return;
-//   }
 
-//   jwtService
-//     .updateUserData(user)
-//     .then(() => {
-//       dispatch(showMessage({ message: 'User data saved with api' }));
-//     })
-//     .catch((error) => {
-//       dispatch(showMessage({ message: error.message }));
-//     });
-// };
 
 const userSlice = createSlice({
   name: 'user',
@@ -127,8 +78,6 @@ const userSlice = createSlice({
     userLoggedOut: (state, action: PayloadAction<void>) => initialState,
   },
   extraReducers: (builder) => {
-    // [updateUserSettings.fulfilled]: (state, action) => action.payload,
-    // [updateUserShortcuts.fulfilled]: (state, action) => action.payload,
     builder.addCase(setUser.fulfilled, (state, action) => {
       return {...state, ...action.payload,access_token: sessionStorage.getItem('access_token')};
     });
@@ -137,8 +86,5 @@ const userSlice = createSlice({
 
 export const { userLoggedOut } = userSlice.actions;
 
-// export const selectUser = ({ user }: RootState) => user;
-
-// export const selectUserShortcuts = ({ user }: RootState) => user.data?.shortcuts;
 
 export default userSlice.reducer;
