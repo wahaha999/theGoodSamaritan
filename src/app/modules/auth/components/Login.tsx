@@ -46,7 +46,6 @@ export function Login() {
       setLoading(true)
       try {
         const {data: auth} = await login(values.email, values.password)
-        console.log('🚀 ~ file: Login.tsx:49 ~ onSubmit: ~ auth:', auth)
 
         if (auth.access_token) {
           sessionStorage.setItem('access_token', auth.access_token)
@@ -65,6 +64,7 @@ export function Login() {
         // dispatch(setUser(auth))
         dispatch(showMessage({message: 'Successful login', variant: 'success'}))
       } catch (error: any) {
+        // console.log('error==', error.data)
         // saveAuth(undefined)
         setStatus(
           typeof error.response.data.message == 'string'

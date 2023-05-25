@@ -9,6 +9,7 @@ export const REGISTER_URL = `${API_URL}/auth/register`
 export const REQUEST_PASSWORD_URL = `${API_URL}/auth/forgot_password`
 export const VALIDATE_PASSWORD_RESET_TOKEN = `${API_URL}/auth/validate-token`
 export const RESET_PASSWORD_URL = `${API_URL}/auth/reset-password`
+export const VERIFY_EMAIL_URL = `${API_URL}/auth/verify`
 // Server should return AuthModel
 export function login(email: string, password: string) {
   return axios.post<any>(LOGIN_URL, {
@@ -47,7 +48,9 @@ export function resetPassword(token: string, password: string) {
   return axios.post<{ result: boolean }>(RESET_PASSWORD_URL, { token, password })
 }
 
-
+export function verifyEmail(token: string) {
+  return axios.get(`${VERIFY_EMAIL_URL}/${token}`)
+}
 
 export function logout() {
   sessionStorage.removeItem('access_token');
