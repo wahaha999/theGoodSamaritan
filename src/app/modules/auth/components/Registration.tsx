@@ -67,12 +67,12 @@ export function Registration() {
           values.password
         )
         console.log('data==', data)
-        navigate('/auth/subscription', {
+        navigate('/auth/verify', {
           state: {account_dbkey: data.account_dbkey, email: data.data.email},
         })
         dispatch(
           showMessage({
-            message: 'Successful registered',
+            message: 'Successful registered. Please verify your email',
             variant: 'success',
             autoHideDuration: 3000,
             anchorOrigin: {
