@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_URL } from "src/app/modules/auth/core/_requests";
 import { showMessage } from "src/app/store/fuse/messageSlice";
+import { setLoading } from "./filterSlice";
 
 export interface IPostData {
     title: string
@@ -52,20 +53,20 @@ export const createPost = createAsyncThunk('dashboard/post/create', async (post:
             }
         })
         const { data } = await axios.post(`${API_URL}/post/create`,formData)
-        dispatch(getPosts());
-        dispatch(showMessage({ message: 'Successful posted' ,variant:'success'}))
+        const state = getState() as any;
+        dispatch(getPosts(state?.post?.filter));
+        dispatch(showMessage({ message: 'Successful posted', variant: 'success' }))
         // return data;
     } catch (error:any) {
-        console.log("🚀 ~ file: postSlice.ts:26 ~ createPost ~ error:", error)
         dispatch(showMessage({message:error.response.data.message,variant:'error'}))
     }
 });
 
-export const getPosts = createAsyncThunk('dashboard/post/get', async (_, { getState, dispatch }) => {
+export const getPosts = createAsyncThunk('dashboard/post/get', async (searchFilter:any, { getState, dispatch }) => {
     try {
-        
-        const { data } = await axios.get(`${API_URL}/post/get`);
-        // console.log("🚀 ~ file: postSlice.ts:48 ~ getPosts ~ data:", data);
+        dispatch(setLoading(true));
+        const { data } = await axios.get(`${API_URL}/post/get`,{params:searchFilter});
+        dispatch(setLoading(false));
         return data;
         
     } catch (error) {
@@ -74,11 +75,10 @@ export const getPosts = createAsyncThunk('dashboard/post/get', async (_, { getSt
 })
 export const deletePost = createAsyncThunk('dashboard/post/delete', async (id:number, { getState, dispatch }) => {
     try {
+        const { data } = await axios.delete(`${API_URL}/post/delete/${id}`);  
+        const { post } = getState() as any;
         
-        const { data } = await axios.delete(`${API_URL}/post/delete/${id}`);
-        
-        // console.log("🚀 ~ file: postSlice.ts:48 ~ getPosts ~ data:", data);
-        dispatch(getPosts());
+        dispatch(getPosts(post?.filter));
         dispatch(showMessage({ message: 'Successfully deleted' ,variant:'success'}))
         // return data;
         
