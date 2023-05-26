@@ -50,11 +50,14 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css' // requires a loa
 import {Carousel} from 'react-responsive-carousel'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
+import CircularProgress from '@mui/material/CircularProgress'
+
 const DashboardPaper = styled(Paper)(() => ({
   width: '100%',
   height: '80vh',
   overflow: 'auto',
   padding: 24,
+  position: 'relative',
 }))
 
 const itemVariants: Variants = {
@@ -173,6 +176,7 @@ function MyPostsDashboard() {
   const posts = useAppSelector(({post}) => {
     return post.post
   })
+  const post_loading = useAppSelector(({post}) => post.filter.loading)
   const dispatch = useAppDispatch()
   const [loading, setLoading] = React.useState(true)
   const [popup, setPopup] = React.useState(false)
@@ -271,6 +275,24 @@ function MyPostsDashboard() {
         >
           <CustomizedInputBase user={user} layoutId='1' popup={popup} setPopup={setPopup} />
         </motion.div>
+        <Grid container justifyContent='center'>
+          {post_loading && (
+            <Box
+              sx={{
+                position: 'fixed',
+                zIndex: 2000,
+                background: 'white',
+                borderRadius: '50%',
+                width: 50,
+                height: 50,
+                boxShadow: 1,
+                display: 'flex',
+              }}
+            >
+              <CircularProgress sx={{margin: 'auto'}} size={30} />
+            </Box>
+          )}
+        </Grid>
         {/* <Toolbar > */}
         {/* </Toolbar> */}
         {/* {!popup && ( */}

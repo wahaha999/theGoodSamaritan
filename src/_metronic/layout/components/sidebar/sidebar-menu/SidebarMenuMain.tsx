@@ -20,6 +20,7 @@ import {Controller, FormProvider, useForm, useFormContext} from 'react-hook-form
 import {showMessage} from 'src/app/store/fuse/messageSlice'
 import {getStates} from 'src/app/pages/dashboard/store/planSlice'
 import BillingManage from 'src/app/pages/dashboard/Billing/BillingManage'
+import {addFilter} from 'src/app/pages/dashboard/store/filterSlice'
 
 declare module 'react' {
   interface CSSProperties {
@@ -279,6 +280,11 @@ function SidebarMenuMain() {
   // React.useEffect(() => {
   //   // console.log('value=====================', allValues)
   // }, [allValues])
+
+  React.useEffect(() => {
+    dispatch(addFilter(watch()))
+  }, [watch()])
+
   return (
     <FormProvider {...methods}>
       <TreeView

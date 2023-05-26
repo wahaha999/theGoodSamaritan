@@ -6,7 +6,7 @@ import FollowingDashboard from './components/FollowingDashboard'
 import MyPostsDashboard from './components/MyPostsDashboard'
 import PostTitleItem from './components/PostTitleItem'
 import {motion} from 'framer-motion'
-import {useAppDispatch} from 'src/app/store/hook'
+import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {getPosts} from './store/postSlice'
 
 const container = {
@@ -96,9 +96,10 @@ const DashboardPage: FC = () => {
 const DashboardWrapper: FC = () => {
   const intl = useIntl()
   const dispatch = useAppDispatch()
+  const {states} = useAppSelector(({post}) => post.filter)
   useEffect(() => {
-    dispatch(getPosts())
-  }, [])
+    dispatch(getPosts({states}))
+  }, [states])
   return (
     <>
       <DashboardPage />
