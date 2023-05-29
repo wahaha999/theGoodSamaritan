@@ -13,7 +13,14 @@ type Props = {
   hasBullet?: boolean
 }
 
-const MenuItem: FC<Props> = ({to, title, icon, fontIcon, hasArrow = false, hasBullet = false}) => {
+const MenuItemBy: FC<Props> = ({
+  to,
+  title,
+  icon,
+  fontIcon,
+  hasArrow = false,
+  hasBullet = false,
+}) => {
   const {pathname} = useLocation()
 
   return (
@@ -50,4 +57,4 @@ const MenuItem: FC<Props> = ({to, title, icon, fontIcon, hasArrow = false, hasBu
   )
 }
 
-export {MenuItem}
+export {MenuItemBy}
