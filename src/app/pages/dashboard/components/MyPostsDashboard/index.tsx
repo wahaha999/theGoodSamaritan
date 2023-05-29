@@ -42,7 +42,7 @@ import {FormProvider, useForm} from 'react-hook-form'
 import * as yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
-import {createPost, deletePost} from '../../store/postSlice'
+import {createPost, deletePost, getPosts} from '../../store/postSlice'
 import withReducer from 'src/app/store/withReducer'
 import reducer from '../../store'
 import moment from 'moment'
@@ -249,6 +249,16 @@ function MyPostsDashboard() {
     }
   }, [user, popup, reset, edit, postData])
 
+  const {filter} = useAppSelector(({post}) => post.filter)
+  const getPostsByFilter = React.useCallback((filter: any) => {
+    dispatch(getPosts(filter))
+  }, [])
+  React.useEffect(() => {
+    if (filter) {
+      getPostsByFilter(filter)
+    }
+  }, [getPostsByFilter, filter])
+
   // React.useEffect(() => {
   //   if (edit && postData) {
   //     reset({
@@ -407,6 +417,9 @@ function MyPostsDashboard() {
                     )}
                     <Box sx={{my: 2}} />
                     <div dangerouslySetInnerHTML={{__html: post?.content}}></div>
+                    <>
+                      {JSON.parse(post?.category).join(',')},{post?.state}
+                    </>
                   </>
                 }
               />

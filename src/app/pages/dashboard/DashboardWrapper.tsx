@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import {Box, Grid} from '@mui/material'
-import {FC, useEffect} from 'react'
+import {FC, memo, useCallback, useEffect} from 'react'
 import {useIntl} from 'react-intl'
 import FollowingDashboard from './components/FollowingDashboard'
 import MyPostsDashboard from './components/MyPostsDashboard'
@@ -95,11 +95,7 @@ const DashboardPage: FC = () => {
 
 const DashboardWrapper: FC = () => {
   const intl = useIntl()
-  const dispatch = useAppDispatch()
-  const {states} = useAppSelector(({post}) => post.filter)
-  useEffect(() => {
-    dispatch(getPosts({states}))
-  }, [states])
+
   return (
     <>
       <DashboardPage />
@@ -107,4 +103,4 @@ const DashboardWrapper: FC = () => {
   )
 }
 
-export {DashboardWrapper}
+export default memo(DashboardWrapper)
