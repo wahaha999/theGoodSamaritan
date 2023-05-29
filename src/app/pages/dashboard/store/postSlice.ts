@@ -53,7 +53,7 @@ export const createPost = createAsyncThunk('dashboard/post/create', async (post:
         })
         const { data } = await axios.post(`${API_URL}/post/create`,formData)
         const state = getState() as any;
-        dispatch(getPosts(state?.post?.filter));
+        dispatch(getPosts(state?.post?.filter?.filter));
         dispatch(showMessage({ message: 'Successful posted', variant: 'success' }))
         // return data;
     } catch (error:any) {
@@ -77,7 +77,7 @@ export const deletePost = createAsyncThunk('dashboard/post/delete', async (id:nu
         const { data } = await axios.delete(`${API_URL}/post/delete/${id}`);  
         const { post } = getState() as any;
         
-        dispatch(getPosts(post?.filter));
+        dispatch(getPosts(post?.filter?.filter));
         dispatch(showMessage({ message: 'Successfully deleted' ,variant:'success'}))
         // return data;
         

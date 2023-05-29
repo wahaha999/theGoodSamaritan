@@ -2,7 +2,8 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 const initialState = {
     states: [] as any[],
     loading: false,
-    filter:{},
+    filter: {},
+    search:{}
 };
 export const filterSlice = createSlice({
     name: 'filter',
@@ -66,11 +67,20 @@ export const filterSlice = createSlice({
             prepare: (status: boolean) => {
                 return{payload:status}
             }
+        },
+        addFilterForHeader: {
+            reducer: (state, action: PayloadAction<Record<string,string>>) => {
+            state.filter = {...state.filter,...action.payload};
+            },
+            prepare: (filter: Record<string,string>) => {
+                
+                return {payload:filter};
+            }
         }
         
     }
 })
 
-export const {addFilter,setLoading} = filterSlice.actions
+export const {addFilter,setLoading,addFilterForHeader} = filterSlice.actions
 
 export default filterSlice.reducer

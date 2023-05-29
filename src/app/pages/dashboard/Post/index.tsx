@@ -77,10 +77,18 @@ const Post = (props: Props) => {
   const all_category = useMemo(() => {
     let temp: any = []
     category.map((item: any, index: number) => {
-      temp.push(item.name)
+      temp.push({name: item.name, value: item.name.toLowerCase()})
     })
     return temp
   }, [category])
+
+  const categoryies = watch('category')
+  const [category_value, setCategoryValue] = useState([])
+  useEffect(() => {
+    if (all_category.length > 0 && categoryies) {
+      setCategoryValue(all_category.filter((item: any) => categoryies.includes(item.value)))
+    }
+  }, [all_category, categoryies])
   return (
     <>
       <Grid container alignItems='center' my={4}>
@@ -143,15 +151,21 @@ const Post = (props: Props) => {
                   <FormControl fullWidth error={!!errors.category}>
                     <Autocomplete
                       onChange={(e, value: any) => {
-                        onChange(value)
+                        setCategoryValue(value)
+                        onChange(value.map((item: any) => item.value))
                       }}
-                      value={typeof value == 'string' ? JSON.parse(value) : value}
+                      value={category_value}
                       sx={{mb: 2}}
                       multiple
                       id='tags-outlined'
                       options={all_category}
-                      // isOptionEqualToValue={(option, value) => option.id == value}
-                      getOptionLabel={(option: any) => option}
+                      // isOptionEqualToValue={(option, value) => option.value === value}
+                      isOptionEqualToValue={(option, value) => {
+                        return option.value === value
+                      }}
+                      getOptionLabel={(option: any) => {
+                        return option.name
+                      }}
                       // defaultValue={[top100Films[13]]}
                       filterSelectedOptions
                       renderInput={(params) => (

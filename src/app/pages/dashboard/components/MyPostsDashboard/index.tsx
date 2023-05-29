@@ -417,9 +417,6 @@ function MyPostsDashboard() {
                     )}
                     <Box sx={{my: 2}} />
                     <div dangerouslySetInnerHTML={{__html: post?.content}}></div>
-                    <>
-                      {JSON.parse(post?.category).join(',')},{post?.state}
-                    </>
                   </>
                 }
               />
