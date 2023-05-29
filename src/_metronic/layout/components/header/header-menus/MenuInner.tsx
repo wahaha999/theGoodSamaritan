@@ -8,6 +8,11 @@ import {MenuInnerWithSub} from './MenuInnerWithSub'
 import {MenuItem} from './MenuItem'
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
 import {useParams} from 'react-router-dom'
+import {Controller, FormProvider, useForm, useFormContext} from 'react-hook-form'
+import {useEffect} from 'react'
+import {useDispatch} from 'react-redux'
+import {useAppDispatch} from 'src/app/store/hook'
+import {addFilterForHeader} from 'src/app/pages/dashboard/store/filterSlice'
 
 const SearchText = styled(TextField)({
   '& .MuiInputBase-root': {
@@ -28,6 +33,24 @@ const SearchText = styled(TextField)({
 export function MenuInner() {
   const intl = useIntl()
   const params = useParams()
+  const dispatch = useAppDispatch()
+  const methods = useForm({
+    mode: 'onChange',
+  })
+  const {control, watch, reset} = methods
+
+  useEffect(() => {
+    const initialState = {
+      search: '',
+      sort_by: 1,
+      select: 1,
+    }
+    reset({...initialState})
+  }, [reset])
+
+  useEffect(() => {
+    dispatch(addFilterForHeader(watch()))
+  }, [watch()])
 
   return (
     <>
@@ -58,48 +81,70 @@ export function MenuInner() {
           </Button>
         </Grid>
         {params['*'] == 'dashboard' && (
-          <Grid container columnSpacing={4} sx={{mt: 1}}>
-            <Grid item>
-              <SearchText
-                placeholder='Search Posts'
-                InputProps={{startAdornment: <SearchIcon />}}
-              />
-            </Grid>
-            <Grid item>
-              <label>Sort By:</label>
-              <Select
-                sx={{ml: 1}}
-                labelId='demo-select-small-label'
-                id='demo-select-small'
-                value='latest'
-                // value={age}
-                // label="Age"
-                // onChange={handleChange}
-              >
-                <option value='latest'>Latest</option>
-                <option value={20}>Twenty</option>
-                <option value={30}>Thirty</option>
-              </Select>
-            </Grid>
-            <Grid item>
-              <Grid container alignItems='center'>
-                <label>Select Posts:</label>
-                <Select
-                  sx={{ml: 1}}
-                  labelId='demo-select-small-label'
-                  id='demo-select-small'
-                  value='Today'
-                  // value={age}
-                  // label="Age"
-                  // onChange={handleChange}
-                >
-                  <option value='Today'>Today</option>
-                  <option value={20}>Twenty</option>
-                  <option value={30}>Thirty</option>
-                </Select>
+          <FormProvider {...methods}>
+            <Grid container columnSpacing={4} sx={{mt: 1}}>
+              <Grid item>
+                <Controller
+                  name='search'
+                  defaultValue=''
+                  control={control}
+                  render={({field}) => (
+                    <SearchText
+                      {...field}
+                      placeholder='Search Posts'
+                      InputProps={{startAdornment: <SearchIcon />}}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item>
+                <label>Sort By:</label>
+                <Controller
+                  name='sort_by'
+                  control={control}
+                  defaultValue={1}
+                  render={({field}) => (
+                    <Select
+                      sx={{ml: 1}}
+                      labelId='demo-select-small-label'
+                      id='demo-select-small'
+                      {...field}
+                      // value={age}
+                      // label="Age"
+                      // onChange={handleChange}
+                    >
+                      <option value={1}>Latest</option>
+                      <option value={2}>Earliest</option>
+                    </Select>
+                  )}
+                />
+              </Grid>
+              <Grid item>
+                <Grid container alignItems='center'>
+                  <label>Select Posts:</label>
+                  <Controller
+                    name='select'
+                    defaultValue={1}
+                    control={control}
+                    render={({field}) => (
+                      <Select
+                        sx={{ml: 1}}
+                        labelId='demo-select-small-label'
+                        id='demo-select-small'
+                        {...field}
+                        // value={age}
+                        // label="Age"
+                        // onChange={handleChange}
+                      >
+                        <option value={1}>Today</option>
+                        <option value={2}>This Month</option>
+                      </Select>
+                    )}
+                  />
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          </FormProvider>
         )}
       </div>
     </>
