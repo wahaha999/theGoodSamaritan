@@ -1,11 +1,11 @@
 import SearchIcon from '@mui/icons-material/Search'
-import {Button, Grid, Select, TextField, styled} from '@mui/material'
+import {Button, Grid, MenuItem, Select, TextField, styled} from '@mui/material'
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs'
 import {DatePicker} from '@mui/x-date-pickers/DatePicker'
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider'
 import {useIntl} from 'react-intl'
 import {MenuInnerWithSub} from './MenuInnerWithSub'
-import {MenuItem} from './MenuItem'
+import {MenuItemBy} from './MenuItem'
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
 import {useParams} from 'react-router-dom'
 import {Controller, FormProvider, useForm, useFormContext} from 'react-hook-form'
@@ -42,7 +42,7 @@ export function MenuInner() {
   useEffect(() => {
     const initialState = {
       search: '',
-      sort_by: 1,
+      sort_by: 'desc',
       select: 1,
     }
     reset({...initialState})
@@ -58,7 +58,7 @@ export function MenuInner() {
         <Grid container flexDirection='row'>
           {/* <Button >Dashboard</Button>
           <Button >Account</Button> */}
-          <MenuItem title={intl.formatMessage({id: 'MENU.DASHBOARD'})} to='/dashboard' />
+          <MenuItemBy title={intl.formatMessage({id: 'MENU.DASHBOARD'})} to='/dashboard' />
           <MenuInnerWithSub
             title='Account'
             to='/account'
@@ -66,13 +66,13 @@ export function MenuInner() {
             menuPlacement='right-start'
             menuTrigger={`{default:'click', lg: 'hover'}`}
           >
-            <MenuItem title='Account Information' to='/account/info' />
-            <MenuItem title='Billing' to='/account/billing' />
-            {/* <MenuItem title='About Your Non-Profit' to='/account/about_non_profit' />
-            <MenuItem title='Noe-Profit Verification' to='/account/verification' />
-            <MenuItem title='Address' to='/account/location' /> */}
+            <MenuItemBy title='Account Information' to='/account/info' />
+            <MenuItemBy title='Billing' to='/account/billing' />
+            {/* <MenuItemBy title='About Your Non-Profit' to='/account/about_non_profit' />
+            <MenuItemBy title='Noe-Profit Verification' to='/account/verification' />
+            <MenuItemBy title='Address' to='/account/location' /> */}
           </MenuInnerWithSub>
-          <MenuItem title={'Subscription'} to='/subscription' />
+          <MenuItemBy title={'Subscription'} to='/subscription' />
           <Button startIcon={<NotificationsActiveIcon color='secondary' />} sx={{ml: 2}}>
             Your Connections
           </Button>
@@ -102,7 +102,7 @@ export function MenuInner() {
                 <Controller
                   name='sort_by'
                   control={control}
-                  defaultValue={1}
+                  defaultValue={'desc'}
                   render={({field}) => (
                     <Select
                       sx={{ml: 1}}
@@ -113,8 +113,8 @@ export function MenuInner() {
                       // label="Age"
                       // onChange={handleChange}
                     >
-                      <option value={1}>Latest</option>
-                      <option value={2}>Earliest</option>
+                      <MenuItem value='desc'>Latest</MenuItem>
+                      <MenuItem value='asc'>Earliest</MenuItem>
                     </Select>
                   )}
                 />
@@ -136,8 +136,8 @@ export function MenuInner() {
                         // label="Age"
                         // onChange={handleChange}
                       >
-                        <option value={1}>Today</option>
-                        <option value={2}>This Month</option>
+                        <MenuItem value={1}>Today</MenuItem>
+                        <MenuItem value={2}>This Month</MenuItem>
                       </Select>
                     )}
                   />

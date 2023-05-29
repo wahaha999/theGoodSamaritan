@@ -11,7 +11,7 @@ export const filterSlice = createSlice({
     reducers: {
         addFilter: {
             reducer: (state, action: PayloadAction<string[]>) => {
-            state.filter = action.payload;
+             state.filter = {...state.filter,...action.payload};
             },
             prepare: (filter: any) => {
                 console.log('filter==', typeof(filter.purpose));
