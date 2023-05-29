@@ -116,6 +116,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
                       })
                     )
                   } else {
+                    console.log('value==', value)
                     onChange(e.target.checked)
                   }
                 }}
@@ -164,7 +165,16 @@ function SidebarMenuMain() {
 
   React.useEffect(() => {
     if (category.length > 0 && state != undefined && state.length > 0 && states) {
-      const initialValues: Record<string, boolean> = category.reduce((acc: any, item: any) => {
+      const initialValues: any = {view: {}, purpose: {}, category: {}, state: {}}
+      initialValues.view.my_posts = true
+      initialValues.view.every_posts = false
+      initialValues.purpose.sharing_message = false
+      initialValues.purpose.resource_to_share = false
+      initialValues.purpose.need_resources = false
+      initialValues.purpose.have_event = false
+      initialValues.all_states = false
+      initialValues.all_select = false
+      const initialCategory: any = category.reduce((acc: any, item: any) => {
         acc[item.name.toLowerCase()] = false
         // item.subcategories.forEach((sub: any) => {
         //   acc[sub.name.toLowerCase()] = false
@@ -189,17 +199,9 @@ function SidebarMenuMain() {
       // initialValues = { ...initialStates };
 
       // Add other static fields to initialValues
-      initialValues.my_posts = false
-      initialValues.every_posts = false
-      initialValues.sharing_message = false
-      initialValues.resource_to_share = false
-      initialValues.need_resources = false
-      initialValues.have_event = false
-      initialValues.states = false
-      initialValues.all_select = false
 
       // Reset the form with the new initialValues when category data is available
-      reset({...initialValues, ...initialStates})
+      reset({...initialValues, state: {...initialStates}, category: {...initialCategory}})
     }
   }, [category, reset, state, states])
 
@@ -209,7 +211,7 @@ function SidebarMenuMain() {
     if (category.length > 0) {
       // Iterate through the category data and set the related fields to the value of all_select
       category.forEach((item: any) => {
-        setValue(item.name.toLowerCase(), allSelect)
+        setValue(`category.${item.name.toLowerCase()}`, allSelect)
         // item.subcategories.forEach((sub: any) => {
         //   setValue(sub.name.toLowerCase(), allSelect)
         // })
@@ -280,7 +282,7 @@ function SidebarMenuMain() {
   // React.useEffect(() => {
   //   // console.log('value=====================', allValues)
   // }, [allValues])
-
+  console.log('value==', watch())
   React.useEffect(() => {
     dispatch(addFilter(watch()))
   }, [watch()])
@@ -300,11 +302,11 @@ function SidebarMenuMain() {
             <span className='menu-section text-muted text-uppercase fs-8 ls-1 ps-4'>View</span>
           </div>
         </div>
-        <StyledTreeItem nodeId='1' labelText='My Posts' name='my_posts' labelIcon={MailIcon} />
+        <StyledTreeItem nodeId='1' labelText='My Posts' name='view.my_posts' labelIcon={MailIcon} />
         <StyledTreeItem
           nodeId='2'
           labelText="Every One Else's Posts"
-          name='every_posts'
+          name='view.every_posts'
           labelIcon={DeleteIcon}
         />
         <div className='menu-item'>
@@ -317,28 +319,28 @@ function SidebarMenuMain() {
         <StyledTreeItem
           nodeId='3'
           labelText='Sharing a Message'
-          name='sharing_message'
+          name='purpose.sharing_message'
           labelIcon={Label}
           labelInfo='90'
         />
         <StyledTreeItem
           nodeId='4'
           labelText='Resources to Share'
-          name='resource_to_share'
+          name='purpose.resource_to_share'
           labelIcon={Label}
           labelInfo='3,566'
         />
         <StyledTreeItem
           nodeId='5'
           labelText='In need of Resources'
-          name='need_resources'
+          name='purpose.need_resources'
           labelIcon={Label}
           labelInfo='733'
         />
         <StyledTreeItem
           nodeId='6'
           labelText='Event'
-          name='have_event'
+          name='purpose.have_event'
           labelIcon={Label}
           labelInfo='1037'
         />
@@ -349,14 +351,14 @@ function SidebarMenuMain() {
             </span>
           </div>
         </div>
-        <StyledTreeItem nodeId='4' labelText='States' name='states' labelIcon={Label}>
+        <StyledTreeItem nodeId='4' labelText='States' name='all_states' labelIcon={Label}>
           {state_with_plan?.map((item: any, index: number) => (
             <StyledTreeItem
               disabled={!item.available}
               nodeId={item.State}
               labelText={item.Description}
               labelIcon={Label}
-              name={item.State}
+              name={`state.${item.State}`}
               key={index}
             />
           ))}
@@ -376,11 +378,11 @@ function SidebarMenuMain() {
         />
         {category.map((item: any, index: number) => (
           <StyledTreeItem
-            nodeId={item.name}
+            nodeId={`${item.name}`}
             labelText={item.name}
             labelIcon={Label}
             key={index}
-            name={item.name.toLowerCase()}
+            name={`category.${item.name.toLowerCase()}`}
           />
         ))}
       </TreeView>
