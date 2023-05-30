@@ -21,6 +21,7 @@ import {showMessage} from 'src/app/store/fuse/messageSlice'
 import {getStates} from 'src/app/pages/dashboard/store/planSlice'
 import BillingManage from 'src/app/pages/dashboard/Billing/BillingManage'
 import {addFilter} from 'src/app/pages/dashboard/store/filterSlice'
+import {getCategories} from '../store/categorySlice'
 
 declare module 'react' {
   interface CSSProperties {
@@ -158,6 +159,9 @@ function SidebarMenuMain() {
   const {state} = useAppSelector(({post}) => post.plan)
   const {states} = useAppSelector(({user}) => user)
   const dispatch = useAppDispatch()
+  React.useEffect(() => {
+    dispatch(getCategories())
+  }, [])
   const methods = useForm({
     mode: 'onChange',
   })
@@ -167,15 +171,15 @@ function SidebarMenuMain() {
     if (category.length > 0 && state != undefined && state.length > 0 && states) {
       const initialValues: any = {view: {}, purpose: {}, category: {}, state: {}}
       initialValues.view.my_posts = true
-      initialValues.view.every_posts = false
-      initialValues.purpose.sharing_message = false
-      initialValues.purpose.resource_to_share = false
-      initialValues.purpose.need_resources = false
-      initialValues.purpose.have_event = false
+      initialValues.view.every_posts = true
+      initialValues.purpose.sharing_message = true
+      initialValues.purpose.resource_to_share = true
+      initialValues.purpose.need_resources = true
+      initialValues.purpose.have_event = true
       initialValues.all_states = false
-      initialValues.all_select = false
+      initialValues.all_select = true
       const initialCategory: any = category.reduce((acc: any, item: any) => {
-        acc[item.name.toLowerCase()] = false
+        acc[item.name.toLowerCase()] = true
         // item.subcategories.forEach((sub: any) => {
         //   acc[sub.name.toLowerCase()] = false
         // })

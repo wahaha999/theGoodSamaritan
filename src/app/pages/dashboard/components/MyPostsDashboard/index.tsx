@@ -6,6 +6,7 @@ import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import CloseIcon from '@mui/icons-material/Close'
 import SearchIcon from '@mui/icons-material/Search'
 import {
+  AppBar,
   Box,
   Button,
   Chip,
@@ -15,12 +16,14 @@ import {
   DialogProps,
   DialogTitle,
   Divider,
+  Fab,
   Grid,
   Menu,
   MenuItem,
   Paper,
   Skeleton,
   Stack,
+  Toolbar,
   Tooltip,
 } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
@@ -550,53 +553,59 @@ function MyPostsDashboard() {
         sx={{zIndex: 1000}}
       >
         <FormProvider {...methods}>
-          <DialogTitle>
-            <>
-              <Stack mb={2}>
-                <motion.div
-                  initial={{x: 30}}
-                  animate={{x: 0}}
-                  exit={{opacity: 0}}
-                  transition={{duration: 1}}
+          {/* <DialogTitle> */}
+          <AppBar position='static' color='default'>
+            <Toolbar>
+              <Typography component='div' sx={{flexGrow: 1}}>
+                New Post
+              </Typography>
+              <motion.div
+                initial={{x: 30}}
+                animate={{x: 0}}
+                exit={{opacity: 0}}
+                transition={{duration: 1}}
+              >
+                {/* <Grid container direction='row-reverse'> */}
+                <Button
+                  variant='contained'
+                  color='success'
+                  sx={{
+                    mx: 2,
+                    borderRadius: 12,
+                    '&.Mui-disabled': {
+                      backgroundColor: '#a7dda7',
+                      // color: 'white',
+                    },
+                  }}
+                  disabled={!isValid}
+                  onClick={() => handleSubmit(onSubmit)()}
                 >
-                  {/* <Grid container direction='row-reverse'> */}
-                  <Button
-                    variant='contained'
-                    color='success'
-                    sx={{
-                      mx: 2,
-                      borderRadius: 12,
-                      float: 'right',
-                      '&.Mui-disabled': {
-                        backgroundColor: '#a7dda7',
-                        // color: 'white',
-                      },
-                    }}
-                    disabled={!isValid}
-                    onClick={() => handleSubmit(onSubmit)()}
-                  >
-                    Post
-                  </Button>
-                </motion.div>
-                <motion.div
-                  initial={{x: -30}}
-                  animate={{x: 0}}
-                  style={{position: 'absolute', top: 8, left: 8}}
-                  exit={{opacity: 0}}
-                  transition={{duration: 1}}
+                  Post
+                </Button>
+              </motion.div>
+              <motion.div
+                initial={{x: -30}}
+                animate={{x: 0}}
+                exit={{opacity: 0}}
+                transition={{duration: 1}}
+              >
+                <IconButton
+                  size='small'
+                  sx={{
+                    backgroundColor: 'white',
+                  }}
+                  onClick={() => {
+                    setPostData({})
+                    setEdit(false)
+                    setPopup(false)
+                  }}
                 >
-                  <IconButton
-                    onClick={() => {
-                      setPostData({})
-                      setEdit(false)
-                      setPopup(false)
-                    }}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                </motion.div>
-              </Stack>
-              {/* <motion.div
+                  <CloseIcon />
+                </IconButton>
+              </motion.div>
+            </Toolbar>
+          </AppBar>
+          {/* <motion.div
                 initial={{scale: 1.1}}
                 animate={{scale: 1}}
                 transition={{type: 'spring', damping: 10, stiffness: 100}}
@@ -614,8 +623,7 @@ function MyPostsDashboard() {
                   )}
                 />
               </motion.div> */}
-            </>
-          </DialogTitle>
+          {/* </DialogTitle> */}
           <DialogContent tabIndex={-1}>
             <Post />
           </DialogContent>
