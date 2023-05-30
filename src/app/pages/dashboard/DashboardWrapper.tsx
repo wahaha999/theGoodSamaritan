@@ -26,7 +26,7 @@ const DashboardPage: FC = () => {
   return (
     <>
       <motion.div variants={container} initial='hidden' animate='show'>
-        <Grid container columnSpacing={4} sx={{mt: 2}}>
+        <Grid container columnSpacing={4} sx={{mt: 4}}>
           <Grid item md={8}>
             <motion.div variants={item} initial='hidden' animate='show'>
               <MyPostsDashboard />

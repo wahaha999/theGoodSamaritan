@@ -1,5 +1,16 @@
 import SearchIcon from '@mui/icons-material/Search'
-import {Button, Grid, MenuItem, Select, TextField, styled} from '@mui/material'
+import {
+  Button,
+  FormControl,
+  Grid,
+  InputBase,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  alpha,
+  styled,
+} from '@mui/material'
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs'
 import {DatePicker} from '@mui/x-date-pickers/DatePicker'
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider'
@@ -7,28 +18,52 @@ import {useIntl} from 'react-intl'
 import {MenuInnerWithSub} from './MenuInnerWithSub'
 import {MenuItemBy} from './MenuItem'
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
-import {useParams} from 'react-router-dom'
+import {Link, useParams} from 'react-router-dom'
 import {Controller, FormProvider, useForm, useFormContext} from 'react-hook-form'
 import {useEffect} from 'react'
 import {useDispatch} from 'react-redux'
 import {useAppDispatch} from 'src/app/store/hook'
 import {addFilterForHeader} from 'src/app/pages/dashboard/store/filterSlice'
 
-const SearchText = styled(TextField)({
-  '& .MuiInputBase-root': {
-    backgroundColor: '#F9F9F9',
-    borderRadius: 8,
-    height: 50,
-    '&.Mui-focused': {
-      backgroundColor: '#fff',
-      borderColor: 'grey',
+const Search = styled('div')(({theme}) => ({
+  position: 'relative',
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.75),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.95),
+  },
+  marginRight: theme.spacing(2),
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(3),
+    width: 'auto',
+  },
+}))
+
+const SearchIconWrapper = styled('div')(({theme}) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}))
+
+const StyledInputBase = styled(InputBase)(({theme}) => ({
+  color: 'inherit',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: '20ch',
     },
   },
-  '& .MuiInputBase-input': {
-    fontSize: 16,
-    fontWeight: 500,
-  },
-})
+}))
 
 export function MenuInner() {
   const intl = useIntl()
@@ -54,11 +89,11 @@ export function MenuInner() {
 
   return (
     <>
-      <div style={{padding: '12px'}}>
+      <div style={{paddingTop: '10px'}}>
         <Grid container flexDirection='row'>
           {/* <Button >Dashboard</Button>
           <Button >Account</Button> */}
-          <MenuItemBy title={intl.formatMessage({id: 'MENU.DASHBOARD'})} to='/dashboard' />
+          <MenuItemBy to={'/dashboard'} title='DASHBOARD' />
           <MenuInnerWithSub
             title='Account'
             to='/account'
@@ -66,13 +101,18 @@ export function MenuInner() {
             menuPlacement='right-start'
             menuTrigger={`{default:'click', lg: 'hover'}`}
           >
-            <MenuItemBy title='Account Information' to='/account/info' />
-            <MenuItemBy title='Billing' to='/account/billing' />
+            <MenuItem>
+              <MenuItemBy title='Account Information' to='/account/info' />
+            </MenuItem>
+            <MenuItem>
+              <MenuItemBy title='Billing' to='/account/billing' />
+            </MenuItem>
             {/* <MenuItemBy title='About Your Non-Profit' to='/account/about_non_profit' />
             <MenuItemBy title='Noe-Profit Verification' to='/account/verification' />
-            <MenuItemBy title='Address' to='/account/location' /> */}
+          <MenuItemBy title='Address' to='/account/location' /> */}
           </MenuInnerWithSub>
-          <MenuItemBy title={'Subscription'} to='/subscription' />
+          <MenuItemBy title={'SUBSCRIPTION'} to='/subscription' />
+          <MenuItemBy title='OUR YOUTUBE CHANNEL' to='/youtube' />
           <Button startIcon={<NotificationsActiveIcon color='secondary' />} sx={{ml: 2}}>
             Your Connections
           </Button>
@@ -82,42 +122,60 @@ export function MenuInner() {
         </Grid>
         {params['*'] == 'dashboard' && (
           <FormProvider {...methods}>
-            <Grid container columnSpacing={4} sx={{mt: 1}}>
+            <Grid container alignItems='center'>
               <Grid item>
                 <Controller
                   name='search'
                   defaultValue=''
                   control={control}
                   render={({field}) => (
-                    <SearchText
-                      {...field}
-                      placeholder='Search Posts'
-                      InputProps={{startAdornment: <SearchIcon />}}
-                    />
+                    <Search>
+                      <SearchIconWrapper>
+                        <SearchIcon />
+                      </SearchIconWrapper>
+                      <StyledInputBase
+                        {...field}
+                        placeholder='Search…'
+                        inputProps={{'aria-label': 'search'}}
+                      />
+                    </Search>
                   )}
                 />
               </Grid>
               <Grid item>
-                <label>Sort By:</label>
-                <Controller
-                  name='sort_by'
-                  control={control}
-                  defaultValue={'desc'}
-                  render={({field}) => (
-                    <Select
-                      sx={{ml: 1}}
-                      labelId='demo-select-small-label'
-                      id='demo-select-small'
-                      {...field}
-                      // value={age}
-                      // label="Age"
-                      // onChange={handleChange}
-                    >
-                      <MenuItem value='desc'>Latest</MenuItem>
-                      <MenuItem value='asc'>Earliest</MenuItem>
-                    </Select>
-                  )}
-                />
+                <Grid container alignItems='center'>
+                  <label>Sort By:</label>
+                  <Controller
+                    name='sort_by'
+                    control={control}
+                    defaultValue={'desc'}
+                    render={({field}) => (
+                      <FormControl sx={{m: 1, minWidth: 120}} size='small'>
+                        <Select
+                          sx={{ml: 1}}
+                          labelId='demo-select-small-label'
+                          id='demo-select-small'
+                          {...field}
+                        >
+                          <MenuItem value='desc'>Latest</MenuItem>
+                          <MenuItem value='asc'>Earliest</MenuItem>
+                        </Select>
+                      </FormControl>
+                      // <Select
+                      //   sx={{ml: 1}}
+                      //   labelId='demo-select-small-label'
+                      //   id='demo-select-small'
+                      //   {...field}
+                      //   // value={age}
+                      //   // label="Age"
+                      //   // onChange={handleChange}
+                      // >
+                      //   <MenuItem value='desc'>Latest</MenuItem>
+                      //   <MenuItem value='asc'>Earliest</MenuItem>
+                      // </Select>
+                    )}
+                  />
+                </Grid>
               </Grid>
               <Grid item>
                 <Grid container alignItems='center'>
@@ -127,18 +185,20 @@ export function MenuInner() {
                     defaultValue={1}
                     control={control}
                     render={({field}) => (
-                      <Select
-                        sx={{ml: 1}}
-                        labelId='demo-select-small-label'
-                        id='demo-select-small'
-                        {...field}
-                        // value={age}
-                        // label="Age"
-                        // onChange={handleChange}
-                      >
-                        <MenuItem value={1}>Today</MenuItem>
-                        <MenuItem value={2}>This Month</MenuItem>
-                      </Select>
+                      <FormControl sx={{m: 1, minWidth: 120}} size='small'>
+                        <Select
+                          sx={{ml: 1}}
+                          labelId='demo-select-small-label'
+                          id='demo-select-small'
+                          {...field}
+                          // value={age}
+                          // label="Age"
+                          // onChange={handleChange}
+                        >
+                          <MenuItem value={1}>Today</MenuItem>
+                          <MenuItem value={2}>This Month</MenuItem>
+                        </Select>
+                      </FormControl>
                     )}
                   />
                 </Grid>

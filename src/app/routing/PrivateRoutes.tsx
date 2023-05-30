@@ -11,6 +11,8 @@ import {useAppSelector} from '../store/hook'
 import Account from '../pages/dashboard/Account'
 import AccountPage from '../modules/accounts/AccountPage'
 import Billing from '../pages/dashboard/Billing'
+import AppLayout from 'src/_metronic/layout/AppLayout'
+import YoutubePage from '../pages/youtube'
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
@@ -28,7 +30,7 @@ const PrivateRoutes = () => {
   // console.log('🚀 ~ file: PrivateRoutes.tsx:22 ~ PrivateRoutes ~ user:', user)
   return (
     <Routes>
-      <Route element={<MasterLayout />}>
+      <Route element={<AppLayout />}>
         {/* Redirect to Dashboard after success login/registartion */}
         {user.account?.customer_id ? (
           user.account?.non_profit_name ? (
@@ -36,8 +38,7 @@ const PrivateRoutes = () => {
               <Route path='auth/*' element={<Navigate to='/dashboard' />} />
               {/* Pages */}
               <Route path='dashboard' element={<DashboardWrapper />} />
-              <Route path='builder' element={<BuilderPageWrapper />} />
-              <Route path='menu-test' element={<MenuTestPage />} />
+              <Route path='youtube' element={<YoutubePage />} />
               <Route
                 path='account/info'
                 element={
