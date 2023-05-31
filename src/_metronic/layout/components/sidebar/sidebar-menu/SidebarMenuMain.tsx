@@ -16,7 +16,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import withReducer from 'src/app/store/withReducer'
 import reducer from '../store'
-import {Controller, FormProvider, useForm, useFormContext} from 'react-hook-form'
+import {Controller, FormProvider, set, useForm, useFormContext} from 'react-hook-form'
 import {showMessage} from 'src/app/store/fuse/messageSlice'
 import {getStates} from 'src/app/pages/dashboard/store/planSlice'
 import BillingManage from 'src/app/pages/dashboard/Billing/BillingManage'
@@ -161,11 +161,15 @@ function SidebarMenuMain() {
   const dispatch = useAppDispatch()
   React.useEffect(() => {
     dispatch(getCategories())
+    dispatch(getStates())
   }, [])
+
   const methods = useForm({
     mode: 'onChange',
   })
   const {getValues, watch, reset, setValue} = methods
+  const allSelect = watch('all_select')
+  const all_states = watch('all_states')
 
   React.useEffect(() => {
     if (category.length > 0 && state != undefined && state.length > 0 && states) {
@@ -176,13 +180,10 @@ function SidebarMenuMain() {
       initialValues.purpose.resource_to_share = true
       initialValues.purpose.need_resources = true
       initialValues.purpose.have_event = true
-      initialValues.all_states = false
+      initialValues.all_states = true
       initialValues.all_select = true
       const initialCategory: any = category.reduce((acc: any, item: any) => {
         acc[item.name.toLowerCase()] = true
-        // item.subcategories.forEach((sub: any) => {
-        //   acc[sub.name.toLowerCase()] = false
-        // })
         return acc
       }, {})
 
@@ -195,37 +196,17 @@ function SidebarMenuMain() {
         })
         return acc
       }, {})
-      // console.log(
-      //   '🚀 ~ file: SidebarMenuMain.tsx:144 ~ constinitialStates:Record<string,boolean>=state.reduce ~ initialStates:',
-      //   initialStates
-      // )
 
-      // initialValues = { ...initialStates };
-
-      // Add other static fields to initialValues
-
-      // Reset the form with the new initialValues when category data is available
       reset({...initialValues, state: {...initialStates}, category: {...initialCategory}})
     }
   }, [category, reset, state, states])
-
-  const allSelect = watch('all_select') // Watch the all_select field
-
   React.useEffect(() => {
     if (category.length > 0) {
-      // Iterate through the category data and set the related fields to the value of all_select
       category.forEach((item: any) => {
         setValue(`category.${item.name.toLowerCase()}`, allSelect)
-        // item.subcategories.forEach((sub: any) => {
-        //   setValue(sub.name.toLowerCase(), allSelect)
-        // })
       })
     }
   }, [category, setValue, allSelect])
-
-  React.useEffect(() => {
-    dispatch(getStates())
-  }, [dispatch])
 
   const state_with_plan = React.useMemo(() => {
     if (state && state.length > 0 && states) {
@@ -241,52 +222,35 @@ function SidebarMenuMain() {
       })
     }
   }, [state, states])
-  // React.useEffect(() => {
-  //   if (category.length > 0) {
-  //     // Iterate through the category data and check for changes in the related fields
-  //     category.forEach((item: any) => {
-  //       let allSubcategoriesChecked = true
 
-  //       // If the category field is true, set all related subcategory fields to true
-  //       if (watchedFields[item.name.toLowerCase()]) {
-  //         item.subcategories.forEach((sub: any) => {
-  //           setValue(sub.name.toLowerCase(), true)
-  //         })
-  //       } else {
-  //         item.subcategories.forEach((sub: any) => {
-  //           setValue(sub.name.toLowerCase(), false)
-  //         })
+  React.useEffect(() => {
+    if (state_with_plan != undefined && state_with_plan.length > 0) {
+      state_with_plan.forEach((element: any) => {
+        if (element.available) {
+          if (all_states) {
+            setValue(`state.${element.State}`, true)
+          } else {
+            setValue(`state.${element.State}`, false)
+            setValue('state.none', true)
+          }
+        }
+      })
+    }
+  }, [setValue, all_states, state_with_plan])
+
+  const watch_state = watch('state')
+  console.log('watch==', watch_state)
+
+  // React.useEffect(() => {
+  //   if (watch_state) {
+  //     Object.keys(states)?.forEach((element: any) => {
+  //       if (!watch_state[`${element}`]) {
+  //         setValue('all_states', false)
   //       }
   //     })
   //   }
-  // }, [category, setValue, watchedFields])
+  // }, [watch(), states, setValue])
 
-  // React.useEffect(() => {
-  //   if (category.length > 0) {
-  //     // Iterate through the category data and check for changes in the subcategory fields
-  //     category.forEach((item: any) => {
-  //       let allSubcategoriesChecked = true
-  //       if (item.subcategories.length > 0) {
-  //         // Check if all subcategories are checked
-  //         item.subcategories.forEach((sub: any) => {
-  //           if (!watchedFields[sub.name.toLowerCase()]) {
-  //             allSubcategoriesChecked = false
-  //           }
-  //         })
-
-  //         if (!allSubcategoriesChecked) {
-  //           // If any subcategory field is false, set the parent category field to false
-  //           setValue(item.name.toLowerCase(), false)
-  //         }
-  //       }
-  //     })
-  //   }
-  // }, [category, setValue, watchedFields])
-
-  // React.useEffect(() => {
-  //   // console.log('value=====================', allValues)
-  // }, [allValues])
-  console.log('value==', watch())
   React.useEffect(() => {
     dispatch(addFilter(watch()))
   }, [watch()])

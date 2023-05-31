@@ -257,7 +257,7 @@ function MyPostsDashboard() {
     dispatch(getPosts(filter))
   }, [])
   React.useEffect(() => {
-    if (filter) {
+    if (filter.states && filter.states.length > 0) {
       getPostsByFilter(filter)
     }
   }, [getPostsByFilter, filter])
