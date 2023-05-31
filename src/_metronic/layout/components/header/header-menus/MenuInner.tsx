@@ -78,7 +78,7 @@ export function MenuInner() {
     const initialState = {
       search: '',
       sort_by: 'desc',
-      select: 1,
+      select: 0,
     }
     reset({...initialState})
   }, [reset])
@@ -182,7 +182,7 @@ export function MenuInner() {
                   <label>Select Posts:</label>
                   <Controller
                     name='select'
-                    defaultValue={1}
+                    defaultValue={0}
                     control={control}
                     render={({field}) => (
                       <FormControl sx={{m: 1, minWidth: 120}} size='small'>
@@ -195,6 +195,7 @@ export function MenuInner() {
                           // label="Age"
                           // onChange={handleChange}
                         >
+                          <MenuItem value={0}>All</MenuItem>
                           <MenuItem value={1}>Today</MenuItem>
                           <MenuItem value={2}>This Month</MenuItem>
                         </Select>
