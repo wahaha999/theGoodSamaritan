@@ -20,17 +20,6 @@ const UsaMap = (props) => {
     }
   }, [states])
 
-  /* optional customization of filling per state and calling custom callbacks per state */
-  // const statesCustomConfig = {
-  //   NJ: {
-  //     fill: 'navy',
-  //     clickHandler: (event) => console.log('Custom handler for NJ', event.target.dataset),
-  //   },
-  //   NY: {
-  //     fill: theme.palette.primary.main,
-  //   },
-  // }
-
   return (
     <div>
       <USAMap style={{width: '100px'}} customize={statesCustomConfig} onClick={mapHandler} />

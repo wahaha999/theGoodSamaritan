@@ -82,7 +82,6 @@ export const deletePost = createAsyncThunk('dashboard/post/delete', async (id:nu
         // return data;
         
     } catch (error:any) {
-        console.log('error==',error)
         dispatch(showMessage({message:error.response.data.message,variant:'error'}))
     }
 })
@@ -99,12 +98,9 @@ const postSlice = createSlice({
     // [getStates.fulfilled]: (state, action) => action.payload,
     // [updateUserShortcuts.fulfilled]: (state, action) => action.payload,
     builder.addCase(getPosts.fulfilled, (state:any, action) => {
-        // console.log('action==', state)
-        // state.post = action.payload;
         return action.payload;
     })
         .addCase(createPost.fulfilled, (state: any, action) => {
-        console.log('action1==',state)
       return action.payload;
     });
   },

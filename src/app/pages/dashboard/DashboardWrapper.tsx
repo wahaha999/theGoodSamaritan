@@ -78,15 +78,6 @@ const DashboardPage: FC = () => {
               </FollowingDashboard>
             </motion.div>
           </Grid>
-          {/* <Grid item md={3}>
-        <FollowingDashboard placeholder='Search Followed Ports' title='45 Saved Posts'>
-          <PostTitleItem request title='Faith Convenant Church' img='/media/avatars/300-2.jpg' />
-          <PostTitleItem request title='Faith Convenant Church' img='/media/avatars/300-7.jpg' />
-          <PostTitleItem title='Faith Convenant Church' img='/media/avatars/300-8.jpg' />
-          <PostTitleItem title='Faith Convenant Church' img='/media/avatars/300-9.jpg' />
-          <PostTitleItem title='Faith Convenant Church' img='/media/avatars/300-10.jpg' />
-        </FollowingDashboard>
-      </Grid> */}
         </Grid>
       </motion.div>
     </>

@@ -62,7 +62,6 @@ const AuthInit = ({children}: any) => {
       try {
         if (!didRequest.current) {
           const {data} = await getUserByToken()
-          console.log('🚀 ~ file: Auth.tsx:65 ~ requestUser ~ data:', data)
           const temp = {...data.user}
           // delete temp.account
           if (temp.email) {

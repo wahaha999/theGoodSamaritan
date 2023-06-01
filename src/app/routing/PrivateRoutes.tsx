@@ -27,7 +27,6 @@ const PrivateRoutes = () => {
   const user = useAppSelector(({user}) => {
     return user.user
   })
-  // console.log('🚀 ~ file: PrivateRoutes.tsx:22 ~ PrivateRoutes ~ user:', user)
   return (
     <Routes>
       <Route element={<AppLayout />}>

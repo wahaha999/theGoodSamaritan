@@ -225,7 +225,6 @@ export default function Account() {
           // dispatch(showMessage({message:'Something is wrong',variant:'error'}))
         })
     } else {
-      // console.log('err==',errors)
       const newActiveStep =
         isLastStep() && !allStepsCompleted()
           ? // It's the last step, but not all steps have been completed,

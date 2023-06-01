@@ -71,7 +71,6 @@ export function Overview() {
   }, [reset, users])
   const user = watch()
   const onSubmit = (data: any) => {
-    console.log('data===', data)
     const {account_dbkey, email_verified_at, id, updated_at, ...res_data} = data
     dispatch(updateUser(res_data))
       .then(() => {

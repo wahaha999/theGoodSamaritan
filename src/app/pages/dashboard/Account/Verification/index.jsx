@@ -38,7 +38,6 @@ const Verification = (props) => {
   const {errors} = formState
   const [filePreviews, setFilePreviews] = useState([])
   const doc = watch('doc')
-  // console.log("🚀 ~ file: index.jsx:23 ~ Verification ~ doc:", doc)
   useEffect(() => {
     if (typeof doc !== 'string') {
       setFilePreviews([...doc])
@@ -144,8 +143,6 @@ const Verification = (props) => {
         defaultValue={'[]'}
         control={control}
         render={({field: {onChange, value}}) => {
-          // setFilePreviews([...filePreviews,...value])
-          // console.log('value==',value)
           return (
             <>
               <Grid container alignItems='center'>

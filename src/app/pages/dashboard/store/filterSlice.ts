@@ -14,7 +14,6 @@ export const filterSlice = createSlice({
              state.filter = {...state.filter,...action.payload};
             },
             prepare: (filter: any) => {
-                console.log('filter==', typeof(filter.purpose));
                 let temp:any = {view:[],states:[],purpose:[],category:[]};
                 Object.keys(filter).forEach((item: string) => {
                     
