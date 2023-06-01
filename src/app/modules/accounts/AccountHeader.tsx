@@ -2,7 +2,6 @@
 import React from 'react'
 import {KTIcon, toAbsoluteUrl, toServerUrl} from '../../../_metronic/helpers'
 import {Link} from 'react-router-dom'
-import {Dropdown1} from '../../../_metronic/partials'
 import {useLocation} from 'react-router-dom'
 import {useAppSelector} from 'src/app/store/hook'
 
