@@ -148,7 +148,7 @@ const PostViewHeader = (props: Props) => {
           )}
           <Box sx={{my: 2}} />
           <div
-            className='ck-blurred ck ck-content ck-editor__editable ck-rounded-corners ck-editor__editable_inline'
+            className='!min-h-0 ck-content'
             dangerouslySetInnerHTML={{__html: post?.content}}
           ></div>
         </>
