@@ -17,43 +17,43 @@ interface ICustomizedInputBase {
 function CustomizedInputBase(props: ICustomizedInputBase & InputBaseProps) {
   const {popup, setPopup, layoutId, field, user, postType, ...other} = props
   return (
-    <motion.div layoutId={layoutId}>
-      <Paper
-        elevation={2}
-        onClick={() => {
-          if (setPopup) {
-            setPopup()
-          }
-        }}
-        component='form'
-        sx={{
-          p: '2px 2px',
-          display: 'flex',
-          alignItems: 'center',
-          width: '100%',
-          borderRadius: 8,
-        }}
-      >
-        <IconButton sx={{p: '10px'}} aria-label='menu'>
-          <Avatar aria-label='recipe' src={toServerUrl('/media/user/avatar/' + user?.avatar)} />
-        </IconButton>
-        <InputBase
-          fullWidth
-          {...other}
-          {...field}
-          sx={{ml: 1, flex: 1}}
-          placeholder={postType === 'post' ? "What's on your mind?*" : 'Add comment'}
-          inputProps={{'aria-label': 'search google maps'}}
-        />
-        <IconButton type='button' sx={{p: '10px'}} aria-label='search'>
-          <SearchIcon />
-        </IconButton>
-        {/* <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" /> */}
-        {/* <IconButton color="primary" sx={{ p: '10px' }} aria-label="directions">
+    // <motion.div layoutId={layoutId}>
+    <Paper
+      elevation={2}
+      onClick={() => {
+        if (setPopup) {
+          setPopup()
+        }
+      }}
+      component='form'
+      sx={{
+        p: '2px 2px',
+        display: 'flex',
+        alignItems: 'center',
+        width: '100%',
+        borderRadius: 8,
+      }}
+    >
+      <IconButton sx={{p: '10px'}} aria-label='menu'>
+        <Avatar aria-label='recipe' src={toServerUrl('/media/user/avatar/' + user?.avatar)} />
+      </IconButton>
+      <InputBase
+        fullWidth
+        {...other}
+        {...field}
+        sx={{ml: 1, flex: 1}}
+        placeholder={postType === 'post' ? "What's on your mind?*" : 'Add comment'}
+        inputProps={{'aria-label': 'search google maps'}}
+      />
+      <IconButton type='button' sx={{p: '10px'}} aria-label='search'>
+        <SearchIcon />
+      </IconButton>
+      {/* <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" /> */}
+      {/* <IconButton color="primary" sx={{ p: '10px' }} aria-label="directions">
           <DirectionsIcon />
         </IconButton> */}
-      </Paper>
-    </motion.div>
+    </Paper>
+    // </motion.div>
   )
 }
 type Props = {
@@ -75,7 +75,7 @@ const PostInput = (props: Props) => {
       <CustomizedInputBase
         postType={type}
         user={user}
-        layoutId='1'
+        // layoutId='1'
         setPopup={() => {
           if (type === 'post') {
             dispatch(openPostDialog({postType: 'new_post', open: true}))
