@@ -37,7 +37,7 @@ const AnimatedDialog: React.FC<AnimatedDialogProps> = ({open, onClose, children,
   )
 }
 
-const schema: any = yup.object().shape({
+const post_schema: any = yup.object().shape({
   purpose: yup.number().required('Purpose is required'),
   // title: yup.string().required('Title is required'),
   event_name: yup
@@ -55,6 +55,10 @@ const schema: any = yup.object().shape({
     ),
   category: yup.array().min(1, 'Category is required and must contain at least one item'),
 })
+const comment_schema: any = yup.object().shape({
+  content: yup.string().min(9, 'Content is required and must contain at least 5 char'),
+  // title: yup.string().required('Title is required'),
+})
 
 const PostDialog = (props: Props) => {
   const dispatch = useAppDispatch()
@@ -64,7 +68,7 @@ const PostDialog = (props: Props) => {
   const methods = useForm({
     mode: 'onChange',
     defaultValues: {},
-    resolver: yupResolver(schema),
+    resolver: yupResolver(postType.includes('post') ? post_schema : comment_schema),
   })
 
   const {
