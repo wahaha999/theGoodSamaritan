@@ -111,7 +111,6 @@ export function MenuInner() {
             <MenuItemBy title='Noe-Profit Verification' to='/account/verification' />
           <MenuItemBy title='Address' to='/account/location' /> */}
           </MenuInnerWithSub>
-          <MenuItemBy title={'SUBSCRIPTION'} to='/subscription' />
           <MenuItemBy title='OUR YOUTUBE CHANNEL' to='/youtube' />
           <Button startIcon={<NotificationsActiveIcon color='secondary' />} sx={{ml: 2}}>
             Your Connections
