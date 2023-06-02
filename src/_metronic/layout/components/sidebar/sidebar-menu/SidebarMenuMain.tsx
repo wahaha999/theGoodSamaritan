@@ -117,7 +117,6 @@ function StyledTreeItem(props: StyledTreeItemProps) {
                       })
                     )
                   } else {
-                    console.log('value==', value)
                     onChange(e.target.checked)
                   }
                 }}
@@ -239,7 +238,6 @@ function SidebarMenuMain() {
   }, [setValue, all_states, state_with_plan])
 
   const watch_state = watch('state')
-  console.log('watch==', watch_state)
 
   // React.useEffect(() => {
   //   if (watch_state) {

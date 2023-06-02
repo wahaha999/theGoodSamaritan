@@ -1,6 +1,5 @@
 import {lazy, FC, Suspense} from 'react'
 import {Route, Routes, Navigate} from 'react-router-dom'
-import {MasterLayout} from '../../_metronic/layout/MasterLayout'
 import TopBarProgress from 'react-topbar-progress-indicator'
 import DashboardWrapper from '../pages/dashboard/DashboardWrapper'
 import {MenuTestPage} from '../pages/MenuTestPage'
@@ -15,19 +14,11 @@ import AppLayout from 'src/_metronic/layout/AppLayout'
 import YoutubePage from '../pages/youtube'
 
 const PrivateRoutes = () => {
-  const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
-  const WizardsPage = lazy(() => import('../modules/wizards/WizardsPage'))
-  // const AccountPage = lazy(() => import('../modules/accounts/AccountPage'))
-  const WidgetsPage = lazy(() => import('../modules/widgets/WidgetsPage'))
-  const ChatPage = lazy(() => import('../modules/apps/chat/ChatPage'))
-  const UsersPage = lazy(() => import('../modules/apps/user-management/UsersPage'))
   const Subscription = lazy(() => import('../pages/dashboard/Subscription/index'))
-  // const Account = lazy(() => import('../pages/dashboard/Account'))
 
   const user = useAppSelector(({user}) => {
     return user.user
   })
-  // console.log('🚀 ~ file: PrivateRoutes.tsx:22 ~ PrivateRoutes ~ user:', user)
   return (
     <Routes>
       <Route element={<AppLayout />}>
@@ -64,30 +55,7 @@ const PrivateRoutes = () => {
                 }
               />
               {/* Lazy Modules */}
-              <Route
-                path='crafted/pages/profile/*'
-                element={
-                  <SuspensedView>
-                    <ProfilePage />
-                  </SuspensedView>
-                }
-              />
-              <Route
-                path='crafted/pages/wizards/*'
-                element={
-                  <SuspensedView>
-                    <WizardsPage />
-                  </SuspensedView>
-                }
-              />
-              <Route
-                path='crafted/widgets/*'
-                element={
-                  <SuspensedView>
-                    <WidgetsPage />
-                  </SuspensedView>
-                }
-              />
+
               <Route
                 path='crafted/account/*'
                 element={
@@ -96,22 +64,7 @@ const PrivateRoutes = () => {
                   // </SuspensedView>
                 }
               />
-              <Route
-                path='apps/chat/*'
-                element={
-                  <SuspensedView>
-                    <ChatPage />
-                  </SuspensedView>
-                }
-              />
-              <Route
-                path='apps/user-management/*'
-                element={
-                  <SuspensedView>
-                    <UsersPage />
-                  </SuspensedView>
-                }
-              />
+
               {/* Page Not Found */}
               <Route path='*' element={<Navigate to='/error/404' />} />
             </>

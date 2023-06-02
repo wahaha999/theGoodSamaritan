@@ -42,7 +42,6 @@ export const updateProfile = createAsyncThunk(
 
       return temp
     } catch (error: any) {
-      console.log('error==', error.response)
       dispatch(showMessage({message: 'Something is wrong', variant: 'error'}))
     }
     // const data = await reqponse.data

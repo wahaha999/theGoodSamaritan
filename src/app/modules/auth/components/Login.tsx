@@ -51,21 +51,14 @@ export function Login() {
           sessionStorage.setItem('access_token', auth.access_token)
         }
         const temp = {...auth.user}
-        // console.log('🚀 ~ file: Login.tsx:54 ~ onSubmit: ~ temp:', temp)
-        // delete temp.account
-        // if (temp.email) {
         dispatch(
           setUser({
             user: temp,
             states: {...auth.states},
           })
         )
-        // }
-        // dispatch(setUser(auth))
         dispatch(showMessage({message: 'Successful login', variant: 'success'}))
       } catch (error: any) {
-        // console.log('error==', error.data)
-        // saveAuth(undefined)
         setStatus(
           typeof error.response.data.message == 'string'
             ? error.response.data.message

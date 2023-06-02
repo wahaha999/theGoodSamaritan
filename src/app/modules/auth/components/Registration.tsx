@@ -66,7 +66,6 @@ export function Registration() {
           values.last_name,
           values.password
         )
-        console.log('data==', data)
         navigate('/auth/verify', {
           state: {account_dbkey: data.account_dbkey, email: data.data.email},
         })

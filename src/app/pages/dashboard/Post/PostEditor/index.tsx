@@ -60,16 +60,12 @@ const PostEditor = (props: Props) => {
             }}
             editor={ClassicEditor}
             data={value}
-            onReady={(editor) => {
-              // You can store the "editor" and use when it is needed.
-              // console.log('Editor is ready to use!', editor)
-            }}
+            onReady={(editor) => {}}
             onChange={(event, editor) => {
               let data = editor.getData()
               // const regex = /(https:\/\/www\.youtube\.com\/embed\/[a-zA-Z0-9_-]+)/g
               // data = data.replace(regex, '$1?autoplay=1')
               onChange(data)
-              // console.log({event, editor, data})
             }}
             // config={{
             //   plugins: [SimpleUploadAdapter],

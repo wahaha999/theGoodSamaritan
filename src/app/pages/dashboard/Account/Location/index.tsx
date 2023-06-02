@@ -42,27 +42,6 @@ const Location = (props: Props) => {
     }
   }, [state])
 
-  // React.useEffect(() => {
-  //   let active = true
-
-  //   if (!loading) {
-  //     return undefined
-  //   }
-
-  //   ;(async () => {
-  //     const {data} = await axios.get(`${API_URL}/get_state`)
-  //     console.log('data==', data)
-
-  //     if (active) {
-  //       setOptions([...data])
-  //     }
-  //   })()
-
-  //   return () => {
-  //     active = false
-  //   }
-  // }, [loading])
-
   return (
     <>
       <Typography variant='h5' my={2}>
@@ -108,7 +87,6 @@ const Location = (props: Props) => {
               name='fax_number'
               defaultValue=''
               render={({field: {value, ...other}}) => {
-                console.log('value==', value)
                 return (
                   <TextField
                     {...other}

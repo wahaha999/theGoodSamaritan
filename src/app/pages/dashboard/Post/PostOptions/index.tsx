@@ -151,7 +151,6 @@ const PostOptions = (props: Props) => {
                   control={control}
                   defaultValue={dayjs('2022-04-18')}
                   render={({field: {onChange, value}}) => {
-                    // console.log('vaulue===', typeof value)
                     return (
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={['DateTimePicker']}>

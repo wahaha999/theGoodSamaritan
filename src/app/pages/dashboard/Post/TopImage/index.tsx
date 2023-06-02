@@ -113,7 +113,6 @@ function TopImage() {
                         })
                       }
                       const newImage = await readFileAsync()
-                      // console.log('imagevalue==', value)
                       setPreview([newImage, ...preview])
                       onChange([
                         e.target.files[0],
@@ -138,7 +137,6 @@ function TopImage() {
                         value.splice(index, 1)
                         onChange(value)
                       }
-                      // console.log('splice==', temp)
                       setPreview(preview)
                     }}
                     // onKeyDown={() => onChange(media.id)}

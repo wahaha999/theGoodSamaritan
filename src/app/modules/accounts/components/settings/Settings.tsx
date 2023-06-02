@@ -87,7 +87,6 @@ export function Settings() {
   const {handleSubmit} = methods
 
   const onSubmit = (data: any) => {
-    console.log('data==', data)
     dispatch(updatePassword(data))
   }
   return (
