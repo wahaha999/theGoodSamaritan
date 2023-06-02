@@ -138,6 +138,7 @@ function MyPostsDashboard(props: Props) {
         <PostInput type='post' />
         {posts?.map((post: any, index: number) => (
           <Card
+            key={index}
             sx={{
               width: '100%',
               margin: '16px 0px',
