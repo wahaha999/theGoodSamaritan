@@ -86,6 +86,52 @@ export const deletePost = createAsyncThunk('dashboard/post/delete', async (id:nu
     }
 })
 
+export const createComment = createAsyncThunk('dashboard/comments/create', async (comment: any,{getState,dispatch}) => {
+     const formData = new FormData();
+    try {
+        Object.keys(comment).map((item, index) => {
+            if (item == 'images' && comment['images']) {
+                (comment['images'] as Array<any>).forEach((item: any, index: number) => {
+                    if (typeof item !== 'string') {
+                        formData.append(`files[${index}]`, item);
+                    } else {
+                        formData.append(`images[${index}]`, item);
+                    }
+                })
+            } else {
+                            
+                formData.append(item, comment[item]);
+                       
+            }
+                
+        })
+        const { data } = await axios.post(`${API_URL}/comments/create`, formData);
+                const state = getState() as any;
+        console.log("🚀 ~ file: postSlice.ts:110 ~ createComment ~ data:", data)
+        dispatch(getPosts(state?.post?.filter?.filter));
+        dispatch(showMessage({ message: 'Successful comment', variant: 'success' }))
+
+    } catch (error: any) {
+                dispatch(showMessage({message:error.response.data.message,variant:'error'}))
+
+    }
+})
+
+
+export const deleteComment = createAsyncThunk('dashboard/comments/delete', async (id:number, { getState, dispatch }) => {
+    try {
+        const { data } = await axios.delete(`${API_URL}/comments/delete/${id}`);  
+        const { post } = getState() as any;
+        
+        dispatch(getPosts(post?.filter?.filter));
+        dispatch(showMessage({ message: 'Successfully deleted' ,variant:'success'}))
+        // return data;
+        
+    } catch (error:any) {
+        dispatch(showMessage({message:error.response.data.message,variant:'error'}))
+    }
+})
+
 
 const postSlice = createSlice({
   name: 'post',

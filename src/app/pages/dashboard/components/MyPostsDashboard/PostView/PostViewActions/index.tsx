@@ -9,10 +9,12 @@ import {openPostDialog} from 'src/app/pages/dashboard/store/postDialogSlice'
 
 type Props = {
   setExpand: React.Dispatch<React.SetStateAction<boolean>>
+  post: any
+  type: 'comment' | 'post'
 }
 
 const PostViewActions = (props: Props) => {
-  const {setExpand} = props
+  const {setExpand, post, type} = props
   const dispatch = useAppDispatch()
   return (
     <CardActions disableSpacing>
@@ -20,18 +22,22 @@ const PostViewActions = (props: Props) => {
         <IconButton sx={{color: 'purple'}}>
           <ForumOutlinedIcon />
         </IconButton>
-        <Button startIcon={<SaveOutlinedIcon />} sx={{mr: 2}} variant='outlined'>
-          Save Post
-        </Button>
+        {type === 'post' && (
+          <Button startIcon={<SaveOutlinedIcon />} sx={{mr: 2}} variant='outlined'>
+            Save Post
+          </Button>
+        )}
         <Button
-          onClick={() =>
-            // setExpand(true)
-            dispatch(openPostDialog({open: true, postType: 'new_comment'}))
-          }
+          onClick={() => {
+            if (type === 'comment') {
+            } else {
+              setExpand(true)
+            }
+          }}
           startIcon={<ChatBubbleOutlineIcon />}
           sx={{mr: 2}}
         >
-          Comment
+          {type === 'comment' ? 'Reply' : 'Comment'}
         </Button>
         <Button startIcon={<FavoriteBorderIcon />} sx={{mr: 2}}>
           Like

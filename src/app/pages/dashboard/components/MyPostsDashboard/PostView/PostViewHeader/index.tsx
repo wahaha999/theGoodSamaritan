@@ -29,10 +29,11 @@ type Props = {
   anchorEl: HTMLElement | null
   open: boolean
   handleClose: () => void
+  type: 'comment' | 'post'
 }
 
 const PostViewHeader = (props: Props) => {
-  const {post, user, handleClick, anchorEl, open, handleClose} = props
+  const {post, user, handleClick, anchorEl, open, handleClose, type} = props
   const dispatch = useAppDispatch()
   return (
     <CardHeader
@@ -66,7 +67,13 @@ const PostViewHeader = (props: Props) => {
               >
                 <MenuItem
                   onClick={() => {
-                    dispatch(openCheckDialog({open: true, checkType: 'post', dialogId: post.id}))
+                    if (type === 'post') {
+                      dispatch(openCheckDialog({open: true, checkType: 'post', dialogId: post.id}))
+                    } else {
+                      dispatch(
+                        openCheckDialog({open: true, checkType: 'comment', dialogId: post.id})
+                      )
+                    }
                     handleClose()
                   }}
                 >
@@ -78,7 +85,15 @@ const PostViewHeader = (props: Props) => {
                 <MenuItem
                   onClick={() => {
                     handleClose()
-                    dispatch(openPostDialog({open: true, postType: 'edit_post', postOption: post}))
+                    if (type === 'post') {
+                      dispatch(
+                        openPostDialog({open: true, postType: 'edit_post', postOption: post})
+                      )
+                    } else {
+                      dispatch(
+                        openPostDialog({open: true, postType: 'edit_comment', postOption: post})
+                      )
+                    }
                   }}
                 >
                   <FuseSvgIcon sx={{mr: 1}} size={16}>
@@ -111,15 +126,17 @@ const PostViewHeader = (props: Props) => {
               {moment(post?.created_at).format('MM/DD/YY')} at{' '}
               {moment(post?.created_at).format('h:mm A')}
             </Typography>
-            <Tooltip title={labels[Number(post?.purpose) - 1].title} arrow>
-              {post?.purpose && labels[Number(post?.purpose) - 1].icon}
-            </Tooltip>
+            {type === 'post' && (
+              <Tooltip title={labels[Number(post?.purpose) - 1].title} arrow>
+                {post?.purpose && labels[Number(post?.purpose) - 1].icon}
+              </Tooltip>
+            )}
           </Grid>
         </>
       }
       subheader={
         <>
-          {post?.event_name && (
+          {type === 'post' && post?.event_name && (
             <Grid container mt={1}>
               <Typography sx={{mr: 2}}>Event Name: {post?.event_name}</Typography>
               <Typography>
@@ -130,7 +147,10 @@ const PostViewHeader = (props: Props) => {
             </Grid>
           )}
           <Box sx={{my: 2}} />
-          <div dangerouslySetInnerHTML={{__html: post?.content}}></div>
+          <div
+            className='ck-blurred ck ck-content ck-editor__editable ck-rounded-corners ck-editor__editable_inline'
+            dangerouslySetInnerHTML={{__html: post?.content}}
+          ></div>
         </>
       }
     />

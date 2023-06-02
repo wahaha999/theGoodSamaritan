@@ -1,7 +1,7 @@
 import {Dialog, DialogTitle, DialogContent, Typography, DialogActions} from '@mui/material'
 import React from 'react'
 import {Button} from 'react-bootstrap'
-import {deletePost} from '../../../store/postSlice'
+import {deleteComment, deletePost} from '../../../store/postSlice'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {ICheckDialog, closeCheckDialog} from '../../../store/checkDialog'
 
@@ -27,7 +27,11 @@ const CheckDialog = (props: Props) => {
           variant='outlined'
           color='error'
           onClick={() => {
-            dispatch(deletePost(dialogId))
+            if (checkType === 'post') {
+              dispatch(deletePost(dialogId))
+            } else {
+              dispatch(deleteComment(dialogId))
+            }
             dispatch(closeCheckDialog())
           }}
         >

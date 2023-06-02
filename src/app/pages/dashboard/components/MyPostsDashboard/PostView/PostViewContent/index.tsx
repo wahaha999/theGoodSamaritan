@@ -4,10 +4,11 @@ import LocationOnIcon from '@mui/icons-material/LocationOn'
 
 type Props = {
   post: any
+  type: 'comment' | 'post'
 }
 
 function PostViewContent(props: Props) {
-  const {post} = props
+  const {post, type} = props
   return (
     <CardContent>
       <Grid container alignItems='center' sx={{mb: 2}}>
@@ -29,15 +30,18 @@ function PostViewContent(props: Props) {
           </Typography>
         )}
       </Grid>
-      <Grid container alignItems='center' gap={2}>
-        {post?.keyword != 'null' && JSON.parse(post?.keyword ? post?.keyword : '[]').length > 0 && (
-          <Typography variant='caption'>Keyword: </Typography>
-        )}
-        {post?.keyword != 'null' &&
-          JSON.parse(post?.keyword ? post?.keyword : '[]').map((item: string, index: number) => (
-            <Chip label={item} key={index} />
-          ))}
-      </Grid>
+      {type === 'post' && (
+        <Grid container alignItems='center' gap={2}>
+          {post?.keyword != 'null' &&
+            JSON.parse(post?.keyword ? post?.keyword : '[]').length > 0 && (
+              <Typography variant='caption'>Keyword: </Typography>
+            )}
+          {post?.keyword != 'null' &&
+            JSON.parse(post?.keyword ? post?.keyword : '[]').map((item: string, index: number) => (
+              <Chip label={item} key={index} />
+            ))}
+        </Grid>
+      )}
     </CardContent>
   )
 }

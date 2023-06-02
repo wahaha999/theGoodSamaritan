@@ -1,4 +1,4 @@
-import {Collapse} from '@mui/material'
+import {Collapse, Divider} from '@mui/material'
 import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
 import {Variants, motion} from 'framer-motion'
@@ -9,9 +9,11 @@ import PostViewHeader from './PostViewHeader'
 import PostViewMedia from './PostViewMedia'
 import PostViewContent from './PostViewContent'
 import PostViewActions from './PostViewActions'
+import PostInput from '../PostInput'
 
 type Props = {
   post: any
+  type: 'comment' | 'post'
 }
 
 const itemVariants: Variants = {
@@ -24,7 +26,7 @@ const itemVariants: Variants = {
 }
 
 const PostView = (props: Props) => {
-  const {post} = props
+  const {post, type} = props
   const [popup, setPopup] = React.useState(false)
 
   const user = useAppSelector(({user}) => user.user)
@@ -39,7 +41,9 @@ const PostView = (props: Props) => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>, post: any) => {
     setAnchorEl(event.currentTarget)
     let tempPost = {...post}
-    tempPost.category = JSON.parse(tempPost.category)
+    if (type === 'post') {
+      tempPost.category = JSON.parse(tempPost.category)
+    }
     setPostData(tempPost)
   }
 
@@ -49,25 +53,30 @@ const PostView = (props: Props) => {
   }
   return (
     <motion.div variants={itemVariants}>
-      <Card sx={{width: '100%', margin: '16px 0px', border: '1px solid #D5DBDB'}}>
-        <PostViewHeader
-          post={post}
-          user={user}
-          handleClick={handleClick}
-          anchorEl={anchorEl}
-          open={open}
-          handleClose={handleClose}
-        />
-        <CardMedia component='div'>
-          <PostViewMedia post={post} />
-        </CardMedia>
-        {/* )} */}
-        <PostViewContent post={post} />
-        <PostViewActions setExpand={setExpand} />
-        <Collapse in={expanded} timeout='auto' unmountOnExit>
-          <PostView post={post} />
-        </Collapse>
-      </Card>
+      {/* <Card sx={{width: '100%', margin: '16px 0px', border: '1px solid #D5DBDB'}}> */}
+      <PostViewHeader
+        type={type}
+        post={post}
+        user={user}
+        handleClick={handleClick}
+        anchorEl={anchorEl}
+        open={open}
+        handleClose={handleClose}
+      />
+      <CardMedia component='div'>
+        <PostViewMedia post={post} type={type} />
+      </CardMedia>
+      {/* )} */}
+      <PostViewContent post={post} type={type} />
+      <PostViewActions setExpand={setExpand} post={post} type={type} />
+      <Divider />
+      <Collapse in={expanded} timeout='auto' unmountOnExit>
+        {post.comments?.map((comment: any, index: number) => (
+          <PostView type='comment' post={comment} key={index} />
+        ))}
+        {<PostInput type='comment' post={post} />}
+      </Collapse>
+      {/* </Card> */}
     </motion.div>
   )
 }

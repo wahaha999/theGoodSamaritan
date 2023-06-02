@@ -12,9 +12,10 @@ interface ICustomizedInputBase {
   layoutId?: string
   field?: any
   user: any
+  postType: 'comment' | 'post'
 }
 function CustomizedInputBase(props: ICustomizedInputBase & InputBaseProps) {
-  const {popup, setPopup, layoutId, field, user, ...other} = props
+  const {popup, setPopup, layoutId, field, user, postType, ...other} = props
   return (
     <motion.div layoutId={layoutId}>
       <Paper
@@ -27,7 +28,6 @@ function CustomizedInputBase(props: ICustomizedInputBase & InputBaseProps) {
         component='form'
         sx={{
           p: '2px 2px',
-          m: '4px 4px',
           display: 'flex',
           alignItems: 'center',
           width: '100%',
@@ -42,7 +42,7 @@ function CustomizedInputBase(props: ICustomizedInputBase & InputBaseProps) {
           {...other}
           {...field}
           sx={{ml: 1, flex: 1}}
-          placeholder="What's on your mind?*"
+          placeholder={postType === 'post' ? "What's on your mind?*" : 'Add comment'}
           inputProps={{'aria-label': 'search google maps'}}
         />
         <IconButton type='button' sx={{p: '10px'}} aria-label='search'>
@@ -56,9 +56,13 @@ function CustomizedInputBase(props: ICustomizedInputBase & InputBaseProps) {
     </motion.div>
   )
 }
-type Props = {}
+type Props = {
+  type: 'comment' | 'post'
+  post?: any
+}
 
 const PostInput = (props: Props) => {
+  const {type, post} = props
   const user = useAppSelector(({user}) => user.user)
   const dispatch = useAppDispatch()
 
@@ -69,9 +73,16 @@ const PostInput = (props: Props) => {
       transition={{type: 'spring', damping: 10, stiffness: 100}}
     >
       <CustomizedInputBase
+        postType={type}
         user={user}
         layoutId='1'
-        setPopup={() => dispatch(openPostDialog({postType: 'new_post', open: true}))}
+        setPopup={() => {
+          if (type === 'post') {
+            dispatch(openPostDialog({postType: 'new_post', open: true}))
+          } else {
+            dispatch(openPostDialog({open: true, postType: 'new_comment', postId: post.id}))
+          }
+        }}
       />
     </motion.div>
   )

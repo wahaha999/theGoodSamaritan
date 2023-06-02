@@ -16,7 +16,7 @@ import {yupResolver} from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import CloseIcon from '@mui/icons-material/Close'
-import {createPost} from '../../../store/postSlice'
+import {createComment, createPost} from '../../../store/postSlice'
 import {IPostDialog, closePostDialog} from '../../../store/postDialogSlice'
 import {showMessage} from 'src/app/store/fuse/messageSlice'
 import {POST_DIALOG_TITLE} from 'src/app/constants/post'
@@ -30,7 +30,12 @@ type AnimatedDialogProps = DialogProps & {
 const AnimatedDialog: React.FC<AnimatedDialogProps> = ({open, onClose, children, ...props}) => {
   return (
     <AnimatePresence>
-      <Dialog open={open} onClose={onClose} {...props}>
+      <Dialog
+        open={open}
+        onClose={onClose}
+        {...props}
+        sx={{'& .MuiPaper-root': {borderRadius: 4}, zIndex: 1000}}
+      >
         {children}
       </Dialog>
     </AnimatePresence>
@@ -63,7 +68,9 @@ const comment_schema: any = yup.object().shape({
 const PostDialog = (props: Props) => {
   const dispatch = useAppDispatch()
   const user = useAppSelector(({user}) => user.user)
-  const {open, postType, postOption}: IPostDialog = useAppSelector(({post}) => post.postDialog)
+  const {open, postType, postOption, postId}: IPostDialog = useAppSelector(
+    ({post}) => post.postDialog
+  )
 
   const methods = useForm({
     mode: 'onChange',
@@ -78,7 +85,7 @@ const PostDialog = (props: Props) => {
   const {handleSubmit} = methods
   React.useEffect(() => {
     if (user.account) {
-      if (postType === 'edit_post' && postOption) {
+      if ((postType === 'edit_post' || postType === 'edit_comment') && postOption) {
         reset({
           ...postOption,
         })
@@ -102,19 +109,36 @@ const PostDialog = (props: Props) => {
   }, [user, open, reset, postType, postOption])
 
   const onSubmit = (data: any) => {
-    dispatch(createPost(data))
-      .then(() => {
-        dispatch(
-          showMessage({
-            message: postType === 'new_post' ? 'Successful posted' : 'Successful edited',
-            variant: 'success',
-          })
-        )
-      })
-      .catch(() => {})
-      .finally(() => {
-        dispatch(closePostDialog())
-      })
+    if (postType.includes('post')) {
+      dispatch(createPost(data))
+        .then(() => {
+          dispatch(
+            showMessage({
+              message: postType === 'new_post' ? 'Successful posted' : 'Successful edited',
+              variant: 'success',
+            })
+          )
+        })
+        .catch(() => {})
+        .finally(() => {
+          dispatch(closePostDialog())
+        })
+    } else {
+      let comment_data = {post_id: postId, ...data}
+      dispatch(createComment(comment_data))
+        .then(() => {
+          // dispatch(
+          //   showMessage({
+          //     message: postType === 'new_comment' ? 'Successful commented' : 'Successful edited',
+          //     variant: 'success',
+          //   })
+          // )
+        })
+        .catch(() => {})
+        .finally(() => {
+          dispatch(closePostDialog())
+        })
+    }
   }
   return (
     <AnimatedDialog
@@ -125,7 +149,6 @@ const PostDialog = (props: Props) => {
       disableEnforceFocus
       disableRestoreFocus
       disablePortal
-      sx={{zIndex: 1000}}
     >
       <FormProvider {...methods}>
         {/* <DialogTitle> */}
@@ -155,7 +178,7 @@ const PostDialog = (props: Props) => {
                 disabled={!isValid}
                 onClick={() => handleSubmit(onSubmit)()}
               >
-                Post
+                {postType.includes('post') ? 'Post' : 'Comment'}
               </Button>
             </motion.div>
             <motion.div
