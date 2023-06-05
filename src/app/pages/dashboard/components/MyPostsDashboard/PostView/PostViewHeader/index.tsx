@@ -21,6 +21,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import {useAppDispatch} from 'src/app/store/hook'
 import {openPostDialog} from 'src/app/pages/dashboard/store/postDialogSlice'
 import {openCheckDialog} from 'src/app/pages/dashboard/store/checkDialog'
+import {getCommentsByPostId, getRepliesByCommentId} from 'src/app/pages/dashboard/store/postSlice'
 
 type Props = {
   post: any
@@ -29,11 +30,12 @@ type Props = {
   anchorEl: HTMLElement | null
   open: boolean
   handleClose: () => void
-  type: 'comment' | 'post'
+  type: 'comment' | 'post' | 'reply'
+  count?: number
 }
 
 const PostViewHeader = (props: Props) => {
-  const {post, user, handleClick, anchorEl, open, handleClose, type} = props
+  const {post, user, handleClick, anchorEl, open, handleClose, type, count} = props
   const dispatch = useAppDispatch()
   return (
     <CardHeader
@@ -69,10 +71,12 @@ const PostViewHeader = (props: Props) => {
                   onClick={() => {
                     if (type === 'post') {
                       dispatch(openCheckDialog({open: true, checkType: 'post', dialogId: post.id}))
-                    } else {
+                    } else if (type === 'comment') {
                       dispatch(
                         openCheckDialog({open: true, checkType: 'comment', dialogId: post.id})
                       )
+                    } else if (type === 'reply') {
+                      dispatch(openCheckDialog({open: true, checkType: 'reply', dialogId: post.id}))
                     }
                     handleClose()
                   }}
@@ -108,6 +112,19 @@ const PostViewHeader = (props: Props) => {
       }
       title={
         <>
+          {type === 'comment'
+            ? count &&
+              count > 1 && (
+                <Button onClick={() => dispatch(getCommentsByPostId(post.post_id))}>
+                  see all comments
+                </Button>
+              )
+            : count &&
+              count > 1 && (
+                <Button onClick={() => dispatch(getRepliesByCommentId(post.comment_id))}>
+                  see all replies
+                </Button>
+              )}
           <Grid container direction='row' alignItems='center'>
             <Avatar
               sx={{bgcolor: red[500], mr: 2}}

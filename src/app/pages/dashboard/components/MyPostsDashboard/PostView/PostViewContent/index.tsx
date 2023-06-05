@@ -4,7 +4,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn'
 
 type Props = {
   post: any
-  type: 'comment' | 'post'
+  type: 'comment' | 'post' | 'reply'
 }
 
 function PostViewContent(props: Props) {

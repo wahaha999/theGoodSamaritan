@@ -12,7 +12,7 @@ interface ICustomizedInputBase {
   layoutId?: string
   field?: any
   user: any
-  postType: 'comment' | 'post'
+  postType: 'comment' | 'post' | 'reply'
 }
 function CustomizedInputBase(props: ICustomizedInputBase & InputBaseProps) {
   const {popup, setPopup, layoutId, field, user, postType, ...other} = props
@@ -42,7 +42,13 @@ function CustomizedInputBase(props: ICustomizedInputBase & InputBaseProps) {
         {...other}
         {...field}
         sx={{ml: 1, flex: 1}}
-        placeholder={postType === 'post' ? "What's on your mind?*" : 'Add comment'}
+        placeholder={
+          postType === 'post'
+            ? "What's on your mind?*"
+            : postType === 'comment'
+            ? 'Add comment'
+            : 'Add reply'
+        }
         inputProps={{'aria-label': 'search google maps'}}
       />
       <IconButton type='button' sx={{p: '10px'}} aria-label='search'>
@@ -57,7 +63,7 @@ function CustomizedInputBase(props: ICustomizedInputBase & InputBaseProps) {
   )
 }
 type Props = {
-  type: 'comment' | 'post'
+  type: 'comment' | 'post' | 'reply'
   post?: any
 }
 
@@ -79,8 +85,16 @@ const PostInput = (props: Props) => {
         setPopup={() => {
           if (type === 'post') {
             dispatch(openPostDialog({postType: 'new_post', open: true}))
-          } else {
+          } else if (type === 'comment') {
             dispatch(openPostDialog({open: true, postType: 'new_comment', postId: post.id}))
+          } else {
+            dispatch(
+              openPostDialog({
+                open: true,
+                postType: 'new_reply',
+                postId: post.id,
+              })
+            )
           }
         }}
       />

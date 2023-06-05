@@ -131,7 +131,7 @@ function MyPostsDashboard(props: Props) {
                 display: 'flex',
               }}
             >
-              <CircularProgress sx={{margin: 'auto'}} size={30} />
+              <CircularProgress sx={{margin: 'auto'}} size={20} />
             </Box>
           )}
         </Grid>
