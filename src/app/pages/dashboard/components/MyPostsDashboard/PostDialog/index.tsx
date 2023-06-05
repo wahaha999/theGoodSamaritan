@@ -16,7 +16,7 @@ import {yupResolver} from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import CloseIcon from '@mui/icons-material/Close'
-import {createComment, createPost} from '../../../store/postSlice'
+import {createComment, createPost, createReply} from '../../../store/postSlice'
 import {IPostDialog, closePostDialog} from '../../../store/postDialogSlice'
 import {showMessage} from 'src/app/store/fuse/messageSlice'
 import {POST_DIALOG_TITLE} from 'src/app/constants/post'
@@ -123,9 +123,24 @@ const PostDialog = (props: Props) => {
         .finally(() => {
           dispatch(closePostDialog())
         })
-    } else {
+    } else if (postType.includes('comment')) {
       let comment_data = {post_id: postId, ...data}
       dispatch(createComment(comment_data))
+        .then(() => {
+          // dispatch(
+          //   showMessage({
+          //     message: postType === 'new_comment' ? 'Successful commented' : 'Successful edited',
+          //     variant: 'success',
+          //   })
+          // )
+        })
+        .catch(() => {})
+        .finally(() => {
+          dispatch(closePostDialog())
+        })
+    } else if (postType.includes('reply')) {
+      let reply_data = {comment_id: postId, ...data}
+      dispatch(createReply(reply_data))
         .then(() => {
           // dispatch(
           //   showMessage({

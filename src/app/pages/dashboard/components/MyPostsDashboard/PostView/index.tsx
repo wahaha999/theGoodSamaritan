@@ -13,7 +13,10 @@ import PostInput from '../PostInput'
 
 type Props = {
   post: any
-  type: 'comment' | 'post'
+  type: 'comment' | 'post' | 'reply'
+  comment?: any
+  comments_count?: number
+  replies_count?: number
 }
 
 const itemVariants: Variants = {
@@ -26,7 +29,7 @@ const itemVariants: Variants = {
 }
 
 const PostView = (props: Props) => {
-  const {post, type} = props
+  const {post, type, comment, comments_count, replies_count} = props
   const [popup, setPopup] = React.useState(false)
 
   const user = useAppSelector(({user}) => user.user)
@@ -52,9 +55,12 @@ const PostView = (props: Props) => {
     setEdit(false)
   }
   return (
-    <motion.div variants={itemVariants}>
+    <motion.div variants={itemVariants} style={{marginLeft: type === 'reply' ? 50 : '0px'}}>
       {/* <Card sx={{width: '100%', margin: '16px 0px', border: '1px solid #D5DBDB'}}> */}
+      {/* {type === 'reply' && <Divider orientation='vertical' flexItem />} */}
+      <Divider sx={{border: '1px solid'}} />
       <PostViewHeader
+        count={type === 'comment' ? comments_count : replies_count}
         type={type}
         post={post}
         user={user}
@@ -68,13 +74,43 @@ const PostView = (props: Props) => {
       </CardMedia>
       {/* )} */}
       <PostViewContent post={post} type={type} />
-      <PostViewActions setExpand={setExpand} post={post} type={type} />
-      <Divider />
+      <PostViewActions
+        comments_count={comments_count}
+        replies_count={replies_count}
+        setExpand={setExpand}
+        post={post}
+        type={type}
+      />
       <Collapse in={expanded} timeout='auto' unmountOnExit>
-        {post.comments?.map((comment: any, index: number) => (
-          <PostView type='comment' post={comment} key={index} />
-        ))}
-        {<PostInput type='comment' post={post} />}
+        {type === 'post' && post.comments
+          ? post.comments?.map((comment: any, index: number) => (
+              <PostView type='comment' post={comment} key={index} />
+            ))
+          : post.latest_comment && (
+              <PostView
+                comments_count={post.comments_count}
+                type='comment'
+                post={post.latest_comment}
+              />
+            )}
+        {type === 'comment' && post.replies
+          ? post.replies?.map((reply: any, index: number) => (
+              <PostView type='reply' comment={post} post={reply} key={index} />
+            ))
+          : post.latest_reply && (
+              <PostView
+                // comments_count={post.comments_count}
+                replies_count={post.replies_count}
+                type='reply'
+                post={post.latest_reply}
+              />
+            )}
+        {
+          <PostInput
+            type={type === 'post' ? 'comment' : 'reply'}
+            post={type === 'reply' ? comment : post}
+          />
+        }
       </Collapse>
       {/* </Card> */}
     </motion.div>

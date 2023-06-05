@@ -2,7 +2,7 @@ import { createSlice,PayloadAction } from "@reduxjs/toolkit"
 
 export interface ICheckDialog {
     open: boolean,
-    checkType: 'post' | 'comment',
+    checkType: 'post' | 'comment'|'reply',
     dialogId:number
 };
 

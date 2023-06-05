@@ -2,7 +2,7 @@ import React from 'react'
 import {Carousel} from 'react-responsive-carousel'
 import {toServerUrl} from 'src/_metronic/helpers'
 
-type Props = {post: any; type: 'comment' | 'post'}
+type Props = {post: any; type: 'comment' | 'post' | 'reply'}
 
 const PostViewMedia = (props: Props) => {
   const {post, type} = props
