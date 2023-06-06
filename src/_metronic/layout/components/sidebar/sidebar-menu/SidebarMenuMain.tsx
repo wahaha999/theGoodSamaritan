@@ -122,8 +122,8 @@ function StyledTreeItem(props: StyledTreeItemProps) {
                 }}
                 checked={value !== undefined ? value : false}
                 color={disabled ? 'default' : 'secondary'}
-                icon={<CheckBoxOutlineBlankIcon color={disabled ? 'inherit' : 'secondary'} />}
-                checkedIcon={<CheckBoxIcon color={disabled ? 'inherit' : 'secondary'} />}
+                icon={<CheckBoxOutlineBlankIcon color={disabled ? 'disabled' : 'secondary'} />}
+                checkedIcon={<CheckBoxIcon color={disabled ? 'disabled' : 'secondary'} />}
                 // sx={{'& .MuiSvgIcon-root': {bgcolor: 'white'}}}
                 size='medium'
               />

@@ -9,7 +9,13 @@ export const theme = createTheme({
     secondary: {
       main: '#F9BF3B',
     },
-    },
+    action: {
+      disabled: "#64748B",
+      
+    }
+    
+  },
+  
   typography: {
       fontFamily:'Inter',
         h5: {
@@ -20,6 +26,7 @@ export const theme = createTheme({
     },
         body1:{fontSize:14,fontWeight:600}
   },
+  
   components: {
     MuiButton: {
       styleOverrides: {
