@@ -3,8 +3,14 @@ import {
   Button,
   FormControl,
   Grid,
+  Hidden,
   InputBase,
   InputLabel,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
   MenuItem,
   Select,
   TextField,
@@ -24,6 +30,8 @@ import {useEffect} from 'react'
 import {useDispatch} from 'react-redux'
 import {useAppDispatch} from 'src/app/store/hook'
 import {addFilterForHeader} from 'src/app/pages/dashboard/store/filterSlice'
+import {usePrevious} from 'src/app/modules/hooks'
+import _ from 'src/app/modules/@lodash/@lodash'
 
 const Search = styled('div')(({theme}) => ({
   position: 'relative',
@@ -65,7 +73,12 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
   },
 }))
 
-export function MenuInner() {
+interface Props {
+  type: 'header' | 'drawer'
+}
+
+export function MenuInner(props: Props) {
+  const {type} = props
   const intl = useIntl()
   const params = useParams()
   const dispatch = useAppDispatch()
@@ -82,131 +95,228 @@ export function MenuInner() {
     }
     reset({...initialState})
   }, [reset])
+  const data = watch()
 
+  const prevData = usePrevious(data ? _.merge({}, data) : null)
   useEffect(() => {
+    if (_.isEqual(prevData, data)) {
+      return
+    }
     dispatch(addFilterForHeader(watch()))
-  }, [watch()])
+  }, [data, prevData])
 
-  return (
-    <>
-      <div style={{paddingTop: '10px'}}>
-        <Grid container flexDirection='row'>
-          {/* <Button >Dashboard</Button>
-          <Button >Account</Button> */}
-          <MenuItemBy to={'/dashboard'} title='DASHBOARD' />
-          <MenuInnerWithSub
-            title='Account'
-            to='/account'
-            hasArrow={true}
-            menuPlacement='right-start'
-            menuTrigger={`{default:'click', lg: 'hover'}`}
-          >
-            <MenuItem>
-              <MenuItemBy title='Account Information' to='/account/info' />
-            </MenuItem>
-            <MenuItem>
-              <MenuItemBy title='Billing' to='/account/billing' />
-            </MenuItem>
-            {/* <MenuItemBy title='About Your Non-Profit' to='/account/about_non_profit' />
-            <MenuItemBy title='Noe-Profit Verification' to='/account/verification' />
-          <MenuItemBy title='Address' to='/account/location' /> */}
-          </MenuInnerWithSub>
-          <MenuItemBy title='OUR YOUTUBE CHANNEL' to='/youtube' />
-          <Button startIcon={<NotificationsActiveIcon color='secondary' />} sx={{ml: 2}}>
-            Your Connections
-          </Button>
-          <Button startIcon={<NotificationsActiveIcon color='secondary' />} sx={{ml: 2}}>
-            Saved Posts
-          </Button>
-        </Grid>
-        {params['*'] == 'dashboard' && (
-          <FormProvider {...methods}>
-            <Grid container alignItems='center'>
-              <Grid item>
-                <Controller
-                  name='search'
-                  defaultValue=''
-                  control={control}
-                  render={({field}) => (
-                    <Search>
-                      <SearchIconWrapper>
-                        <SearchIcon />
-                      </SearchIconWrapper>
-                      <StyledInputBase
-                        {...field}
-                        placeholder='Search…'
-                        inputProps={{'aria-label': 'search'}}
+  if (type === 'header') {
+    return (
+      <>
+        <div style={{paddingTop: '10px'}}>
+          <Grid container flexDirection='row'>
+            {/* <Button >Dashboard</Button>
+            <Button >Account</Button> */}
+            <MenuItemBy to={'/dashboard'} title='DASHBOARD' />
+            <MenuInnerWithSub
+              title='Account'
+              to='/account'
+              hasArrow={true}
+              menuPlacement='right-start'
+              menuTrigger={`{default:'click', lg: 'hover'}`}
+            >
+              <MenuItem>
+                <MenuItemBy title='Account Information' to='/account/info' />
+              </MenuItem>
+              <MenuItem>
+                <MenuItemBy title='Billing' to='/account/billing' />
+              </MenuItem>
+              {/* <MenuItemBy title='About Your Non-Profit' to='/account/about_non_profit' />
+              <MenuItemBy title='Noe-Profit Verification' to='/account/verification' />
+            <MenuItemBy title='Address' to='/account/location' /> */}
+            </MenuInnerWithSub>
+            <MenuItemBy title='OUR YOUTUBE CHANNEL' to='/youtube' />
+            <Hidden mdDown>
+              <Button startIcon={<NotificationsActiveIcon color='secondary' />} sx={{ml: 2}}>
+                Your Connections
+              </Button>
+              <Button startIcon={<NotificationsActiveIcon color='secondary' />} sx={{ml: 2}}>
+                Saved Posts
+              </Button>
+            </Hidden>
+          </Grid>
+          <Hidden mdDown>
+            {params['*'] == 'dashboard' && (
+              <FormProvider {...methods}>
+                <Grid container alignItems='center'>
+                  <Grid item>
+                    <Controller
+                      name='search'
+                      defaultValue=''
+                      control={control}
+                      render={({field}) => (
+                        <Search>
+                          <SearchIconWrapper>
+                            <SearchIcon />
+                          </SearchIconWrapper>
+                          <StyledInputBase
+                            {...field}
+                            placeholder='Search…'
+                            inputProps={{'aria-label': 'search'}}
+                          />
+                        </Search>
+                      )}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Grid container alignItems='center'>
+                      <label>Sort By:</label>
+                      <Controller
+                        name='sort_by'
+                        control={control}
+                        defaultValue={'desc'}
+                        render={({field}) => (
+                          <FormControl sx={{m: 1, minWidth: 120}} size='small'>
+                            <Select
+                              sx={{ml: 1}}
+                              labelId='demo-select-small-label'
+                              id='demo-select-small'
+                              {...field}
+                            >
+                              <MenuItem value='desc'>Latest</MenuItem>
+                              <MenuItem value='asc'>Earliest</MenuItem>
+                            </Select>
+                          </FormControl>
+                          // <Select
+                          //   sx={{ml: 1}}
+                          //   labelId='demo-select-small-label'
+                          //   id='demo-select-small'
+                          //   {...field}
+                          //   // value={age}
+                          //   // label="Age"
+                          //   // onChange={handleChange}
+                          // >
+                          //   <MenuItem value='desc'>Latest</MenuItem>
+                          //   <MenuItem value='asc'>Earliest</MenuItem>
+                          // </Select>
+                        )}
                       />
-                    </Search>
-                  )}
-                />
-              </Grid>
-              <Grid item>
-                <Grid container alignItems='center'>
-                  <label>Sort By:</label>
-                  <Controller
-                    name='sort_by'
-                    control={control}
-                    defaultValue={'desc'}
-                    render={({field}) => (
-                      <FormControl sx={{m: 1, minWidth: 120}} size='small'>
-                        <Select
-                          sx={{ml: 1}}
-                          labelId='demo-select-small-label'
-                          id='demo-select-small'
-                          {...field}
-                        >
-                          <MenuItem value='desc'>Latest</MenuItem>
-                          <MenuItem value='asc'>Earliest</MenuItem>
-                        </Select>
-                      </FormControl>
-                      // <Select
-                      //   sx={{ml: 1}}
-                      //   labelId='demo-select-small-label'
-                      //   id='demo-select-small'
-                      //   {...field}
-                      //   // value={age}
-                      //   // label="Age"
-                      //   // onChange={handleChange}
-                      // >
-                      //   <MenuItem value='desc'>Latest</MenuItem>
-                      //   <MenuItem value='asc'>Earliest</MenuItem>
-                      // </Select>
-                    )}
-                  />
+                    </Grid>
+                  </Grid>
+                  <Grid item>
+                    <Grid container alignItems='center'>
+                      <label>Select Posts:</label>
+                      <Controller
+                        name='select'
+                        defaultValue={0}
+                        control={control}
+                        render={({field}) => (
+                          <FormControl sx={{m: 1, minWidth: 120}} size='small'>
+                            <Select
+                              sx={{ml: 1}}
+                              labelId='demo-select-small-label'
+                              id='demo-select-small'
+                              {...field}
+                              // value={age}
+                              // label="Age"
+                              // onChange={handleChange}
+                            >
+                              <MenuItem value={0}>All</MenuItem>
+                              <MenuItem value={1}>Today</MenuItem>
+                              <MenuItem value={2}>This Month</MenuItem>
+                            </Select>
+                          </FormControl>
+                        )}
+                      />
+                    </Grid>
+                  </Grid>
                 </Grid>
-              </Grid>
-              <Grid item>
-                <Grid container alignItems='center'>
-                  <label>Select Posts:</label>
-                  <Controller
-                    name='select'
-                    defaultValue={0}
-                    control={control}
-                    render={({field}) => (
-                      <FormControl sx={{m: 1, minWidth: 120}} size='small'>
-                        <Select
-                          sx={{ml: 1}}
-                          labelId='demo-select-small-label'
-                          id='demo-select-small'
-                          {...field}
-                          // value={age}
-                          // label="Age"
-                          // onChange={handleChange}
-                        >
-                          <MenuItem value={0}>All</MenuItem>
-                          <MenuItem value={1}>Today</MenuItem>
-                          <MenuItem value={2}>This Month</MenuItem>
-                        </Select>
-                      </FormControl>
-                    )}
+              </FormProvider>
+            )}
+          </Hidden>
+        </div>
+      </>
+    )
+  } else {
+    return (
+      <FormProvider {...methods}>
+        <List>
+          <ListItem>
+            <Controller
+              name='search'
+              defaultValue=''
+              control={control}
+              render={({field}) => (
+                <Search>
+                  <SearchIconWrapper>
+                    <SearchIcon />
+                  </SearchIconWrapper>
+                  <StyledInputBase
+                    {...field}
+                    placeholder='Search…'
+                    inputProps={{'aria-label': 'search'}}
                   />
-                </Grid>
-              </Grid>
-            </Grid>
-          </FormProvider>
-        )}
-      </div>
-    </>
-  )
+                </Search>
+              )}
+            />
+          </ListItem>
+          <ListItem>
+            <Controller
+              name='sort_by'
+              control={control}
+              defaultValue={'desc'}
+              render={({field}) => (
+                <FormControl sx={{m: 1, minWidth: 120}} size='small' fullWidth>
+                  <Select
+                    sx={{ml: 1}}
+                    labelId='demo-select-small-label'
+                    id='demo-select-small'
+                    {...field}
+                  >
+                    <MenuItem value='desc'>Latest</MenuItem>
+                    <MenuItem value='asc'>Earliest</MenuItem>
+                  </Select>
+                </FormControl>
+              )}
+            />
+          </ListItem>
+          <ListItem>
+            <Controller
+              name='select'
+              defaultValue={0}
+              control={control}
+              render={({field}) => (
+                <FormControl sx={{m: 1, minWidth: 120}} size='small' fullWidth>
+                  <Select
+                    sx={{ml: 1}}
+                    labelId='demo-select-small-label'
+                    id='demo-select-small'
+                    {...field}
+                    // value={age}
+                    // label="Age"
+                    // onChange={handleChange}
+                  >
+                    <MenuItem value={0}>All</MenuItem>
+                    <MenuItem value={1}>Today</MenuItem>
+                    <MenuItem value={2}>This Month</MenuItem>
+                  </Select>
+                </FormControl>
+              )}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemButton>
+              <ListItemIcon>
+                <NotificationsActiveIcon color='secondary' />
+              </ListItemIcon>
+              <ListItemText primary='Your Connections' />
+            </ListItemButton>
+          </ListItem>
+          <ListItem>
+            <ListItemButton>
+              <ListItemIcon>
+                <NotificationsActiveIcon color='secondary' />
+              </ListItemIcon>
+              <ListItemText primary='Saved Posts' />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </FormProvider>
+    )
+  }
 }
