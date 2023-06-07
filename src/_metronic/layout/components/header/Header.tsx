@@ -23,7 +23,7 @@ const Header: FC = () => {
       id='kt_app_header_menu'
       data-kt-menu='true'
     >
-      <MenuInner />
+      {/* <MenuInner /> */}
     </div>
   )
 }

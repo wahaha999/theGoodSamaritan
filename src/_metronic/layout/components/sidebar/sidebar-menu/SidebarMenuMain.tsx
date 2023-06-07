@@ -22,6 +22,8 @@ import {getStates} from 'src/app/pages/dashboard/store/planSlice'
 import BillingManage from 'src/app/pages/dashboard/Billing/BillingManage'
 import {addFilter} from 'src/app/pages/dashboard/store/filterSlice'
 import {getCategories} from '../store/categorySlice'
+import {usePrevious} from 'src/app/modules/hooks'
+import _ from 'src/app/modules/@lodash/@lodash'
 
 declare module 'react' {
   interface CSSProperties {
@@ -152,6 +154,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
     />
   )
 }
+let prevData: any
 
 function SidebarMenuMain() {
   const category = useAppSelector(({sidebar}) => sidebar.category)
@@ -239,6 +242,10 @@ function SidebarMenuMain() {
 
   const watch_state = watch('state')
 
+  const data = watch()
+
+  const prevData = usePrevious(data ? _.merge({}, data) : null)
+
   // React.useEffect(() => {
   //   if (watch_state) {
   //     Object.keys(states)?.forEach((element: any) => {
@@ -250,9 +257,15 @@ function SidebarMenuMain() {
   // }, [watch(), states, setValue])
 
   React.useEffect(() => {
-    dispatch(addFilter(watch()))
-  }, [watch()])
+    if (_.isEqual(prevData, data)) {
+      return
+    }
+    if (prevData) {
+      dispatch(addFilter(watch()))
+    }
+  }, [prevData, data])
 
+  // prevData = usePrevious(data)
   return (
     <FormProvider {...methods}>
       <TreeView

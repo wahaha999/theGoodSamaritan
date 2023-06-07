@@ -2,7 +2,11 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 const initialState = {
     states: [] as any[],
     loading: false,
-    filter: {},
+    filter: {
+        search: '',
+        sort_by: 'desc',
+        select: 0,
+    },
     search:{}
 };
 export const filterSlice = createSlice({
