@@ -30,6 +30,7 @@ const itemVariants: Variants = {
 
 const PostView = (props: Props) => {
   const {post, type, comment, comments_count, replies_count} = props
+  console.log('typepepep====', type, post, comment)
   const [popup, setPopup] = React.useState(false)
 
   const user = useAppSelector(({user}) => user.user)
@@ -54,11 +55,14 @@ const PostView = (props: Props) => {
     setAnchorEl(null)
     setEdit(false)
   }
+
   return (
-    <motion.div variants={itemVariants} style={{marginLeft: type === 'reply' ? 50 : '0px'}}>
+    <motion.div
+      variants={itemVariants}
+      style={{marginLeft: type === 'reply' ? 50 : '0px', paddingTop: '20px'}}
+    >
       {/* <Card sx={{width: '100%', margin: '16px 0px', border: '1px solid #D5DBDB'}}> */}
       {/* {type === 'reply' && <Divider orientation='vertical' flexItem />} */}
-      <Divider sx={{border: '1px solid'}} />
       <PostViewHeader
         count={type === 'comment' ? comments_count : replies_count}
         type={type}
@@ -81,16 +85,23 @@ const PostView = (props: Props) => {
         post={post}
         type={type}
       />
+
       <Collapse in={expanded} timeout='auto' unmountOnExit>
+        {type === 'post' && (
+          <Divider variant='middle' sx={{mx: 2}}>
+            Comments
+          </Divider>
+        )}
         {type === 'post' && post.comments
           ? post.comments?.map((comment: any, index: number) => (
-              <PostView type='comment' post={comment} key={index} />
+              <PostView type='comment' post={comment} comment={comment} key={index} />
             ))
           : post.latest_comment && (
               <PostView
                 comments_count={post.comments_count}
                 type='comment'
                 post={post.latest_comment}
+                comment={post.latest_comment}
               />
             )}
         {type === 'comment' && post.replies
@@ -102,13 +113,14 @@ const PostView = (props: Props) => {
                 // comments_count={post.comments_count}
                 replies_count={post.replies_count}
                 type='reply'
+                comment={post.latest_reply}
                 post={post.latest_reply}
               />
             )}
         {
           <PostInput
             type={type === 'post' ? 'comment' : 'reply'}
-            post={type === 'reply' ? comment : post}
+            post={type === 'reply' || type === 'comment' ? comment : post}
           />
         }
       </Collapse>

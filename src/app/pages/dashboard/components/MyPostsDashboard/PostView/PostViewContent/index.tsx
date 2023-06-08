@@ -11,7 +11,7 @@ function PostViewContent(props: Props) {
   const {post, type} = props
   return (
     <CardContent>
-      <Grid container alignItems='center' sx={{mb: 2}}>
+      <Grid container alignItems='center' sx={{mb: 1}}>
         <LocationOnIcon color='primary' sx={{mr: 2}} />
         {post?.address ? (
           <Typography

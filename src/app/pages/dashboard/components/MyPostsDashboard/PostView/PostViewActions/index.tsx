@@ -32,7 +32,7 @@ const PostViewActions = (props: Props) => {
 
   const open = Boolean(anchorEl)
   return (
-    <CardActions disableSpacing>
+    <CardActions sx={{mb: 2}}>
       <Grid container flexDirection='row-reverse'>
         <IconButton sx={{color: 'purple'}}>
           <ForumOutlinedIcon />

@@ -69,6 +69,7 @@ type Props = {
 
 const PostInput = (props: Props) => {
   const {type, post} = props
+  console.log('🚀 ~ file: index.tsx:72 ~ PostInput ~ post:', post)
   const user = useAppSelector(({user}) => user.user)
   const dispatch = useAppDispatch()
 

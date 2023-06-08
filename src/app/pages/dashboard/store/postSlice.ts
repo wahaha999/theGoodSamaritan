@@ -137,9 +137,32 @@ export const createReply = createAsyncThunk('dashboard/replies/create', async (r
                 
         })
         const { data } = await axios.post(`${API_URL}/replies/create`, formData);
-                const state = getState() as any;
-        dispatch(getPosts(state?.post?.filter?.filter));
+        const rep = data.reply;
+        const {post} = getState() as any;
+        console.log("🚀 ~ file: postSlice.ts:141 ~ createReply ~ data:", rep)
+
         dispatch(showMessage({ message: 'Successful reply', variant: 'success' }))
+         const updatedPosts = _.map(post.post, (p: any) => {
+            if (p.comments) {
+                const updatedComments = _.map(p.comments, (c: any) => {
+                    if (c.id === rep.comment_id) {
+                        if (c.replies) {
+                            return {...c,replies:[...c.replies,rep]}
+                        } else {
+                            return {...c,latest_reply:rep}
+                        }
+                    } else {
+                        return c
+                    }
+                })
+                return { ...p, comments: updatedComments }
+            }
+            return p;
+        })
+        return updatedPosts;
+
+        
+        // dispatch(getPosts(state?.post?.filter?.filter));
 
     } catch (error: any) {
                 dispatch(showMessage({message:error.response.data.message,variant:'error'}))
@@ -229,7 +252,7 @@ const postSlice = createSlice({
             return action.payload;
         }).addCase(getRepliesByCommentId.fulfilled, (state: any, action) => {
             return action.payload;
-    });
+    }).addCase(createReply.fulfilled,(state:any,action) => action.payload);
   },
 });
 

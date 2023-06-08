@@ -32,6 +32,9 @@ import {useAppDispatch} from 'src/app/store/hook'
 import {addFilterForHeader} from 'src/app/pages/dashboard/store/filterSlice'
 import {usePrevious} from 'src/app/modules/hooks'
 import _ from 'src/app/modules/@lodash/@lodash'
+import HoverPopover from 'src/app/pages/dashboard/components/MyPostsDashboard/PostView/PostViewHeader/PostAccountViewPopover/index'
+import Navigation from '../Navigation'
+import FuseScrollbars from 'src/app/modules/core/FuseScrollbars/FuseScrollbars'
 
 const Search = styled('div')(({theme}) => ({
   position: 'relative',
@@ -77,6 +80,160 @@ interface Props {
   type: 'header' | 'drawer'
 }
 
+const navigationConfig = [
+  {
+    id: 'dashboards',
+    title: 'Dashboards',
+    subtitle: 'Unique dashboard designs',
+    type: 'group',
+    icon: 'heroicons-outline:home',
+    translate: 'DASHBOARDS',
+    children: [
+      {
+        id: 'dashboards.project',
+        title: 'Project',
+        type: 'item',
+        icon: 'heroicons-outline:clipboard-check',
+        url: '/dashboards/project',
+      },
+      {
+        id: 'dashboards.analytics',
+        title: 'Analytics',
+        type: 'item',
+        icon: 'heroicons-outline:chart-pie',
+        url: '/dashboards/analytics',
+      },
+    ],
+  },
+  {
+    id: 'apps',
+    title: 'Applications',
+    subtitle: 'Custom made application designs',
+    type: 'group',
+    icon: 'heroicons-outline:home',
+    translate: 'APPLICATIONS',
+    children: [
+      {
+        id: 'apps.academy',
+        title: 'Academy',
+        type: 'item',
+        icon: 'heroicons-outline:academic-cap',
+        url: '/apps/academy',
+        translate: 'ACADEMY',
+      },
+      {
+        id: 'apps.calendar',
+        title: 'Calendar',
+        subtitle: '3 upcoming events',
+        type: 'item',
+        icon: 'heroicons-outline:calendar',
+        url: '/apps/calendar',
+        translate: 'CALENDAR',
+      },
+      {
+        id: 'apps.chat',
+        title: 'Chat',
+        type: 'item',
+        icon: 'heroicons-outline:chat-alt',
+        url: '/apps/chat',
+        translate: 'CHAT',
+      },
+      {
+        id: 'apps.contacts',
+        title: 'Contacts',
+        type: 'item',
+        icon: 'heroicons-outline:user-group',
+        url: '/apps/contacts',
+        translate: 'CONTACTS',
+      },
+      {
+        id: 'apps.ecommerce',
+        title: 'ECommerce',
+        type: 'collapse',
+        icon: 'heroicons-outline:shopping-cart',
+        translate: 'ECOMMERCE',
+        children: [
+          {
+            id: 'e-commerce-products',
+            title: 'Products',
+            type: 'item',
+            url: 'apps/e-commerce/products',
+            end: true,
+          },
+          {
+            id: 'e-commerce-product-detail',
+            title: 'Product Detail',
+            type: 'item',
+            url: 'apps/e-commerce/products/1/a-walk-amongst-friends-canvas-print',
+          },
+          {
+            id: 'e-commerce-new-product',
+            title: 'New Product',
+            type: 'item',
+            url: 'apps/e-commerce/products/new',
+          },
+          {
+            id: 'e-commerce-orders',
+            title: 'Orders',
+            type: 'item',
+            url: 'apps/e-commerce/orders',
+            end: true,
+          },
+          {
+            id: 'e-commerce-order-detail',
+            title: 'Order Detail',
+            type: 'item',
+            url: 'apps/e-commerce/orders/1',
+          },
+        ],
+      },
+      {
+        id: 'apps.file-manager',
+        title: 'File Manager',
+        type: 'item',
+        icon: 'heroicons-outline:cloud',
+        url: '/apps/file-manager',
+        end: true,
+        translate: 'FILE_MANAGER',
+      },
+      {
+        id: 'apps.help-center',
+        title: 'Help Center',
+        type: 'collapse',
+        icon: 'heroicons-outline:support',
+        url: '/apps/help-center',
+        children: [
+          {
+            id: 'apps.help-center.home',
+            title: 'Home',
+            type: 'item',
+            url: '/apps/help-center',
+            end: true,
+          },
+          {
+            id: 'apps.help-center.faqs',
+            title: 'FAQs',
+            type: 'item',
+            url: '/apps/help-center/faqs',
+          },
+          {
+            id: 'apps.help-center.guides',
+            title: 'Guides',
+            type: 'item',
+            url: '/apps/help-center/guides',
+          },
+          {
+            id: 'apps.help-center.support',
+            title: 'Support',
+            type: 'item',
+            url: '/apps/help-center/support',
+          },
+        ],
+      },
+    ],
+  },
+]
+
 export function MenuInner(props: Props) {
   const {type} = props
   const intl = useIntl()
@@ -109,10 +266,14 @@ export function MenuInner(props: Props) {
     return (
       <>
         <div style={{paddingTop: '10px'}}>
-          <Grid container flexDirection='row'>
-            {/* <Button >Dashboard</Button>
+          {/* <Grid container flexDirection='row'> */}
+          <FuseScrollbars className={'flex h-full items-center'}>
+            <Navigation layout='horizontal' />
+          </FuseScrollbars>
+
+          {/* <Button >Dashboard</Button>
             <Button >Account</Button> */}
-            <MenuItemBy to={'/dashboard'} title='DASHBOARD' />
+          {/* <MenuItemBy to={'/dashboard'} title='DASHBOARD' />
             <MenuInnerWithSub
               title='Account'
               to='/account'
@@ -125,21 +286,17 @@ export function MenuInner(props: Props) {
               </MenuItem>
               <MenuItem>
                 <MenuItemBy title='Billing' to='/account/billing' />
-              </MenuItem>
-              {/* <MenuItemBy title='About Your Non-Profit' to='/account/about_non_profit' />
+              </MenuItem> */}
+          {/* <MenuItemBy title='About Your Non-Profit' to='/account/about_non_profit' />
               <MenuItemBy title='Noe-Profit Verification' to='/account/verification' />
             <MenuItemBy title='Address' to='/account/location' /> */}
-            </MenuInnerWithSub>
-            <MenuItemBy title='OUR YOUTUBE CHANNEL' to='/youtube' />
-            <Hidden mdDown>
-              <Button startIcon={<NotificationsActiveIcon color='secondary' />} sx={{ml: 2}}>
-                Your Connections
-              </Button>
-              <Button startIcon={<NotificationsActiveIcon color='secondary' />} sx={{ml: 2}}>
-                Saved Posts
-              </Button>
-            </Hidden>
-          </Grid>
+          {/* </MenuInnerWithSub>
+            <MenuItemBy title='OUR YOUTUBE CHANNEL' to='/youtube' /> */}
+          {/* {navigationConfig.map((item: any) => (
+              <HoverPopover item={item} nestedLevel={0} />
+            ))} */}
+          <Hidden mdDown></Hidden>
+          {/* </Grid> */}
           <Hidden mdDown>
             {params['*'] == 'dashboard' && (
               <FormProvider {...methods}>
@@ -224,6 +381,16 @@ export function MenuInner(props: Props) {
                         )}
                       />
                     </Grid>
+                  </Grid>
+                  <Grid item>
+                    <Button startIcon={<NotificationsActiveIcon color='secondary' />} sx={{ml: 2}}>
+                      Your Connections
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button startIcon={<NotificationsActiveIcon color='secondary' />} sx={{ml: 2}}>
+                      Saved Posts
+                    </Button>
                   </Grid>
                 </Grid>
               </FormProvider>
