@@ -170,7 +170,8 @@ FuseScrollbars.propTypes = {
   onXReachEnd: PropTypes.func,
   scrollToTopOnRouteChange: PropTypes.bool,
   scrollToTopOnChildChange: PropTypes.bool,
-  className:PropTypes.string
+  className: PropTypes.string,
+  children:PropTypes.elementType
 };
 
 FuseScrollbars.defaultProps = {
