@@ -85,7 +85,10 @@ const PostDialog = (props: Props) => {
   const {handleSubmit} = methods
   React.useEffect(() => {
     if (user.account) {
-      if ((postType === 'edit_post' || postType === 'edit_comment') && postOption) {
+      if (
+        (postType === 'edit_post' || postType === 'edit_comment' || postType === 'edit_reply') &&
+        postOption
+      ) {
         reset({
           ...postOption,
         })
@@ -193,7 +196,11 @@ const PostDialog = (props: Props) => {
                 disabled={!isValid}
                 onClick={() => handleSubmit(onSubmit)()}
               >
-                {postType.includes('post') ? 'Post' : 'Comment'}
+                {postType.includes('post')
+                  ? 'Post'
+                  : postType.includes('comment')
+                  ? 'Comment'
+                  : 'Reply'}
               </Button>
             </motion.div>
             <motion.div

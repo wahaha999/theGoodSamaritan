@@ -107,9 +107,34 @@ export const createComment = createAsyncThunk('dashboard/comments/create', async
                 
         })
         const { data } = await axios.post(`${API_URL}/comments/create`, formData);
-                const state = getState() as any;
-        dispatch(getPosts(state?.post?.filter?.filter));
+        const comm = data.comment;
+                const {post} = getState() as any;
+        // dispatch(getPosts(state?.post?.filter?.filter));
         dispatch(showMessage({ message: 'Successful comment', variant: 'success' }))
+
+        const updatedPosts = _.map(post.post, (p: any) => {
+            if (p.id === comm.post_id) {
+                if (p.comments) {
+                    const updatedComments = _.map(p.comments, (c: any) => {
+                        if (c.id === comm.id) {
+                            return comm
+                        } else {
+                            return c
+                        }
+                    })
+
+                     if (!_.some(updatedComments, { id: comm.id })) {
+                                updatedComments.push(comm);
+                        }
+                    return {...p,comments:updatedComments,comments_count:p.comments_count+1}
+                } else {
+                    return {...p,comments: [comm],comments_count:p.comments_count+1}
+                }
+            } else {
+                return p
+            }
+        })
+        return updatedPosts;
 
     } catch (error: any) {
                 dispatch(showMessage({message:error.response.data.message,variant:'error'}))
@@ -142,23 +167,54 @@ export const createReply = createAsyncThunk('dashboard/replies/create', async (r
         console.log("🚀 ~ file: postSlice.ts:141 ~ createReply ~ data:", rep)
 
         dispatch(showMessage({ message: 'Successful reply', variant: 'success' }))
-         const updatedPosts = _.map(post.post, (p: any) => {
+        const updatedPosts = _.map(post.post, (p: any) => {
             if (p.comments) {
                 const updatedComments = _.map(p.comments, (c: any) => {
                     if (c.id === rep.comment_id) {
                         if (c.replies) {
-                            return {...c,replies:[...c.replies,rep]}
+                            // Map over the replies, updating the one with the same id as rep.id
+                            const updatedReplies = _.map(c.replies, (r: any) => {
+                                if (r.id === rep.id) {
+                                    return rep;
+                                } else {
+                                    return r;
+                                }
+                            });
+
+                            // If the reply wasn't found in the list of replies, add it.
+                            if (!_.some(updatedReplies, { id: rep.id })) {
+                                updatedReplies.push(rep);
+                            }
+
+                            return {...c, replies: updatedReplies, replies_count: c.replies_count + 1};
                         } else {
-                            return {...c,latest_reply:rep}
+                            return {...c, replies: [rep], replies_count: c.replies_count + 1};
                         }
                     } else {
-                        return c
+                        return c;
                     }
                 })
                 return { ...p, comments: updatedComments }
-            }
+            } 
             return p;
         })
+        //  const updatedPosts = _.map(post.post, (p: any) => {
+        //     if (p.comments) {
+        //         const updatedComments = _.map(p.comments, (c: any) => {
+        //             if (c.id === rep.comment_id) {
+        //                 if (c.replies) {
+        //                     return {...c,replies:[...c.replies,rep],replies_count:c.replies_count+1}
+        //                 } else {
+        //                     return {...c,replies:[rep],replies_count:c.replies_count+1}
+        //                 }
+        //             } else {
+        //                 return c
+        //             }
+        //         })
+        //         return { ...p, comments: updatedComments }
+        //     } 
+        //     return p;
+        // })
         return updatedPosts;
 
         
@@ -203,29 +259,65 @@ export const deleteReply = createAsyncThunk('dashboard/replies/delete', async (i
 export const getCommentsByPostId = createAsyncThunk('dashboard/comments/getByPostId', async (post_id: number, { getState, dispatch }) => {
     try {
         dispatch(setLoading(true));
-        const { data:comments } = await axios.get(`${API_URL}/comments/get/${post_id}`);
+        const { data } = await axios.get(`${API_URL}/comments/get/${post_id}`);
+        const { comments, comments_count } = data;
         const {post}:any = getState()
-        const updatedPosts = _.map(post.post, (p:any) => p.id === post_id ? {...p, comments} : p);
+        const updatedPosts = _.map(post.post, (p:any) => p.id === post_id ? {...p, comments,comments_count} : p);
         dispatch(setLoading(false));
         return updatedPosts
     } catch (error:any) {
         dispatch(showMessage({message:error.response.data.message,variant:'error'}))
     }
 })
+
+export const getLatestCommentByPostId = createAsyncThunk('dashboard/comments/getLatestCommentByPostId',async (post_id: number, { getState, dispatch }) => {
+    try {
+        dispatch(setLoading(true));
+        const { data } = await axios.get(`${API_URL}/comments/getLatest/${post_id}`);
+        const { comment, comments_count } = data;
+        const {post}:any = getState()
+        const updatedPosts = _.map(post.post, (p:any) => p.id === post_id ? {...p, comments:[comment],comments_count} : p);
+        dispatch(setLoading(false));
+        return updatedPosts
+    } catch (error:any) {
+        dispatch(showMessage({message:error.response.data.message,variant:'error'}))
+    }
+})
+
 export const getRepliesByCommentId = createAsyncThunk('dashboard/replies/getByCommentId', async (comment_id: number, { getState, dispatch }) => {
     try {
         dispatch(setLoading(true));
-        const { data:replies } = await axios.get(`${API_URL}/replies/get/${comment_id}`);
+        const { data } = await axios.get(`${API_URL}/replies/get/${comment_id}`);
+        const { replies, replies_count } = data;
         const {post}:any = getState()
-        console.log("🚀 ~ file: postSlice.ts:197 ~ getRepliesByCommentId ~ replies:", replies)
          const updatedPosts = _.map(post.post, (p: any) => {
             if (p.comments) {
-                const updatedComments = _.map(p.comments, (c: any) => c.id === comment_id ? { ...c, replies } : c)
+                const updatedComments = _.map(p.comments, (c: any) => c.id === comment_id ? { ...c, replies,replies_count } : c)
                 return { ...p, comments: updatedComments }
             }
             return p;
         })
-        // const updatedPosts = _.map(post.post, (p:any) => p.id === comment_id ? {...p, replies} : p);
+        dispatch(setLoading(false));
+        return updatedPosts
+    } catch (error:any) {
+        dispatch(showMessage({message:error.response.data.message,variant:'error'}))
+    }
+})
+export const getLatestRepliesByCommentId = createAsyncThunk('dashboard/replies/getLatestRepliesByCommentId', async (comment_id: number, { getState, dispatch }) => {
+    try {
+        dispatch(setLoading(true));
+        const { data } = await axios.get(`${API_URL}/replies/getLatest/${comment_id}`);
+        const { reply, replies_count } = data;
+        const {post}:any = getState()
+        
+        const updatedPosts = _.map(post.post, (p: any) => {
+            if (p.comments) {
+                
+                const updatedComments = _.map(p.comments, (c: any) => c.id === comment_id ? { ...c, replies:[reply],replies_count } : c)
+                return { ...p, comments: updatedComments }
+            }
+            return p
+        })
         dispatch(setLoading(false));
         return updatedPosts
     } catch (error:any) {
@@ -252,7 +344,12 @@ const postSlice = createSlice({
             return action.payload;
         }).addCase(getRepliesByCommentId.fulfilled, (state: any, action) => {
             return action.payload;
-    }).addCase(createReply.fulfilled,(state:any,action) => action.payload);
+        }).addCase(createReply.fulfilled, (state: any, action) => action.payload)
+        .addCase(getLatestCommentByPostId.fulfilled, (state: any, action) => {
+        return action.payload
+        }).addCase(getLatestRepliesByCommentId.fulfilled, (state: any, action) => {
+            return action.payload
+        }).addCase(createComment.fulfilled,(state:any,action) => action.payload);
   },
 });
 

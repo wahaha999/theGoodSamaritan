@@ -6,6 +6,10 @@ import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import {useAppDispatch} from 'src/app/store/hook'
 import {openPostDialog} from 'src/app/pages/dashboard/store/postDialogSlice'
+import {
+  getLatestCommentByPostId,
+  getLatestRepliesByCommentId,
+} from 'src/app/pages/dashboard/store/postSlice'
 
 type Props = {
   setExpand: React.Dispatch<React.SetStateAction<boolean>>
@@ -17,6 +21,7 @@ type Props = {
 
 const PostViewActions = (props: Props) => {
   const {setExpand, post, type, comments_count, replies_count} = props
+  console.log('🚀 ~ file: index.tsx:24 ~ PostViewActions ~ comments_count:', comments_count)
   const dispatch = useAppDispatch()
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
 
@@ -44,6 +49,12 @@ const PostViewActions = (props: Props) => {
         )}
         <Button
           onClick={() => {
+            if (type === 'post' && post.comments_count && post.comments_count > 0) {
+              dispatch(getLatestCommentByPostId(post.id))
+            }
+            if (type === 'comment' && post.replies_count && post.replies_count > 0) {
+              dispatch(getLatestRepliesByCommentId(post.id))
+            }
             // if (type === 'comment') {
             // } else {
             setExpand(true)

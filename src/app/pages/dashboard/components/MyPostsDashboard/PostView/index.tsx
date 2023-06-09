@@ -17,6 +17,8 @@ type Props = {
   comment?: any
   comments_count?: number
   replies_count?: number
+  index?: number
+  length?: number
 }
 
 const itemVariants: Variants = {
@@ -29,7 +31,7 @@ const itemVariants: Variants = {
 }
 
 const PostView = (props: Props) => {
-  const {post, type, comment, comments_count, replies_count} = props
+  const {post, type, comment, comments_count, replies_count, index, length} = props
   console.log('typepepep====', type, post, comment)
   const [popup, setPopup] = React.useState(false)
 
@@ -67,6 +69,8 @@ const PostView = (props: Props) => {
         count={type === 'comment' ? comments_count : replies_count}
         type={type}
         post={post}
+        index={index}
+        length={length}
         user={user}
         handleClick={handleClick}
         anchorEl={anchorEl}
@@ -92,31 +96,32 @@ const PostView = (props: Props) => {
             Comments
           </Divider>
         )}
-        {type === 'post' && post.comments
-          ? post.comments?.map((comment: any, index: number) => (
-              <PostView type='comment' post={comment} comment={comment} key={index} />
-            ))
-          : post.latest_comment && (
-              <PostView
-                comments_count={post.comments_count}
-                type='comment'
-                post={post.latest_comment}
-                comment={post.latest_comment}
-              />
-            )}
-        {type === 'comment' && post.replies
-          ? post.replies?.map((reply: any, index: number) => (
-              <PostView type='reply' comment={post} post={reply} key={index} />
-            ))
-          : post.latest_reply && (
-              <PostView
-                // comments_count={post.comments_count}
-                replies_count={post.replies_count}
-                type='reply'
-                comment={post.latest_reply}
-                post={post.latest_reply}
-              />
-            )}
+        {type === 'post' &&
+          post.comments &&
+          post.comments?.map((comment: any, index: number) => (
+            <PostView
+              type='comment'
+              length={post.comments.length}
+              index={index}
+              comments_count={post.comments_count ? post.comments_count : 0}
+              post={comment}
+              comment={comment}
+              key={index}
+            />
+          ))}
+        {type === 'comment' &&
+          comment.replies &&
+          comment.replies?.map((reply: any, index: number) => (
+            <PostView
+              type='reply'
+              comment={comment}
+              index={index}
+              replies_count={comment.replies_count ? comment.replies_count : 0}
+              length={comment.replies.length}
+              post={reply}
+              key={index}
+            />
+          ))}
         {
           <PostInput
             type={type === 'post' ? 'comment' : 'reply'}

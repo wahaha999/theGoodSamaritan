@@ -19,10 +19,10 @@ type NewOrEditComment = PostDialogBase & {
 
 type NewOrEditReply = PostDialogBase & {
   postType: 'new_reply' | 'edit_reply';
-  postId: number;
+  postId?: number;
 }
 
-export type IPostDialog = NewOrEditPost | NewOrEditComment|NewOrEditReply;
+export type IPostDialog = NewOrEditPost | NewOrEditComment | NewOrEditReply;
 
 
 const initialState:IPostDialog = {
