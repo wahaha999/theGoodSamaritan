@@ -32,11 +32,14 @@ type Props = {
   handleClose: () => void
   type: 'comment' | 'post' | 'reply'
   count?: number
+  index?: number
+  length?: number
 }
 
 const PostViewHeader = (props: Props) => {
-  const {post, user, handleClick, anchorEl, open, handleClose, type, count} = props
+  const {post, user, handleClick, anchorEl, open, handleClose, type, count, index, length} = props
   const dispatch = useAppDispatch()
+  console.log('props===', count, index, length)
   return (
     <CardHeader
       action={
@@ -93,9 +96,13 @@ const PostViewHeader = (props: Props) => {
                       dispatch(
                         openPostDialog({open: true, postType: 'edit_post', postOption: post})
                       )
-                    } else {
+                    } else if (type === 'comment') {
                       dispatch(
                         openPostDialog({open: true, postType: 'edit_comment', postOption: post})
+                      )
+                    } else if (type === 'reply') {
+                      dispatch(
+                        openPostDialog({open: true, postType: 'edit_reply', postOption: post})
                       )
                     }
                   }}
@@ -112,19 +119,17 @@ const PostViewHeader = (props: Props) => {
       }
       title={
         <>
-          {type === 'comment'
-            ? count &&
-              count > 1 && (
-                <Button onClick={() => dispatch(getCommentsByPostId(post.post_id))}>
-                  see all comments
-                </Button>
-              )
-            : count &&
-              count > 1 && (
-                <Button onClick={() => dispatch(getRepliesByCommentId(post.comment_id))}>
-                  see all replies
-                </Button>
-              )}
+          {type === 'comment' ? (
+            count && index === 0 && length && length < count && count > 1 ? (
+              <Button onClick={() => dispatch(getCommentsByPostId(post.post_id))}>
+                {count} see all comments
+              </Button>
+            ) : null
+          ) : count && index === 0 && length && length < count && count > 1 ? (
+            <Button onClick={() => dispatch(getRepliesByCommentId(post.comment_id))}>
+              {count} see all replies
+            </Button>
+          ) : null}
           <Grid container direction='row' alignItems='center'>
             <Avatar
               sx={{bgcolor: red[500], mr: 2}}
