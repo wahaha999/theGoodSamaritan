@@ -22,6 +22,7 @@ import {useAppDispatch} from 'src/app/store/hook'
 import {openPostDialog} from 'src/app/pages/dashboard/store/postDialogSlice'
 import {openCheckDialog} from 'src/app/pages/dashboard/store/checkDialog'
 import {getCommentsByPostId, getRepliesByCommentId} from 'src/app/pages/dashboard/store/postSlice'
+import PostAccountView from './PostAccountViewPopover'
 
 type Props = {
   post: any
@@ -131,18 +132,10 @@ const PostViewHeader = (props: Props) => {
             </Button>
           ) : null}
           <Grid container direction='row' alignItems='center'>
-            <Avatar
-              sx={{bgcolor: red[500], mr: 2}}
-              aria-label='recipe'
-              src={toServerUrl('/media/account/avatar/' + post?.user?.account.avatar)}
-            />
-            <Typography>{post?.user?.account.non_profit_name}</Typography>
-            <Divider
-              orientation='vertical'
-              flexItem
-              sx={{border: '1px solid black', mx: 2, my: 1}}
-            />
-            <Avatar sx={{mr: 2}} src={toServerUrl('/media/user/avatar/' + post?.user?.avatar)} />
+            <PostAccountView
+              avatar={toServerUrl('/media/user/avatar/' + post?.user?.avatar)}
+              data={post}
+            />{' '}
             <Typography>
               {`${post?.user?.first_name} ${post?.user?.last_name}`} posted on{' '}
               {moment(post?.created_at).format('MM/DD/YY')} at{' '}
@@ -153,6 +146,18 @@ const PostViewHeader = (props: Props) => {
                 {post?.purpose && labels[Number(post?.purpose) - 1].icon}
               </Tooltip>
             )}
+            {/* <Avatar
+              sx={{bgcolor: red[500], mr: 2}}
+              aria-label='recipe'
+              src={toServerUrl('/media/account/avatar/' + post?.user?.account.avatar)}
+            /> */}
+            {/* <Typography>{post?.user?.account.non_profit_name}</Typography> */}
+            {/* <Divider
+              orientation='vertical'
+              flexItem
+              sx={{border: '1px solid black', mx: 2, my: 1}}
+            />
+            <Avatar sx={{mr: 2}} src={toServerUrl('/media/user/avatar/' + post?.user?.avatar)} /> */}
           </Grid>
         </>
       }

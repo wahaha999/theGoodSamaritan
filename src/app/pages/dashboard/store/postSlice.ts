@@ -325,6 +325,21 @@ export const getLatestRepliesByCommentId = createAsyncThunk('dashboard/replies/g
     }
 })
 
+export const createLike = createAsyncThunk('dashboard/createLike', async (data: any, { getState, dispatch }) => {
+    try {
+        dispatch(setLoading(true));
+        const response = await axios.post(`${API_URL}/like/create`, data);
+        const { like } = response.data;
+        const { post }: any = getState();
+        
+
+        dispatch(setLoading(false));
+        console.log('response===', response);
+    } catch (error) {
+        console.log('error===', error);
+    }
+})
+
 const postSlice = createSlice({
   name: 'post',
   initialState,
