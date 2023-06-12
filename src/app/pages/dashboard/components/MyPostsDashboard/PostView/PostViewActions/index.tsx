@@ -44,10 +44,10 @@ const PostViewActions = (props: Props) => {
       <Grid container justifyContent='space-between' alignItems='center'>
         <Grid item>
           <Typography variant='h6' ml={4} sx={{display: 'inline'}}>
-            {post.likes.length > 0 && ` ${emoji[post?.likes[0]?.like_type - 1]}  `}
+            {post?.likes.length > 0 && ` ${emoji[post?.likes[0]?.like_type - 1]}  `}
           </Typography>
           <Typography sx={{display: 'inline'}}>
-            {post.likes.length === 0 ? '' : post.likes.length}
+            {post?.likes.length === 0 ? '' : post?.likes.length}
           </Typography>
         </Grid>
         <Grid item>
