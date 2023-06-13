@@ -232,7 +232,6 @@ const navigationConfig = [
 
 export function MenuInner(props) {
   const {type} = props
-  console.log('type===', type)
   const intl = useIntl()
   const params = useParams()
   const dispatch = useAppDispatch()

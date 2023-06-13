@@ -25,7 +25,6 @@ const item = {
 const DashboardPage: FC = () => {
   const theme = useTheme()
   // const media = useMediaQuery()
-  console.log('lg==', theme.breakpoints)
   return (
     <>
       <motion.div variants={container} initial='hidden' animate='show'>

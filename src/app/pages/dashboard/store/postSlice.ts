@@ -440,7 +440,6 @@ export const createLike = createAsyncThunk(
       }
 
       dispatch(setLoading(false))
-      console.log('response===', updatedPosts)
       return updatedPosts
     } catch (error) {
       console.log('error===', error)
