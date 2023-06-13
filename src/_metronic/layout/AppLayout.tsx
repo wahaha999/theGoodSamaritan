@@ -21,11 +21,11 @@ import MailIcon from '@mui/icons-material/Mail'
 import {Link, Outlet, useLocation} from 'react-router-dom'
 import SidebarMenuMain from './components/sidebar/sidebar-menu/SidebarMenuMain'
 import {toAbsoluteUrl, toServerUrl} from '../helpers'
-import {MenuInner} from './components/header/header-menus'
 import {Avatar, Fab, Hidden, Menu, MenuItem, useMediaQuery} from '@mui/material'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {logoutUser} from 'src/app/store/userSlice'
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined'
+import {MenuInner} from './components/header/header-menus/MenuInner'
 interface Props {
   /**
    * Injected by the documentation to work in an iframe.

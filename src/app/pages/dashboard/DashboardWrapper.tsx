@@ -31,13 +31,13 @@ const DashboardPage: FC = () => {
       <motion.div variants={container} initial='hidden' animate='show'>
         <Grid container columnSpacing={4} sx={{mt: 4}}>
           <Grid item md={1}></Grid>
-          <Grid item md={10} xl={7}>
+          <Grid item md={10} xl={6}>
             <motion.div variants={item} initial='hidden' animate='show'>
               <MyPostsDashboard />
             </motion.div>
           </Grid>
           <Hidden xlDown>
-            <Grid item md={4} sx={{position: 'fixed', right: 80}}>
+            <Grid item md={4} sx={{position: 'fixed', right: 100}}>
               <motion.div variants={item} initial='hidden' animate='show'>
                 <FollowingDashboard title='3 Connections Pending Your Approval'>
                   <PostTitleItem
