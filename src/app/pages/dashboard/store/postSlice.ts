@@ -161,7 +161,6 @@ export const createReply = createAsyncThunk(
       const {data} = await axios.post(`${API_URL}/replies/create`, formData)
       const rep = data.reply
       const {post} = getState() as any
-      console.log('🚀 ~ file: postSlice.ts:141 ~ createReply ~ data:', rep)
 
       dispatch(showMessage({message: 'Successful reply', variant: 'success'}))
       const updatedPosts = _.map(post.post, (p: any) => {
@@ -440,7 +439,6 @@ export const createLike = createAsyncThunk(
       }
 
       dispatch(setLoading(false))
-      console.log('response===', updatedPosts)
       return updatedPosts
     } catch (error) {
       console.log('error===', error)
