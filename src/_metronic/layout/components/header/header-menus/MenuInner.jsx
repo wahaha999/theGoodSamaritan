@@ -232,6 +232,7 @@ const navigationConfig = [
 
 export function MenuInner(props) {
   const {type} = props
+  console.log('type===', type)
   const intl = useIntl()
   const params = useParams()
   const dispatch = useAppDispatch()
@@ -267,31 +268,6 @@ export function MenuInner(props) {
             <Navigation layout='horizontal' />
           </FuseScrollbars>
 
-          {/* <Button >Dashboard</Button>
-            <Button >Account</Button> */}
-          {/* <MenuItemBy to={'/dashboard'} title='DASHBOARD' />
-            <MenuInnerWithSub
-              title='Account'
-              to='/account'
-              hasArrow={true}
-              menuPlacement='right-start'
-              menuTrigger={`{default:'click', lg: 'hover'}`}
-            >
-              <MenuItem>
-                <MenuItemBy title='Account Information' to='/account/info' />
-              </MenuItem>
-              <MenuItem>
-                <MenuItemBy title='Billing' to='/account/billing' />
-              </MenuItem> */}
-          {/* <MenuItemBy title='About Your Non-Profit' to='/account/about_non_profit' />
-              <MenuItemBy title='Noe-Profit Verification' to='/account/verification' />
-            <MenuItemBy title='Address' to='/account/location' /> */}
-          {/* </MenuInnerWithSub>
-            <MenuItemBy title='OUR YOUTUBE CHANNEL' to='/youtube' /> */}
-          {/* {navigationConfig.map((item: any) => (
-              <HoverPopover item={item} nestedLevel={0} />
-            ))} */}
-          <Hidden mdDown></Hidden>
           {/* </Grid> */}
           <Hidden mdDown>
             {params['*'] == 'dashboard' && (

@@ -32,7 +32,6 @@ const itemVariants: Variants = {
 
 const PostView = (props: Props) => {
   const {post, type, comment, comments_count, replies_count, index, length} = props
-  console.log('typepepep====', type, post, comment)
   const [popup, setPopup] = React.useState(false)
 
   const user = useAppSelector(({user}) => user.user)

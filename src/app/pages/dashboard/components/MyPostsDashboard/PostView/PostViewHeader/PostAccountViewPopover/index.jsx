@@ -115,7 +115,7 @@ const PostAccountView = (props) => {
                       <Grid container spacing={2} my={2}>
                         <Grid item md={6}>
                           <Typography variant='subtitle1'>
-                            Organize: {params[account.organize]}
+                            Organization Size: {params[account.organize]}
                           </Typography>
                         </Grid>
 
@@ -126,7 +126,7 @@ const PostAccountView = (props) => {
                         </Grid>
                         <Grid item md={6}>
                           <Typography variant='subtitle1'>
-                            Fax Number: {account.fax_number ?? ''}
+                            Fax Number: {account.fax_number === 'null' ? '' : account.fax_number}
                           </Typography>{' '}
                         </Grid>
                       </Grid>
