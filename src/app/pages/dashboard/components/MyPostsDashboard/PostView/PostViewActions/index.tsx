@@ -34,7 +34,6 @@ export const emoji = ['😍', '😒', '🎉', '💕', '😎']
 
 const PostViewActions = (props: Props) => {
   const {setExpand, post, type} = props
-  // console.log('🚀 ~ file: index.tsx:24 ~ PostViewActions ~ comments_count:', comments_count)
   const dispatch = useAppDispatch()
   const [open, setOpen] = useState(false)
   const [data, setData] = useState([])
