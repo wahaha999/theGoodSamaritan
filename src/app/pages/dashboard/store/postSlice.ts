@@ -366,6 +366,9 @@ export const createLike = createAsyncThunk(
               return {...p, likes: updatedLikes}
             } else if (message === 'created') {
               return {...p, likes: [...p.likes, like]}
+            } else if (message === 'deleted') {
+              const updatedLikes = _.filter(p.likes, (l: any) => like.id !== l.id)
+              return {...p, likes: updatedLikes}
             }
           } else {
             return p
@@ -390,6 +393,9 @@ export const createLike = createAsyncThunk(
                   return {...c, likes: updatedLikes}
                 } else if (message === 'created') {
                   return {...c, likes: [...c.likes, like]}
+                } else if (message === 'deleted') {
+                  const updatedLikes = _.filter(c.likes, (l: any) => like.id !== l.id)
+                  return {...c, likes: updatedLikes}
                 }
               } else {
                 return c
@@ -421,6 +427,9 @@ export const createLike = createAsyncThunk(
                       return {...r, likes: updatedLikes}
                     } else if (message === 'created') {
                       return {...r, likes: [...r.likes, like]}
+                    } else if (message === 'deleted') {
+                      const updatedLikes = _.filter(r.likes, (l: any) => like.id !== l.id)
+                      return {...r, likes: updatedLikes}
                     }
                   } else {
                     return r

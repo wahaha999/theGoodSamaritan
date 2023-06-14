@@ -1,14 +1,15 @@
-import {DialogContent, DialogTitle, Typography, Grid} from '@mui/material'
+import {DialogContent, DialogTitle, Typography, Grid, DialogActions, Button} from '@mui/material'
 import React, {useMemo} from 'react'
 import LikeInfoItem from './LikeInfoItem'
-import {emoji} from '.'
+import {emoji} from 'src/app/constants/emoji'
 
 type Props = {
   data: any[]
+  onClose: () => void
 }
 
 const LikeInfoDialog = (props: Props) => {
-  const {data} = props
+  const {data, onClose} = props
   const title = useMemo(() => {
     const likeTypeCount: any = {}
 
@@ -24,9 +25,8 @@ const LikeInfoDialog = (props: Props) => {
         <Grid container alignItems='center' spacing={2}>
           {Object.keys(title).map((item: any, index: number) => (
             <Grid item key={index}>
-              <Typography variant='h5' key={index} sx={{display: 'inline'}}>
-                {emoji[item - 1]}
-              </Typography>
+              <img src={emoji[item - 1].url} className='w-24 h-24 inline' />
+
               <Typography sx={{display: 'inline'}}> - {title[item]}</Typography>
             </Grid>
           ))}
@@ -40,6 +40,11 @@ const LikeInfoDialog = (props: Props) => {
           <LikeInfoItem info={item} key={index} />
         ))}
       </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} variant='contained'>
+          cancel
+        </Button>
+      </DialogActions>
     </>
   )
 }

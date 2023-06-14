@@ -7,12 +7,14 @@ import {
   Box,
   Dialog,
   ButtonBase,
+  Chip,
+  Avatar,
 } from '@mui/material'
-import React, {useState} from 'react'
+import React, {useMemo, useState} from 'react'
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
 import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
-import {useAppDispatch} from 'src/app/store/hook'
+import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {
   getLatestCommentByPostId,
   getLatestRepliesByCommentId,
@@ -21,6 +23,8 @@ import {
 import LikeHover from './LikeHover'
 import LikeInfoDialog from './LikeInfoDialog'
 import {setLoading} from 'src/app/pages/dashboard/store/filterSlice'
+import {emoji} from 'src/app/constants/emoji'
+import _ from 'src/app/modules/@lodash/@lodash'
 
 type Props = {
   setExpand: React.Dispatch<React.SetStateAction<boolean>>
@@ -30,13 +34,23 @@ type Props = {
   replies_count?: number
 }
 
-export const emoji = ['😍', '😒', '🎉', '💕', '😎']
-
 const PostViewActions = (props: Props) => {
+  const {id} = useAppSelector(({user}) => user.user)
+
   const {setExpand, post, type} = props
   const dispatch = useAppDispatch()
   const [open, setOpen] = useState(false)
   const [data, setData] = useState([])
+
+  const title = useMemo(() => {
+    const likeTypeCount: any = {}
+
+    for (const like of post.likes) {
+      const likeType = like.like_type
+      likeTypeCount[likeType] = (likeTypeCount[likeType] || 0) + 1
+    }
+    return likeTypeCount
+  }, [post.likes])
 
   return (
     <>
@@ -57,12 +71,22 @@ const PostViewActions = (props: Props) => {
               }}
               sx={{cursor: 'pointer'}}
             >
-              <Typography variant='h6' ml={4} sx={{display: 'inline'}}>
-                {post?.likes.length > 0 && ` ${emoji[post?.likes[0]?.like_type - 1]}  `}
-              </Typography>
-              <Typography sx={{display: 'inline'}}>
-                {post?.likes.length === 0 ? '' : post?.likes.length}
-              </Typography>
+              <Grid container spacing={1} ml={4}>
+                {Object.keys(title).map((item: any, index: number) => (
+                  <Grid item key={index}>
+                    <Chip
+                      size='small'
+                      color={
+                        _.find(post?.likes, {user_id: id})?.like_type === emoji[item - 1].id
+                          ? 'secondary'
+                          : 'default'
+                      }
+                      avatar={<Avatar src={emoji[item - 1].url} />}
+                      label={<Typography variant='caption'>{title[item]}</Typography>}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
             </ButtonBase>
           </Grid>
           <Grid item>
@@ -107,12 +131,19 @@ const PostViewActions = (props: Props) => {
         maxWidth='sm'
         fullWidth
         open={open}
+        PaperProps={{sx: {height: '400px', overflowY: 'auto'}}}
         onClose={() => {
           setOpen(false)
           setData([])
         }}
       >
-        <LikeInfoDialog data={data} />
+        <LikeInfoDialog
+          onClose={() => {
+            setOpen(false)
+            setData([])
+          }}
+          data={data}
+        />
       </Dialog>
     </>
   )
