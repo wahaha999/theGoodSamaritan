@@ -1,8 +1,8 @@
 import React, {memo} from 'react'
 import {Grid, Badge, Typography, Avatar, Button} from '@mui/material'
 import {toServerUrl} from 'src/_metronic/helpers'
-import {emoji} from '.'
 import BluetoothConnectedOutlinedIcon from '@mui/icons-material/BluetoothConnectedOutlined'
+import {emoji} from 'src/app/constants/emoji'
 type Props = {
   info: any
 }
@@ -15,7 +15,7 @@ const LikeInfoItem = (props: Props) => {
         <Badge
           overlap='circular'
           anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
-          badgeContent={<Typography variant='h6'>{emoji[info.like_type - 1]}</Typography>}
+          badgeContent={<img src={emoji[info.like_type - 1].url} />}
         >
           <Avatar
             sx={{width: 70, height: 70}}
