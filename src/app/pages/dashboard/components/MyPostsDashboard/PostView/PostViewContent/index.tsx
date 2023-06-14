@@ -22,7 +22,7 @@ function PostViewContent(props: Props) {
               post?.state || ''
             } ${post?.zip_code || ''}`}
           >
-            {post?.address}
+            {post?.address} , {post?.city} {post?.state}
           </Typography>
         ) : (
           <Typography color='purple'>
