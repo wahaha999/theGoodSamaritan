@@ -19,7 +19,7 @@ const LikeInfoItem = (props: Props) => {
         >
           <Avatar
             sx={{width: 70, height: 70}}
-            alt='Travis Howard'
+            alt=''
             src={toServerUrl('/media/user/avatar/' + info.user?.avatar)}
           />
         </Badge>

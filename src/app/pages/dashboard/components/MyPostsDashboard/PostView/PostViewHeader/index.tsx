@@ -134,7 +134,7 @@ const PostViewHeader = (props: Props) => {
             ) : null}
             <Grid container direction='row' alignItems='center'>
               <PostAccountView
-                avatar={toServerUrl('/media/user/avatar/' + post?.user?.avatar)}
+                avatar={toServerUrl('/media/account/avatar/' + user?.account.avatar)}
                 data={post}
               />{' '}
               <Typography>
