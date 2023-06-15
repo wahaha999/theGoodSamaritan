@@ -9,6 +9,7 @@ import {
   ButtonBase,
   Chip,
   Avatar,
+  Tooltip,
 } from '@mui/material'
 import React, {useMemo, useState} from 'react'
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
@@ -91,13 +92,17 @@ const PostViewActions = (props: Props) => {
           </Grid>
           <Grid item>
             <Grid container flexDirection='row-reverse'>
-              <IconButton sx={{color: 'purple'}}>
-                <ForumOutlinedIcon />
-              </IconButton>
+                <Tooltip title="Chat with this organization">
+                <Button  startIcon={<ForumOutlinedIcon />} sx={{mr: 2 }} variant='outlined'>
+                  Chat
+                </Button>
+                </Tooltip>
               {type === 'post' && (
-                <Button startIcon={<SaveOutlinedIcon />} sx={{mr: 2}} variant='outlined'>
+                <Tooltip title="Save this post and follow it for updates.">
+                <Button startIcon={<ChatBubbleOutlineIcon />} sx={{mr: 2}} variant='outlined'>
                   Save Post
                 </Button>
+                </Tooltip>
               )}
               <Button
                 onClick={() => {
@@ -112,9 +117,10 @@ const PostViewActions = (props: Props) => {
                   setExpand(true)
                   // }
                 }}
+                
                 startIcon={<ChatBubbleOutlineIcon />}
                 sx={{mr: 2}}
-              >
+              > 
                 {type === 'comment' || type === 'reply'
                   ? post.replies_count
                     ? post.replies_count + ' Replies'
