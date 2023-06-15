@@ -35,7 +35,7 @@ function CustomizedInputBase(props: ICustomizedInputBase & InputBaseProps) {
       }}
     >
       <IconButton sx={{p: '10px'}} aria-label='menu'>
-        <Avatar aria-label='recipe' src={toServerUrl('/media/user/avatar/' + user?.avatar)} />
+        <Avatar aria-label='recipe' src={toServerUrl('/media/account/avatar/' + user?.account.avatar)} />
       </IconButton>
       <InputBase
         fullWidth
