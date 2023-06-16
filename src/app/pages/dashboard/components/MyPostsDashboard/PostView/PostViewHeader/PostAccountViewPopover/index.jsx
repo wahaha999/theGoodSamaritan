@@ -1,4 +1,5 @@
-import {Button, Typography, Paper, Avatar, Grid} from '@mui/material'
+import {Button, Typography, Paper, Avatar, Grid, Tooltip, TextField} from '@mui/material'
+import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined'
 import React, {useMemo, useState} from 'react'
 import {Manager, Popper, Reference} from 'react-popper'
 import {useDebounce} from 'src/app/modules/hooks'
@@ -8,6 +9,7 @@ import {motion, AnimatePresence} from 'framer-motion'
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined'
 import ConnectWithoutContactOutlinedIcon from '@mui/icons-material/ConnectWithoutContactOutlined'
 import {toServerUrl} from 'src/_metronic/helpers'
+import { maxWidth } from '@mui/system'
 
 const params = ['0~50', '51~100', '101~200', '201~500', '501~1000', '1000~']
 
@@ -53,7 +55,8 @@ const PostAccountView = (props) => {
                         top: -50,
                         left: -20,
                         zIndex: 1000,
-                        width: 'auto',
+                        //width: 'auto',
+                        minWidth: '500px',
                         // minWidth: 500,
                         height: 'auto',
                         borderRadius: '8px',
@@ -85,56 +88,60 @@ const PostAccountView = (props) => {
                                 transition={{type: 'spring', damping: 10, stiffness: 100}}
                                 animate={{scale: 1.1}}
                                 style={{width: '70px', height: '70px', borderRadius: '50%'}}
-                                src={toServerUrl('/media/account/avatar/' + account.avatar)}
+                                src={toServerUrl('/media/account/avatar/' + account?.avatar)}
                               />
                             </Grid>
                             <Grid item direction='column'>
-                              <Typography>{account.non_profit_name}</Typography>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                        <Grid item>
-                          <Grid container alignItems='center' spacing={2}>
-                            <Grid item>
-                              <motion.img
-                                transition={{type: 'spring', damping: 10, stiffness: 100}}
-                                animate={{scale: 1.1}}
-                                style={{width: '70px', height: '70px', borderRadius: '50%'}}
-                                src={toServerUrl('/media/user/avatar/' + user?.avatar)}
-                              />
-                            </Grid>
-                            <Grid item direction='column'>
-                              <Typography>
-                                {user.first_name} {user.last_name}
+                              <Typography>{user?.account.non_profit_name}</Typography>
+                              <Typography variant='subtitle1'>
+                                Phone: {account.phone_number}
                               </Typography>
-                              <Typography variant='subtitle1'>{user.email}</Typography>
+                              <Typography variant='subtitle1'>
+                                {' '}
+                                Organization Size: {params[account.organize]}
+                              </Typography>
                             </Grid>
                           </Grid>
                         </Grid>
                       </Grid>
-                      <Grid container spacing={2} my={2}>
-                        <Grid item md={6}>
-                          <Typography variant='subtitle1'>
-                            Organization Size: {params[account.organize]}
-                          </Typography>
-                        </Grid>
-
-                        <Grid item md={6}>
-                          <Typography variant='subtitle1'>
-                            Phone Number: {account.phone_number}
-                          </Typography>
-                        </Grid>
-                        <Grid item md={6}>
-                          <Typography variant='subtitle1'>
-                            Fax Number: {account.fax_number === 'null' ? '' : account.fax_number}
-                          </Typography>{' '}
-                        </Grid>
+                      <Grid container spacing={1} my={1}>
+                        <Grid item md={12}></Grid>
                       </Grid>
-                      <Typography variant='subtitle1'>Mission of Organize:</Typography>
+                      <Typography variant='subtitle1'><h2>Our Mission:</h2></Typography>
                       <div
                         dangerouslySetInnerHTML={{__html: account.mission}}
-                        style={{padding: '4px'}}
-                      ></div>
+                        style={{padding: '4px', maxWidth: '500px'}}
+                      >
+                        
+                      </div>
+
+      
+
+                      <Grid container spacing={1} my={1}>
+                        <Grid item md={12}></Grid>
+                      </Grid>
+                      <Grid item>
+                        <Grid container alignItems='center' spacing={2}>
+                          <Grid item>
+                            <motion.img
+                              transition={{type: 'spring', damping: 10, stiffness: 100}}
+                              animate={{scale: 1.1}}
+                              style={{width: '70px', height: '70px', borderRadius: '50%'}}
+                              src={toServerUrl('/media/user/avatar/' + user?.avatar)}
+                            />
+                          </Grid>
+                          <Grid item direction='column'>
+                            <Typography>
+                              Posted By: {user.first_name} {user.last_name}
+                            </Typography>
+                            <Typography variant='subtitle1'>{user.email}</Typography>
+                            <Typography variant='subtitle1'>{user.phone_number}</Typography>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                      <Grid container spacing={1} my={1}>
+                        <Grid item md={12}></Grid>
+                      </Grid>
                       <Grid
                         container
                         direction='row'
@@ -147,21 +154,29 @@ const PostAccountView = (props) => {
                           // transition={{duration: 1}}
                           animate={{opacity: 1}}
                         >
-                          <Button
-                            variant='contained'
-                            startIcon={<ConnectWithoutContactOutlinedIcon />}
-                          >
-                            Connect
-                          </Button>
+                          <Tooltip title='Connect and follow conversations with this organization'>
+                            <Button
+                              variant='contained'
+                              startIcon={<ConnectWithoutContactOutlinedIcon />}
+                            >
+                              Connect
+                            </Button>
+                          </Tooltip>
                         </motion.div>
                         <motion.div
                           initial={{opacity: 0}}
                           // transition={{duration: 1}}
                           animate={{opacity: 1}}
                         >
-                          <Button variant='outlined' startIcon={<SendOutlinedIcon />}>
-                            Message
-                          </Button>
+                          <Tooltip title='Chat with this organization'>
+                            <Button
+                              startIcon={<ForumOutlinedIcon />}
+                              sx={{mr: 2}}
+                              variant='outlined'
+                            >
+                              Chat
+                            </Button>
+                          </Tooltip>
                         </motion.div>
                       </Grid>
                       {/* </Paper> */}
