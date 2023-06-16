@@ -9,7 +9,8 @@ import {motion, AnimatePresence} from 'framer-motion'
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined'
 import ConnectWithoutContactOutlinedIcon from '@mui/icons-material/ConnectWithoutContactOutlined'
 import {toServerUrl} from 'src/_metronic/helpers'
-import { maxWidth } from '@mui/system'
+import {maxWidth} from '@mui/system'
+import {Link} from '@react-email/link'
 
 const params = ['0~50', '51~100', '101~200', '201~500', '501~1000', '1000~']
 
@@ -38,7 +39,7 @@ const PostAccountView = (props) => {
           )}
         </Reference>
         {ReactDOM.createPortal(
-          <Popper placement='bottom-start' eventsEnabled={open} positionFixed>
+          <Popper placement='bottom-start' eventsEnabled={open} positionFixed disablePortal={false}>
             {({ref, style, placement}) => {
               return (
                 <AnimatePresence>
@@ -107,15 +108,18 @@ const PostAccountView = (props) => {
                       <Grid container spacing={1} my={1}>
                         <Grid item md={12}></Grid>
                       </Grid>
-                      <Typography variant='subtitle1'><h2>Our Mission:</h2></Typography>
+                      <Typography variant='subtitle1'>
+                        <h2>Our Mission:</h2>
+                      </Typography>
                       <div
                         dangerouslySetInnerHTML={{__html: account.mission}}
-                        style={{padding: '4px', maxWidth: '500px'}}
-                      >
-                        
-                      </div>
-
-      
+                        style={{
+                          padding: '4px',
+                          maxWidth: '500px',
+                          maxHeight: '200px',
+                          overflowY: 'auto',
+                        }}
+                      ></div>
 
                       <Grid container spacing={1} my={1}>
                         <Grid item md={12}></Grid>
@@ -134,7 +138,11 @@ const PostAccountView = (props) => {
                             <Typography>
                               Posted By: {user.first_name} {user.last_name}
                             </Typography>
-                            <Typography variant='subtitle1'>{user.email}</Typography>
+                            <Typography variant='subtitle1'>
+                              <Link href={`mailto:${user.email}`} className='underline'>
+                                {user.email}
+                              </Link>
+                            </Typography>
                             <Typography variant='subtitle1'>{user.phone_number}</Typography>
                           </Grid>
                         </Grid>
