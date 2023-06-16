@@ -1,3 +1,24 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+body::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+body::-webkit-scrollbar:hover {
+    width: 8px;
+    height: 8px;
+    background-color: rgba(0, 0, 0, 0.06);
+}
+
+body::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
+    border-radius: 20px;
+}
+
+body::-webkit-scrollbar-thumb:active {
+    border-radius: 20px;
+}
