@@ -39,6 +39,7 @@ import PostDialog from './PostDialog'
 import PostInput from './PostInput'
 import CheckDialog from './CheckDialog'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
+import ConnectionDialog from '../ConnectionDialog'
 
 const DashboardPaper = styled(Paper)(() => ({
   width: '100%',
@@ -158,6 +159,7 @@ function MyPostsDashboard(props: Props) {
       {/* </DashboardPaper> */}
       <PostDialog />
       <CheckDialog />
+      <ConnectionDialog />
     </>
   )
 }

@@ -26,6 +26,7 @@ import LikeInfoDialog from './LikeInfoDialog'
 import {setLoading} from 'src/app/pages/dashboard/store/filterSlice'
 import {emoji} from 'src/app/constants/emoji'
 import _ from 'src/app/modules/@lodash/@lodash'
+import {openConnDialog} from 'src/app/pages/dashboard/store/connectDialogSlice'
 
 type Props = {
   setExpand: React.Dispatch<React.SetStateAction<boolean>>
@@ -92,16 +93,23 @@ const PostViewActions = (props: Props) => {
           </Grid>
           <Grid item>
             <Grid container flexDirection='row-reverse'>
-                <Tooltip title="Chat with this organization">
-                <Button  startIcon={<ForumOutlinedIcon />} sx={{mr: 2 }} variant='outlined'>
+              <Tooltip title='Chat with this organization'>
+                <Button
+                  startIcon={<ForumOutlinedIcon />}
+                  sx={{mr: 2}}
+                  variant='outlined'
+                  onClick={() => {
+                    dispatch(openConnDialog({open: true, info: post.user}))
+                  }}
+                >
                   Chat
                 </Button>
-                </Tooltip>
+              </Tooltip>
               {type === 'post' && (
-                <Tooltip title="Save this post and follow it for updates.">
-                <Button startIcon={<ChatBubbleOutlineIcon />} sx={{mr: 2}} variant='outlined'>
-                  Save Post
-                </Button>
+                <Tooltip title='Save this post and follow it for updates.'>
+                  <Button startIcon={<ChatBubbleOutlineIcon />} sx={{mr: 2}} variant='outlined'>
+                    Save Post
+                  </Button>
                 </Tooltip>
               )}
               <Button
@@ -117,10 +125,9 @@ const PostViewActions = (props: Props) => {
                   setExpand(true)
                   // }
                 }}
-                
                 startIcon={<ChatBubbleOutlineIcon />}
                 sx={{mr: 2}}
-              > 
+              >
                 {type === 'comment' || type === 'reply'
                   ? post.replies_count
                     ? post.replies_count + ' Replies'

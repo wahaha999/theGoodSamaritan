@@ -1,10 +1,11 @@
 import {styled, AppBar, Toolbar, IconButton, Typography, Avatar, Paper} from '@mui/material'
-import React, {useRef} from 'react'
+import React, {useEffect, useRef} from 'react'
 import {toServerUrl} from 'src/_metronic/helpers'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 import {useAppSelector} from 'src/app/store/hook'
 import ContactList from './ContactList'
 import Chat from './Chat'
+import {echoInit} from 'src/app/helpers/echoHelper'
 
 type Props = {
   opened: boolean
@@ -22,8 +23,13 @@ const Root = styled('div')<{opened: boolean}>(({theme, opened}) => ({
 const ChatSidePanel = (props: Props) => {
   const {opened} = props
   const user = useAppSelector(({user}) => user.user)
+  const {access_token} = useAppSelector(({user}) => user)
   const {onClose} = props
   const ref = useRef(null)
+  useEffect(() => {
+    console.log('hello')
+    echoInit(access_token)
+  }, [])
   return (
     <Root opened={opened}>
       <div className='panel flex flex-col max-w-ful' ref={ref}>
