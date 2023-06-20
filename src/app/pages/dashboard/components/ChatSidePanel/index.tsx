@@ -6,6 +6,8 @@ import {useAppSelector} from 'src/app/store/hook'
 import ContactList from './ContactList'
 import Chat from './Chat'
 import {echoInit} from 'src/app/helpers/echoHelper'
+import withReducer from 'src/app/store/withReducer'
+import reducer from './store'
 
 type Props = {
   opened: boolean
@@ -78,4 +80,4 @@ const ChatSidePanel = (props: Props) => {
   )
 }
 
-export default ChatSidePanel
+export default withReducer('chat', reducer)(ChatSidePanel)

@@ -1,5 +1,6 @@
 import Echo from 'laravel-echo'
 import axios from 'axios'
+import {API_URL} from '../modules/auth/core/_requests'
 
 declare global {
   interface Window {
@@ -43,7 +44,7 @@ export const echoInit = (token: string) => {
         },
       }
 
-      axios.get(`/api/online/${user.id}`, headersObj)
+      axios.get(`${API_URL}/online/${user.id}`, headersObj)
     })
     .leaving((user: any) => {
       const headersObj = {
@@ -53,7 +54,7 @@ export const echoInit = (token: string) => {
       }
 
       console.log('IN LEAVING ')
-      axios.get(`/api/offline/${user.id}`, headersObj)
+      axios.get(`${API_URL}/offline/${user.id}`, headersObj)
     })
     .listen('UserOnline', (event: any) => {
       console.log(event.user.name + ' IS ONLINE ')

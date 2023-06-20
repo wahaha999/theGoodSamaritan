@@ -7,6 +7,7 @@ import {toServerUrl} from 'src/_metronic/helpers'
 import {useAppSelector} from 'src/app/store/hook'
 
 interface Props {
+  info: any
   //   contact: {
   //     id: string
   //     name: string
@@ -75,8 +76,9 @@ const StyledStatus = styled('div', {shouldForwardProp: (prop) => prop !== 'value
 )
 
 const ContactButton = (props: Props) => {
-  const user = useAppSelector(({user}) => user.user)
-
+  // const user = useAppSelector(({user}) => user.user)
+  const {info} = props
+  console.log('🚀 ~ file: ContactButton.tsx:81 ~ ContactButton ~ info:', info)
   return (
     <Button
       className={clsx(
@@ -86,7 +88,7 @@ const ContactButton = (props: Props) => {
     >
       {/* <StyledUreadBadge value='hello'></StyledUreadBadge> */}
       <StyledStatus value='online' />
-      <Avatar src={toServerUrl('/media/user/avatar/' + user?.avatar)} />{' '}
+      <Avatar src={toServerUrl('/media/user/avatar/' + info?.avatar)} />{' '}
     </Button>
   )
 }

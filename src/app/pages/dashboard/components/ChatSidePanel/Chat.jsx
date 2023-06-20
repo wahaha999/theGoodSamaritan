@@ -2,12 +2,13 @@ import {styled} from '@mui/material/styles'
 import IconButton from '@mui/material/IconButton'
 import Paper from '@mui/material/Paper'
 import clsx from 'clsx'
-import {useMemo, useRef} from 'react'
+import {useMemo, useRef, useState} from 'react'
 import {useDispatch} from 'react-redux'
 import InputBase from '@mui/material/InputBase'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 import FuseScrollbars from 'src/app/modules/core/FuseScrollbars/FuseScrollbars'
 import {Typography} from '@mui/material'
+import {sendMessage} from '../../store/messageSlice'
 
 const StyledMessageRow = styled('div')(({theme}) => ({
   '&.contact': {
@@ -90,7 +91,7 @@ function Chat(props) {
   //   const user = useSelector(selectUser)
 
   const chatScroll = useRef(null)
-  //   const [messageText, setMessageText] = useState('')
+  const [messageText, setMessageText] = useState('')
 
   //   useEffect(() => {
   //     scrollToBottom()
@@ -106,9 +107,9 @@ function Chat(props) {
   //     })
   //   }
 
-  //   const onInputChange = (ev) => {
-  //     setMessageText(ev.target.value)
-  //   }
+  const onInputChange = (ev) => {
+    setMessageText(ev.target.value)
+  }
 
   return (
     <Paper
@@ -176,27 +177,27 @@ function Chat(props) {
       </FuseScrollbars>
 
       {useMemo(() => {
-        // const onMessageSubmit = (ev) => {
-        //   ev.preventDefault()
-        //   if (messageText === '') {
-        //     return
-        //   }
-        //   dispatch(
-        //     sendMessage({
-        //       messageText,
-        //       chatId: chat.id,
-        //       contactId: selectedContactId,
-        //     })
-        //   ).then(() => {
-        //     setMessageText('')
-        //   })
-        // }
+        const onMessageSubmit = (ev) => {
+          ev.preventDefault()
+          if (messageText === '') {
+            return
+          }
+          dispatch(
+            sendMessage({
+              message: messageText,
+              channel_id: 1,
+              channel_type: 'dm',
+            })
+          ).then(() => {
+            setMessageText('')
+          })
+        }
 
         return (
           <>
             {/* {chat && ( */}
             <form
-              // onSubmit={onMessageSubmit}
+              onSubmit={onMessageSubmit}
               className='pb-10 px-8 absolute bottom-0 left-0 right-0'
             >
               <Paper className='flex items-center relative shadow' sx={{borderRadius: '2.4rem'}}>
@@ -205,8 +206,8 @@ function Chat(props) {
                   id='message-input'
                   className='flex flex-1 grow shrink-0 mx-16 ltr:mr-48 rtl:ml-48 my-6'
                   placeholder='Type your message'
-                  //   onChange={onInputChange}
-                  //   value={messageText}
+                  onChange={onInputChange}
+                  value={messageText}
                 />
                 <IconButton
                   className='absolute ltr:right-0 rtl:left-0 top-0'
