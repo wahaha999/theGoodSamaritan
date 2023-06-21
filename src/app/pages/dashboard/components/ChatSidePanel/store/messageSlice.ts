@@ -1,31 +1,14 @@
-import {createAsyncThunk} from '@reduxjs/toolkit'
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import axios from 'axios'
 import {API_URL} from 'src/app/modules/auth/core/_requests'
+import {selectChatRoom} from './chatRoomSlice'
 
 export interface IMessage {
   message: string
   receiver: number
 }
 
-const initialState: IMessage = {
-  message: '',
-  receiver: NaN,
-}
-
-export const directMessage = createAsyncThunk(
-  'dashboard/chat/directMessage',
-  async (data: IMessage, {getState, dispatch}) => {
-    const res = await axios.post(`${API_URL}/directMessage`, data)
-    console.log('message===', res)
-    // const {data} = await getUserByToken()
-    // const temp = {...data.user}
-    // delete temp.account
-    // if (temp.email) {
-    //   dispatch(setUser({user: temp, states: data.states}))
-    // }
-    // return res.data
-  }
-)
+const initialState: any = []
 
 export const sendMessage = createAsyncThunk(
   'dashboard/chat/sendMessage',
@@ -37,8 +20,12 @@ export const sendMessage = createAsyncThunk(
 
 export const dmSelect = createAsyncThunk(
   'dashboard/chat/dmselect',
-  async (data: any, {getState, dispatch}) => {
-    const {channel_id} = data
+  async (channel_id: number, {getState, dispatch}) => {
+    window.Echo.leave('chat.channel.5')
+    dispatch(selectChatRoom(channel_id))
+
+    const res = await axios.get(`${API_URL}/getMessages/${channel_id}`)
+    dispatch(getMessages(res.data))
     window.Echo.join(`chat.dm.${channel_id}`)
       .listen('MessageSent', (event: any) => {
         console.log('FROM DM USERS EVENT FUNCTION')
@@ -52,6 +39,8 @@ export const dmSelect = createAsyncThunk(
           user: event.user,
           message: event.message.message,
         }
+        dispatch(addMessage(event.message))
+        // return [...messages, event.message]
         // dispatch({type: ADD_MESSAGE, payload: message})
       })
       .listenForWhisper('typing', (event: any) => {
@@ -72,3 +61,27 @@ export const dmSelect = createAsyncThunk(
       })
   }
 )
+
+const messageSlice = createSlice({
+  name: 'messages',
+  initialState,
+  reducers: {
+    getMessages: (state, action) => {
+      //   console.log('action===', action.payload)
+      return action.payload
+    },
+    addMessage: (state, action) => {
+      //   console.log('action===', action.payload)
+      state.push(action.payload)
+    },
+  },
+  extraReducers(builder) {
+    builder.addCase(dmSelect.fulfilled, (state, action) => {
+      return action.payload
+    })
+  },
+})
+
+export const {getMessages, addMessage} = messageSlice.actions
+
+export default messageSlice.reducer

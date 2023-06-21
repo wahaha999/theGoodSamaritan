@@ -5,8 +5,7 @@ import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import ConnectionContent from './ConnectionContent'
 import ConnectionTitle from './ConnectionTitle'
 import {FormProvider, useForm} from 'react-hook-form'
-import {IMessage, directMessage} from '../../store/messageSlice'
-import {createChatRoom} from '../ChatSidePanel/store/chatRoomSlice'
+import {IMessage, createChatRoom} from '../ChatSidePanel/store/chatRoomSlice'
 
 type Props = {}
 

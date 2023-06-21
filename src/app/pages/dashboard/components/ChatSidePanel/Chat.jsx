@@ -8,7 +8,9 @@ import InputBase from '@mui/material/InputBase'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 import FuseScrollbars from 'src/app/modules/core/FuseScrollbars/FuseScrollbars'
 import {Typography} from '@mui/material'
-import {sendMessage} from '../../store/messageSlice'
+import {sendMessage} from './store/messageSlice'
+import {useAppSelector} from 'src/app/store/hook'
+import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 
 const StyledMessageRow = styled('div')(({theme}) => ({
   '&.contact': {
@@ -39,7 +41,7 @@ const StyledMessageRow = styled('div')(({theme}) => ({
 
     '& .bubble': {
       marginLeft: 'auto',
-      backgroundColor: theme.palette.primary.light,
+      backgroundColor: theme.palette.primary.main,
       color: theme.palette.primary.contrastText,
       borderTopLeftRadius: 20,
       borderBottomLeftRadius: 20,
@@ -86,6 +88,9 @@ const StyledMessageRow = styled('div')(({theme}) => ({
 
 function Chat(props) {
   const dispatch = useDispatch()
+  const selectedChatRoom = useAppSelector(({chat}) => chat.chatRoom.selectedChatRoom)
+  const {messages} = useAppSelector(({chat}) => chat)
+  const {user} = useAppSelector(({user}) => user)
   //   const selectedContactId = useSelector(selectSelectedContactId)
   //   const chat = useSelector(selectChat)
   //   const user = useSelector(selectUser)
@@ -121,48 +126,49 @@ function Chat(props) {
         className='flex flex-1 flex-col overflow-y-auto overscroll-contain'
         option={{suppressScrollX: true, wheelPropagation: false}}
       >
-        <div className='flex flex-col pt-16'>
-          {/* {useMemo(() => {
+        <div className='flex flex-col flex-1 pt-16'>
+          {useMemo(() => {
             function isFirstMessageOfGroup(item, i) {
-              return i === 0 || (chat[i - 1] && chat[i - 1].contactId !== item.contactId)
+              return i === 0 || (messages[i - 1] && messages[i - 1].user_id !== item.user_id)
             }
 
             function isLastMessageOfGroup(item, i) {
               return (
-                i === chat.length - 1 || (chat[i + 1] && chat[i + 1].contactId !== item.contactId)
+                i === messages.length - 1 ||
+                (messages[i + 1] && messages[i + 1].user_id !== item.user_id)
               )
             }
 
-            return chat?.length > 0
-              ? chat.map((item, i) => {
+            return messages?.length > 0
+              ? messages.map((item, i) => {
                   return (
                     <StyledMessageRow
                       key={i}
                       className={clsx(
-                        'flex flex-col grow-0 shrink-0 items-start justify-end relative px-16 pb-4',
-                        item.contactId === user.id ? 'me' : 'contact',
+                        'flex flex-col grow-0 shrink-0 items-start justify-end relative px-8 pb-4',
+                        item.user_id === user.id ? 'me' : 'contact',
                         {'first-of-group': isFirstMessageOfGroup(item, i)},
                         {'last-of-group': isLastMessageOfGroup(item, i)},
-                        i + 1 === chat.length && 'pb-72'
+                        i + 1 === messages.length && 'pb-72'
                       )}
                     >
-                      <div className='bubble flex relative items-center justify-center p-12 max-w-full'>
-                        <div className='leading-tight whitespace-pre-wrap'>{item.value}</div>
+                      <div className='bubble flex relative items-center justify-center p-4 max-w-full'>
+                        <div className='leading-tight whitespace-pre-wrap'>{item.message}</div>
                         <Typography
                           className='time absolute hidden w-full text-11 mt-8 -mb-24 ltr:left-0 rtl:right-0 bottom-0 whitespace-nowrap'
                           color='text.secondary'
                         >
-                          {formatDistanceToNow(new Date(item.createdAt), {addSuffix: true})}
+                          {formatDistanceToNow(new Date(item.created_at), {addSuffix: true})}
                         </Typography>
                       </div>
                     </StyledMessageRow>
                   )
                 })
               : null
-          }, [chat, user?.id])} */}
+          }, [messages, user?.id])}
         </div>
 
-        {/* {chat?.length === 0 && ( */}
+        {/* {messages?.length === 0 && ( */}
         <div className='flex flex-col flex-1'>
           <div className='flex flex-col flex-1 items-center justify-center'>
             <FuseSvgIcon size={128} color='disabled'>
@@ -185,7 +191,7 @@ function Chat(props) {
           dispatch(
             sendMessage({
               message: messageText,
-              channel_id: 1,
+              channel_id: selectedChatRoom,
               channel_type: 'dm',
             })
           ).then(() => {
@@ -223,7 +229,7 @@ function Chat(props) {
             {/* )} */}
           </>
         )
-      }, [dispatch])}
+      }, [dispatch, messageText])}
     </Paper>
   )
 }

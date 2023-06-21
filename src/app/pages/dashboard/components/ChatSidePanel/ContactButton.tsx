@@ -1,13 +1,15 @@
 import styled from '@emotion/styled'
-import {Avatar, Button} from '@mui/material'
+import {Avatar, Button, Tooltip} from '@mui/material'
 import {Theme} from '@mui/material'
 import clsx from 'clsx'
 import React from 'react'
 import {toServerUrl} from 'src/_metronic/helpers'
-import {useAppSelector} from 'src/app/store/hook'
+import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
+import {dmSelect} from './store/messageSlice'
 
 interface Props {
   info: any
+  channel_id: number
   //   contact: {
   //     id: string
   //     name: string
@@ -25,9 +27,28 @@ interface StyledProps {
   value: string
 }
 
+const Root = styled(Tooltip)<any>(({theme, active}) => ({
+  width: 70,
+  minWidth: 70,
+  flex: '0 0 auto',
+  ...(active && {
+    '&:after': {
+      position: 'absolute',
+      top: 8,
+      right: 0,
+      bottom: 8,
+      content: "''",
+      width: 4,
+      borderTopLeftRadius: 4,
+      borderBottomLeftRadius: 4,
+      backgroundColor: theme.palette.primary.main,
+    },
+  }),
+}))
+
 const StyledUreadBadge = styled('div', {
   shouldForwardProp: (prop) => prop !== 'value',
-})<StyledProps>(({theme, value}) => ({
+})<any>(({theme, value}) => ({
   position: 'absolute',
   minWidth: 18,
   height: 18,
@@ -76,20 +97,23 @@ const StyledStatus = styled('div', {shouldForwardProp: (prop) => prop !== 'value
 )
 
 const ContactButton = (props: Props) => {
-  // const user = useAppSelector(({user}) => user.user)
-  const {info} = props
-  console.log('🚀 ~ file: ContactButton.tsx:81 ~ ContactButton ~ info:', info)
+  const selectedChatRoom = useAppSelector(({chat}) => chat.chatRoom.selectedChatRoom)
+  const {info, channel_id} = props
+  const dispatch = useAppDispatch()
   return (
-    <Button
-      className={clsx(
-        'contactButton rounded-0 py-4 h-auto min-h-auto max-h-none'
-        //   selectedContactId === contact.id && 'active'
-      )}
-    >
-      {/* <StyledUreadBadge value='hello'></StyledUreadBadge> */}
-      <StyledStatus value='online' />
-      <Avatar src={toServerUrl('/media/user/avatar/' + info?.avatar)} />{' '}
-    </Button>
+    <Root title={info.name} placement='left' active={channel_id === selectedChatRoom ? 1 : 0}>
+      <Button
+        className={clsx(
+          'contactButton rounded-0 py-4 h-auto min-h-auto max-h-none',
+          channel_id === selectedChatRoom && 'active'
+        )}
+        onClick={() => dispatch(dmSelect(channel_id))}
+      >
+        <StyledUreadBadge>{info.id}</StyledUreadBadge>
+        <StyledStatus value='online' />
+        <Avatar src={toServerUrl('/media/user/avatar/' + info?.avatar)} />{' '}
+      </Button>
+    </Root>
   )
 }
 

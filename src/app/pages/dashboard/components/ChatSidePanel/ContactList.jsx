@@ -11,8 +11,8 @@ const Root = styled(FuseScrollbars)(({theme}) => ({
 
 const ContactList = (props) => {
   const {id} = useAppSelector(({user}) => user.user)
-  const {chatRoom} = useAppSelector(({chat}) => chat)
-  console.log('🚀 ~ file: ContactList.jsx:15 ~ ContactList ~ chatRoom:', chatRoom)
+  const {chatRooms} = useAppSelector(({chat}) => chat.chatRoom)
+  // console.log('🚀 ~ file: ContactList.jsx:15 ~ ContactList ~ chatRoom:', chatRoom)
   const contactListScroll = useRef(null)
   const dispatch = useAppDispatch()
   useEffect(() => {
@@ -45,15 +45,18 @@ const ContactList = (props) => {
               animate='show'
               className='flex flex-col shrink-0'
             >
-              {chatRoom?.map((item, index) => (
+              {chatRooms?.map((item, index) => (
                 <motion.div variants={variant} key={index}>
-                  <ContactButton info={item.sender.id === id ? item.receiver : item.sender} />
+                  <ContactButton
+                    channel_id={item.id}
+                    info={item.sender.id === id ? item.receiver : item.sender}
+                  />
                 </motion.div>
               ))}
             </motion.div>
           </>
         )
-      }, [chatRoom])}
+      }, [chatRooms])}
     </Root>
   )
 }

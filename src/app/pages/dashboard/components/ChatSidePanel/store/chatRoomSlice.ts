@@ -6,7 +6,7 @@ export interface IMessage {
   message: string
   receiver: number
 }
-const initialState: any = []
+const initialState: any = {chatRooms: [], selectedChatRoom: null}
 
 export const createChatRoom = createAsyncThunk(
   'dashboard/chat/createChatRoom',
@@ -27,17 +27,33 @@ export const getChatRooms = createAsyncThunk(
   }
 )
 
+export const selectChatRoom = createAsyncThunk(
+  'dashboard/chat/selectChatRoom',
+  async (channel_id: number, {getState, dispatch}) => {
+    // console.log('res==', res.data)
+    return {channel_id}
+    // return res.data
+  }
+)
+
 const chatRoomSlice = createSlice({
   name: 'chatRoom',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(createChatRoom.fulfilled, (state: any, action) => {
-        return [...state, action.payload]
+      .addCase(createChatRoom.fulfilled, (state, action) => {
+        // Update the chatRooms array by adding the new chat room
+        state.chatRooms.push(action.payload)
       })
-      .addCase(getChatRooms.fulfilled, (state: any, action) => {
-        return action.payload
+      .addCase(getChatRooms.fulfilled, (state, action) => {
+        // Replace the existing chatRooms array with the received chat rooms
+        state.chatRooms = action.payload
+      })
+      .addCase(selectChatRoom.fulfilled, (state, action: any) => {
+        // Update the selectedChatRoom with the received data
+        state.selectedChatRoom = action.payload.channel_id
+        // state.selectedChatRoom.messages = action.payload.messages
       })
   },
 })
