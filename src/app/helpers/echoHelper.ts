@@ -18,6 +18,8 @@ declare global {
 export const echoInit = createAsyncThunk('dashboard/echoinit', (token: string, {dispatch}) => {
   // const dispatch = useAppDispatch()
   window.Pusher = require('pusher-js')
+  console.log('window==', window)
+  console.log('windowhost==', window.location.hostname)
 
   window.Echo = new Echo({
     broadcaster: 'pusher',
