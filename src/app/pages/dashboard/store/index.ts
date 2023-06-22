@@ -1,10 +1,11 @@
-import { combineReducers } from '@reduxjs/toolkit';
-import plan from './planSlice';
+import {combineReducers} from '@reduxjs/toolkit'
+import plan from './planSlice'
 import post from './postSlice'
-import billing from './billingSlice';
-import filter from './filterSlice';
-import postDialog from './postDialogSlice';
-import checkDialog  from './checkDialog';
+import billing from './billingSlice'
+import filter from './filterSlice'
+import postDialog from './postDialogSlice'
+import checkDialog from './checkDialog'
+import connDialog from './connectDialogSlice'
 
 const reducer = combineReducers({
   plan,
@@ -12,7 +13,8 @@ const reducer = combineReducers({
   billing,
   filter,
   postDialog,
-  checkDialog
-});
+  checkDialog,
+  connDialog,
+})
 
-export default reducer;
+export default reducer

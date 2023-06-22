@@ -1,14 +1,23 @@
-import React, {useMemo, useRef} from 'react'
+import React, {useEffect, useMemo, useRef} from 'react'
 import {styled} from '@mui/material/styles'
 import FuseScrollbars from 'src/app/modules/core/FuseScrollbars/FuseScrollbars'
 import {motion} from 'framer-motion'
 import ContactButton from './ContactButton'
+import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
+import {getChatRooms} from './store/chatRoomSlice'
 const Root = styled(FuseScrollbars)(({theme}) => ({
   background: theme.palette.background.paper,
 }))
 
 const ContactList = (props) => {
+  const {id} = useAppSelector(({user}) => user.user)
+  const {chatRooms} = useAppSelector(({chat}) => chat.chatRoom)
+  // console.log('🚀 ~ file: ContactList.jsx:15 ~ ContactList ~ chatRoom:', chatRoom)
   const contactListScroll = useRef(null)
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    dispatch(getChatRooms(id))
+  }, [dispatch])
 
   return (
     <Root
@@ -36,15 +45,18 @@ const ContactList = (props) => {
               animate='show'
               className='flex flex-col shrink-0'
             >
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((item, index) => (
+              {chatRooms?.map((item, index) => (
                 <motion.div variants={variant} key={index}>
-                  <ContactButton />
+                  <ContactButton
+                    channel_id={item.id}
+                    info={item.sender.id === id ? item.receiver : item.sender}
+                  />
                 </motion.div>
               ))}
             </motion.div>
           </>
         )
-      }, [])}
+      }, [chatRooms])}
     </Root>
   )
 }

@@ -2,12 +2,15 @@ import {styled} from '@mui/material/styles'
 import IconButton from '@mui/material/IconButton'
 import Paper from '@mui/material/Paper'
 import clsx from 'clsx'
-import {useMemo, useRef} from 'react'
+import {useEffect, useMemo, useRef, useState} from 'react'
 import {useDispatch} from 'react-redux'
 import InputBase from '@mui/material/InputBase'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 import FuseScrollbars from 'src/app/modules/core/FuseScrollbars/FuseScrollbars'
 import {Typography} from '@mui/material'
+import {sendMessage} from './store/messageSlice'
+import {useAppSelector} from 'src/app/store/hook'
+import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 
 const StyledMessageRow = styled('div')(({theme}) => ({
   '&.contact': {
@@ -38,7 +41,7 @@ const StyledMessageRow = styled('div')(({theme}) => ({
 
     '& .bubble': {
       marginLeft: 'auto',
-      backgroundColor: theme.palette.primary.light,
+      backgroundColor: theme.palette.primary.main,
       color: theme.palette.primary.contrastText,
       borderTopLeftRadius: 20,
       borderBottomLeftRadius: 20,
@@ -85,30 +88,41 @@ const StyledMessageRow = styled('div')(({theme}) => ({
 
 function Chat(props) {
   const dispatch = useDispatch()
+  const selectedChatRoom = useAppSelector(({chat}) => chat.chatRoom.selectedChatRoom)
+  const {messages} = useAppSelector(({chat}) => chat)
+  const {user} = useAppSelector(({user}) => user)
   //   const selectedContactId = useSelector(selectSelectedContactId)
   //   const chat = useSelector(selectChat)
   //   const user = useSelector(selectUser)
 
   const chatScroll = useRef(null)
-  //   const [messageText, setMessageText] = useState('')
+  const [messageText, setMessageText] = useState('')
 
-  //   useEffect(() => {
-  //     scrollToBottom()
-  //   }, [chat])
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
 
-  //   function scrollToBottom() {
-  //     if (!chatScroll.current) {
-  //       return
-  //     }
-  //     chatScroll.current.scrollTo({
-  //       top: chatScroll.current.scrollHeight,
-  //       behavior: 'smooth',
-  //     })
-  //   }
+  function scrollToBottom() {
+    if (!chatScroll.current) {
+      return
+    }
+    chatScroll.current.scrollTo({
+      top: chatScroll.current.scrollHeight,
+      behavior: 'smooth',
+    })
+  }
 
-  //   const onInputChange = (ev) => {
-  //     setMessageText(ev.target.value)
-  //   }
+  const onInputChange = (ev, selectedChatRoom) => {
+    setMessageText(ev.target.value)
+
+    setTimeout(() => {
+      console.log('🚀 ~ file: Chat.jsx:92 ~ Chat ~ selectedChatRoom:', selectedChatRoom)
+
+      window.Echo.join(`chat.dm.${selectedChatRoom}`).whisper('typing', {
+        name: user,
+      })
+    }, 300)
+  }
 
   return (
     <Paper
@@ -120,93 +134,92 @@ function Chat(props) {
         className='flex flex-1 flex-col overflow-y-auto overscroll-contain'
         option={{suppressScrollX: true, wheelPropagation: false}}
       >
-        <div className='flex flex-col pt-16'>
-          {/* {useMemo(() => {
+        <div className='flex flex-col flex-1 pt-8'>
+          {useMemo(() => {
             function isFirstMessageOfGroup(item, i) {
-              return i === 0 || (chat[i - 1] && chat[i - 1].contactId !== item.contactId)
+              return i === 0 || (messages[i - 1] && messages[i - 1].user_id !== item.user_id)
             }
 
             function isLastMessageOfGroup(item, i) {
               return (
-                i === chat.length - 1 || (chat[i + 1] && chat[i + 1].contactId !== item.contactId)
+                i === messages.length - 1 ||
+                (messages[i + 1] && messages[i + 1].user_id !== item.user_id)
               )
             }
 
-            return chat?.length > 0
-              ? chat.map((item, i) => {
+            return messages?.length > 0
+              ? messages.map((item, i) => {
                   return (
                     <StyledMessageRow
                       key={i}
                       className={clsx(
-                        'flex flex-col grow-0 shrink-0 items-start justify-end relative px-16 pb-4',
-                        item.contactId === user.id ? 'me' : 'contact',
+                        'flex flex-col grow-0 shrink-0 items-start justify-end relative px-4 pb-2',
+                        item.user_id === user.id ? 'me' : 'contact',
                         {'first-of-group': isFirstMessageOfGroup(item, i)},
                         {'last-of-group': isLastMessageOfGroup(item, i)},
-                        i + 1 === chat.length && 'pb-72'
+                        i + 1 === messages.length && 'pb-72'
                       )}
                     >
-                      <div className='bubble flex relative items-center justify-center p-12 max-w-full'>
-                        <div className='leading-tight whitespace-pre-wrap'>{item.value}</div>
+                      <div className='bubble flex relative items-center justify-center p-4 max-w-full'>
+                        <div className='leading-tight whitespace-pre-wrap'>{item.message}</div>
                         <Typography
-                          className='time absolute hidden w-full text-11 mt-8 -mb-24 ltr:left-0 rtl:right-0 bottom-0 whitespace-nowrap'
+                          variant='caption'
+                          className='time absolute hidden w-full mt-8 -mb-24 ltr:left-0 rtl:right-0 -bottom-12 whitespace-nowrap'
                           color='text.secondary'
                         >
-                          {formatDistanceToNow(new Date(item.createdAt), {addSuffix: true})}
+                          {formatDistanceToNow(new Date(item.created_at), {addSuffix: true})}
                         </Typography>
                       </div>
                     </StyledMessageRow>
                   )
                 })
               : null
-          }, [chat, user?.id])} */}
+          }, [messages, user?.id])}
         </div>
 
-        {/* {chat?.length === 0 && ( */}
-        <div className='flex flex-col flex-1'>
-          <div className='flex flex-col flex-1 items-center justify-center'>
-            <FuseSvgIcon size={128} color='disabled'>
-              heroicons-outline:chat
-            </FuseSvgIcon>
+        {messages?.length === 0 && (
+          <div className='flex flex-col flex-1'>
+            <div className='flex flex-col flex-1 items-center justify-center'>
+              <FuseSvgIcon size={128} color='disabled'>
+                heroicons-outline:chat
+              </FuseSvgIcon>
+            </div>
+            <Typography className='px-16 pb-24 text-center' color='text.secondary'>
+              Start a conversation by typing your message below.
+            </Typography>
           </div>
-          <Typography className='px-16 pb-24 text-center' color='text.secondary'>
-            Start a conversation by typing your message below.
-          </Typography>
-        </div>
-        {/* )} */}
+        )}
       </FuseScrollbars>
 
       {useMemo(() => {
-        // const onMessageSubmit = (ev) => {
-        //   ev.preventDefault()
-        //   if (messageText === '') {
-        //     return
-        //   }
-        //   dispatch(
-        //     sendMessage({
-        //       messageText,
-        //       chatId: chat.id,
-        //       contactId: selectedContactId,
-        //     })
-        //   ).then(() => {
-        //     setMessageText('')
-        //   })
-        // }
+        const onMessageSubmit = (ev) => {
+          ev.preventDefault()
+          if (messageText === '') {
+            return
+          }
+          dispatch(
+            sendMessage({
+              message: messageText,
+              channel_id: selectedChatRoom,
+              channel_type: 'dm',
+            })
+          ).then(() => {
+            setMessageText('')
+          })
+        }
 
         return (
           <>
             {/* {chat && ( */}
-            <form
-              // onSubmit={onMessageSubmit}
-              className='pb-10 px-8 absolute bottom-0 left-0 right-0'
-            >
+            <form onSubmit={onMessageSubmit} className='pb-6 px-8 absolute bottom-0 left-0 right-0'>
               <Paper className='flex items-center relative shadow' sx={{borderRadius: '2.4rem'}}>
                 <InputBase
                   autoFocus={false}
                   id='message-input'
                   className='flex flex-1 grow shrink-0 mx-16 ltr:mr-48 rtl:ml-48 my-6'
                   placeholder='Type your message'
-                  //   onChange={onInputChange}
-                  //   value={messageText}
+                  onChange={(e) => onInputChange(e, selectedChatRoom)}
+                  value={messageText}
                 />
                 <IconButton
                   className='absolute ltr:right-0 rtl:left-0 top-0'
@@ -222,7 +235,7 @@ function Chat(props) {
             {/* )} */}
           </>
         )
-      }, [dispatch])}
+      }, [dispatch, messageText, selectedChatRoom])}
     </Paper>
   )
 }
