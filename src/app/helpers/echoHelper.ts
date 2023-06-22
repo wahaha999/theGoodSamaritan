@@ -23,14 +23,16 @@ export const echoInit = createAsyncThunk('dashboard/echoinit', (token: string, {
 
   window.Echo = new Echo({
     broadcaster: 'pusher',
-    key: process.env.REACT_APP_MIX_PUSHER_APP_KEY,
+    key: process.env.REACT_APP_MIX_PUSHER_APP_KEY || 'websocketkey',
     wsHost: window.location.hostname,
-    cluster: process.env.REACT_APP_PUSHER_APP_CLUSTER,
+    cluster: process.env.REACT_APP_PUSHER_APP_CLUSTER || 'mt1',
     wsPort: 6001,
     wssPort: 6001,
     disableStats: true,
     forceTLS: false,
-    authEndpoint: process.env.REACT_APP_MIX_AUTH_ENDPOINT,
+    authEndpoint:
+      process.env.REACT_APP_MIX_AUTH_ENDPOINT ||
+      'https://apiportal.samaritanmarketplace.com/broadcasting/auth',
   })
 
   console.log('echo==', window.Echo)
