@@ -1,6 +1,12 @@
 import Echo from 'laravel-echo'
 import axios from 'axios'
 import {API_URL} from '../modules/auth/core/_requests'
+import {useAppDispatch} from '../store/hook'
+import {
+  addOnlineUser,
+  removeOnlineUser,
+} from '../pages/dashboard/components/ChatSidePanel/store/chatRoomSlice'
+import {createAsyncThunk} from '@reduxjs/toolkit'
 
 declare global {
   interface Window {
@@ -9,7 +15,8 @@ declare global {
   }
 }
 
-export const echoInit = (token: string) => {
+export const echoInit = createAsyncThunk('dashboard/echoinit', (token: string, {dispatch}) => {
+  // const dispatch = useAppDispatch()
   window.Pusher = require('pusher-js')
 
   window.Echo = new Echo({
@@ -31,11 +38,15 @@ export const echoInit = (token: string) => {
     },
   }
 
-  console.log('echo==', window.Echo)
   window.Echo.join('chat')
     .here((users: any) => {
-      console.log(' IN HERE INSIDE ECHOHELPERS CHAT')
-      console.log('users==', users)
+      let users_id: any = []
+      for (let i = 0; i < users.length; i++) {
+        const element = users[i]
+        users_id.push(users[i].id)
+      }
+
+      dispatch(addOnlineUser(users_id))
     })
     .joining((user: any) => {
       const headersObj = {
@@ -53,17 +64,12 @@ export const echoInit = (token: string) => {
         },
       }
 
-      console.log('IN LEAVING ')
       axios.get(`${API_URL}/offline/${user.id}`, headersObj)
     })
     .listen('UserOnline', (event: any) => {
-      console.log(event.user.name + ' IS ONLINE ')
-      console.log(event.user)
-      //  store.dispatch({type: IS_ONLINE, payload: event.user.id})
+      dispatch(addOnlineUser([Number(event.user.id)]))
     })
     .listen('UserOffline', (event: any) => {
-      console.log(event.user.name + ' IS OFFLINE ')
-      console.log(event.user)
-      //  store.dispatch({type: IS_OFFLINE, payload: event.user.id})
+      dispatch(removeOnlineUser(Number(event.user.id)))
     })
-}
+})

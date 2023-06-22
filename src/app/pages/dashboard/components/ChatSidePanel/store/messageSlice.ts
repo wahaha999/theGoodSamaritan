@@ -20,16 +20,17 @@ export const sendMessage = createAsyncThunk(
 
 export const dmSelect = createAsyncThunk(
   'dashboard/chat/dmselect',
-  async (channel_id: number, {getState, dispatch}) => {
+  async (data: any, {getState, dispatch}: any) => {
+    const {channel_id} = data
+    const {selectedChatRoom} = getState().chat.chatRoom
     window.Echo.leave('chat.channel.5')
-    dispatch(selectChatRoom(channel_id))
+    window.Echo.leave(`chat.dm.${selectedChatRoom}`)
+    dispatch(selectChatRoom(data))
 
     const res = await axios.get(`${API_URL}/getMessages/${channel_id}`)
     dispatch(getMessages(res.data))
     window.Echo.join(`chat.dm.${channel_id}`)
       .listen('MessageSent', (event: any) => {
-        console.log('FROM DM USERS EVENT FUNCTION')
-        console.log(event)
         const typingEvent = {
           user: event.user,
           type: 'typing',
@@ -40,8 +41,6 @@ export const dmSelect = createAsyncThunk(
           message: event.message.message,
         }
         dispatch(addMessage(event.message))
-        // return [...messages, event.message]
-        // dispatch({type: ADD_MESSAGE, payload: message})
       })
       .listenForWhisper('typing', (event: any) => {
         let timer
@@ -51,12 +50,11 @@ export const dmSelect = createAsyncThunk(
           user: event.name,
           type: 'typing',
         }
-        // dispatch({type: ADD_TYPING_EVENT, payload: message})
 
         clearTimeout(timer)
 
         timer = setTimeout(() => {
-          //   dispatch({type: REMOVE_TYPING_EVENT, payload: message})
+          // dispatch({type: REMOVE_TYPING_EVENT, payload: message});
         }, 2000)
       })
   }
@@ -67,11 +65,9 @@ const messageSlice = createSlice({
   initialState,
   reducers: {
     getMessages: (state, action) => {
-      //   console.log('action===', action.payload)
       return action.payload
     },
     addMessage: (state, action) => {
-      //   console.log('action===', action.payload)
       state.push(action.payload)
     },
   },

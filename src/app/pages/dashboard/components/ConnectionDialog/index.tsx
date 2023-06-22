@@ -21,6 +21,7 @@ const ConnectionDialog = (props: Props) => {
     // console.log('data=', data, info)
     const mdata: IMessage = {...data, receiver: info.id}
     dispatch(createChatRoom(mdata))
+    dispatch(closeConnDialog())
   }
 
   return (

@@ -93,6 +93,8 @@ const PostViewActions = (props: Props) => {
           </Grid>
           <Grid item>
             <Grid container flexDirection='row-reverse'>
+              {
+                id !== post.user.id &&
               <Tooltip title='Chat with this organization'>
                 <Button
                   startIcon={<ForumOutlinedIcon />}
@@ -105,6 +107,7 @@ const PostViewActions = (props: Props) => {
                   Chat
                 </Button>
               </Tooltip>
+              }
               {type === 'post' && (
                 <Tooltip title='Save this post and follow it for updates.'>
                   <Button startIcon={<ChatBubbleOutlineIcon />} sx={{mr: 2}} variant='outlined'>

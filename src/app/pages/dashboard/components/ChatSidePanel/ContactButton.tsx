@@ -97,7 +97,7 @@ const StyledStatus = styled('div', {shouldForwardProp: (prop) => prop !== 'value
 )
 
 const ContactButton = (props: Props) => {
-  const selectedChatRoom = useAppSelector(({chat}) => chat.chatRoom.selectedChatRoom)
+  const {selectedChatRoom, onlineUsers} = useAppSelector(({chat}) => chat.chatRoom)
   const {info, channel_id} = props
   const dispatch = useAppDispatch()
   return (
@@ -107,10 +107,10 @@ const ContactButton = (props: Props) => {
           'contactButton rounded-0 py-4 h-auto min-h-auto max-h-none',
           channel_id === selectedChatRoom && 'active'
         )}
-        onClick={() => dispatch(dmSelect(channel_id))}
+        onClick={() => dispatch(dmSelect({channel_id, info}))}
       >
         <StyledUreadBadge>{info.id}</StyledUreadBadge>
-        <StyledStatus value='online' />
+        <StyledStatus value={onlineUsers.includes(info.id) ? 'online' : 'offline'} />
         <Avatar src={toServerUrl('/media/user/avatar/' + info?.avatar)} />{' '}
       </Button>
     </Root>
