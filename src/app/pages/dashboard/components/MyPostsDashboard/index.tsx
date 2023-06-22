@@ -40,6 +40,8 @@ import PostInput from './PostInput'
 import CheckDialog from './CheckDialog'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import ConnectionDialog from '../ConnectionDialog'
+import {usePrevious} from 'src/app/modules/hooks'
+import _ from 'src/app/modules/@lodash/@lodash'
 
 const DashboardPaper = styled(Paper)(() => ({
   width: '100%',
@@ -102,11 +104,18 @@ function MyPostsDashboard(props: Props) {
   const post_loading = useAppSelector(({post}) => post.filter.loading)
   const dispatch = useAppDispatch()
   const {filter} = useAppSelector(({post}) => post.filter)
-  const getPostsByFilter = React.useCallback((filter: any) => {
-    dispatch(getPosts(filter))
-  }, [])
+  const getPostsByFilter = React.useCallback(
+    (filter: any) => {
+      dispatch(getPosts(filter))
+    },
+    [filter]
+  )
+  const prevData = usePrevious(filter ? _.merge({}, filter) : null)
   React.useEffect(() => {
     if (filter.states && filter.states.length > 0) {
+      if (_.isEqual(prevData, filter)) {
+        return
+      }
       getPostsByFilter(filter)
     }
   }, [getPostsByFilter, filter])

@@ -31,6 +31,8 @@ export const echoInit = createAsyncThunk('dashboard/echoinit', (token: string, {
     authEndpoint: process.env.REACT_APP_MIX_AUTH_ENDPOINT,
   })
 
+  console.log('echo==', window.Echo)
+
   window.Echo.connector.options.auth.headers['Authorization'] = 'Bearer ' + token
   window.Echo.options.auth = {
     headers: {
