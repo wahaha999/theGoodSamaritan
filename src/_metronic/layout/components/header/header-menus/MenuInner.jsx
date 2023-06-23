@@ -249,6 +249,7 @@ export function MenuInner(props) {
     reset({...initialState})
   }, [reset])
   const data = watch()
+  const saved_posts = watch('saved_posts')
 
   const prevData = usePrevious(data ? _.merge({}, data) : null)
   useEffect(() => {
@@ -358,11 +359,26 @@ export function MenuInner(props) {
                       Your Connections
                     </Button>
                   </Grid>
-                  <Grid item>
-                    <Button startIcon={<NotificationsActiveIcon color='secondary' />} sx={{ml: 2}}>
-                      Saved Posts
-                    </Button>
-                  </Grid>
+                  <Controller
+                    name='saved_posts'
+                    control={control}
+                    defaultValue={false}
+                    render={({field}) => (
+                      <Grid item>
+                        <Button
+                          onClick={() => field.onChange(!field.value)}
+                          startIcon={
+                            <NotificationsActiveIcon
+                              color={saved_posts ? 'primary' : 'secondary'}
+                            />
+                          }
+                          sx={{ml: 2}}
+                        >
+                          Saved Posts
+                        </Button>
+                      </Grid>
+                    )}
+                  />
                 </Grid>
               </FormProvider>
             )}
@@ -446,12 +462,19 @@ export function MenuInner(props) {
             </ListItemButton>
           </ListItem>
           <ListItem>
-            <ListItemButton>
-              <ListItemIcon>
-                <NotificationsActiveIcon color='secondary' />
-              </ListItemIcon>
-              <ListItemText primary='Saved Posts' />
-            </ListItemButton>
+            <Controller
+              name='saved_posts'
+              control={control}
+              defaultValue={false}
+              render={({field}) => (
+                <ListItemButton onClick={() => field.onChange(!field.value)}>
+                  <ListItemIcon>
+                    <NotificationsActiveIcon color={saved_posts ? 'primary' : 'secondary'} />
+                  </ListItemIcon>
+                  <ListItemText primary='Saved Posts' />
+                </ListItemButton>
+              )}
+            />
           </ListItem>
         </List>
       </FormProvider>

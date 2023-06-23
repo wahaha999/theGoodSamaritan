@@ -20,6 +20,7 @@ import {
   getLatestCommentByPostId,
   getLatestRepliesByCommentId,
   getLikes,
+  savePost,
 } from 'src/app/pages/dashboard/store/postSlice'
 import LikeHover from './LikeHover'
 import LikeInfoDialog from './LikeInfoDialog'
@@ -53,6 +54,15 @@ const PostViewActions = (props: Props) => {
     }
     return likeTypeCount
   }, [post.likes])
+
+  const saved_post = useMemo(() => {
+    let filter = _.find(post.post_saves, {user_id: id})
+    if (filter) {
+      return true
+    } else {
+      return false
+    }
+  }, [post.post_saves, id])
 
   return (
     <>
@@ -93,25 +103,30 @@ const PostViewActions = (props: Props) => {
           </Grid>
           <Grid item>
             <Grid container flexDirection='row-reverse'>
-              {
-                id !== post.user.id &&
-              <Tooltip title='Chat with this organization'>
-                <Button
-                  startIcon={<ForumOutlinedIcon />}
-                  sx={{mr: 2}}
-                  variant='outlined'
-                  onClick={() => {
-                    dispatch(openConnDialog({open: true, info: post.user}))
-                  }}
-                >
-                  Chat
-                </Button>
-              </Tooltip>
-              }
+              {id !== post.user.id && (
+                <Tooltip title='Chat with this organization'>
+                  <Button
+                    startIcon={<ForumOutlinedIcon />}
+                    sx={{mr: 2}}
+                    variant='outlined'
+                    onClick={() => {
+                      dispatch(openConnDialog({open: true, info: post.user}))
+                    }}
+                  >
+                    Chat
+                  </Button>
+                </Tooltip>
+              )}
               {type === 'post' && (
                 <Tooltip title='Save this post and follow it for updates.'>
-                  <Button startIcon={<ChatBubbleOutlineIcon />} sx={{mr: 2}} variant='outlined'>
-                    Save Post
+                  <Button
+                    startIcon={<ChatBubbleOutlineIcon />}
+                    sx={{mr: 2}}
+                    variant={saved_post ? 'contained' : 'outlined'}
+                    color={saved_post ? 'secondary' : 'primary'}
+                    onClick={() => dispatch(savePost({post_id: post.id}))}
+                  >
+                    {!saved_post ? 'Save Post' : 'Un Save Post'}
                   </Button>
                 </Tooltip>
               )}

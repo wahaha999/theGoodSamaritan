@@ -463,6 +463,7 @@ export const getLikes = createAsyncThunk(
       const response = await axios.get(
         `${API_URL}/like/get/${data.likeable_type}/${data.likeable_id}`
       )
+      dispatch(setLoading(false))
 
       return response.data
     } catch (error: any) {
@@ -470,6 +471,41 @@ export const getLikes = createAsyncThunk(
     }
   }
 )
+
+export const savePost = createAsyncThunk(
+  'dashboard/post/savePost',
+  async (data: any, {dispatch, getState}) => {
+    try {
+      dispatch(setLoading(true))
+
+      const res: any = await axios.post(`${API_URL}/post/postSave/save`, data)
+      const {post}: any = getState()
+      // console.log('🚀 ~ file: postSlice.ts:480 ~ res:', res)
+
+      const updatedPosts = _.map(post.post, (p: any) => {
+        if (p.id === res.data.postSave.post_id) {
+          if (res.data.status === 'create') {
+            return {...p, post_saves: [...p.post_saves, res.data.postSave]}
+          } else {
+            return {
+              ...p,
+              post_saves: p.post_saves.filter((e: any) => e.post_id !== res.data.postSave.post_id),
+            }
+          }
+        } else {
+          return p
+        }
+      })
+      dispatch(setLoading(false))
+
+      dispatch(showMessage({message: res.data.message, variant: 'success'}))
+      return updatedPosts
+    } catch (error: any) {
+      dispatch(showMessage({message: error.response.data.message, variant: 'error'}))
+    }
+  }
+)
+
 const postSlice = createSlice({
   name: 'post',
   initialState,
@@ -501,6 +537,7 @@ const postSlice = createSlice({
       })
       .addCase(createComment.fulfilled, (state: any, action) => action.payload)
       .addCase(createLike.fulfilled, (state: any, action) => action.payload)
+      .addCase(savePost.fulfilled, (state: any, action) => action.payload)
   },
 })
 
