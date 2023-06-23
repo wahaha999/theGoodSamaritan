@@ -18,8 +18,6 @@ declare global {
 export const echoInit = createAsyncThunk('dashboard/echoinit', (token: string, {dispatch}) => {
   // const dispatch = useAppDispatch()
   window.Pusher = require('pusher-js')
-  console.log('window==', Echo)
-  console.log('windowhost==', process.env.REACT_APP_MIX_PUSHER_APP_KEY)
 
   window.Echo = new Echo({
     broadcaster: 'pusher',
@@ -34,8 +32,6 @@ export const echoInit = createAsyncThunk('dashboard/echoinit', (token: string, {
       process.env.REACT_APP_MIX_AUTH_ENDPOINT ||
       'https://apiportal.samaritanmarketplace.com/broadcasting/auth',
   })
-
-  console.log('echo==', window.Echo)
 
   window.Echo.connector.options.auth.headers['Authorization'] = 'Bearer ' + token
   window.Echo.options.auth = {
