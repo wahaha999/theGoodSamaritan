@@ -12,33 +12,31 @@ export const updateProfile = createAsyncThunk(
       Object.keys(data).map((item) => {
         if (item == 'doc') {
           if (data['doc']) {
-              
-            let temp_doc = [];
+            let temp_doc = []
             if (typeof data['doc'] == 'string') {
               temp_doc = JSON.parse(data['doc'])
             } else {
-              temp_doc = data['doc'];
+              temp_doc = data['doc']
             }
             temp_doc.forEach((item: any, index: number) => {
               if (typeof item !== 'string') {
                 formData.append(`files[${index}]`, item.file)
               } else {
                 formData.append(`docs[${index}]`, item)
-         
               }
             })
           }
-    } else {
-        formData.append(item, data[item])
-    }
-})
+        } else {
+          formData.append(item, data[item])
+        }
+      })
       const response = await axios.post(`${API_URL}/account/update`, formData)
       const temp = {...response.data}
-        // delete temp.account;
-        Promise.all([
-            dispatch(setUser({user: temp.user,states:temp.states})),
-            dispatch(showMessage({message: 'Successfully updated', variant: 'success'}))
-        ])
+      // delete temp.account;
+      Promise.all([
+        dispatch(setUser({user: temp.user, states: temp.states})),
+        dispatch(showMessage({message: 'Successfully updated', variant: 'success'})),
+      ])
 
       return temp
     } catch (error: any) {
@@ -61,7 +59,7 @@ export const updateUser = createAsyncThunk(
       })
       const response = await axios.post(`${API_URL}/users/update`, formData)
       const temp = {...response.data}
-      dispatch(setUser({ user: temp.user, states: temp.states }));
+      dispatch(setUser({user: temp.user, states: temp.states}))
       return temp
     } catch (error) {
       dispatch(showMessage({message: 'Something wrong', variant: 'error'}))

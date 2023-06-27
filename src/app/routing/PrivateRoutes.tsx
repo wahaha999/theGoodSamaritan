@@ -12,10 +12,9 @@ import AccountPage from '../modules/accounts/AccountPage'
 import Billing from '../pages/dashboard/Billing'
 import AppLayout from 'src/_metronic/layout/AppLayout'
 import YoutubePage from '../pages/youtube'
+import Subscription from '../pages/dashboard/Subscription'
 
 const PrivateRoutes = () => {
-  const Subscription = lazy(() => import('../pages/dashboard/Subscription/index'))
-
   const user = useAppSelector(({user}) => {
     return user.user
   })
@@ -31,7 +30,7 @@ const PrivateRoutes = () => {
               <Route path='dashboard' element={<DashboardWrapper />} />
               <Route path='youtube' element={<YoutubePage />} />
               <Route
-                path='account/info'
+                path='account/*'
                 element={
                   // <SuspensedView>
                   <Account />
@@ -49,9 +48,9 @@ const PrivateRoutes = () => {
               <Route
                 path='subscription'
                 element={
-                  <SuspensedView>
-                    <Subscription />
-                  </SuspensedView>
+                  // <SuspensedView>
+                  <Subscription />
+                  // </SuspensedView>
                 }
               />
               {/* Lazy Modules */}
@@ -66,7 +65,7 @@ const PrivateRoutes = () => {
               />
 
               {/* Page Not Found */}
-              <Route path='*' element={<Navigate to='/error/404' />} />
+              {/* <Route path='*' element={<Navigate to='/error/404' />} /> */}
             </>
           ) : (
             <>
@@ -83,7 +82,17 @@ const PrivateRoutes = () => {
             </>
           )
         ) : (
-          <Route path='auth/*' element={<Navigate to='/subscription' />} />
+          <>
+            <Route path='*' element={<Navigate to='/subscription' />} />
+            <Route
+              path='subscription'
+              element={
+                // <SuspensedView>
+                <Subscription />
+                // </SuspensedView>
+              }
+            />
+          </>
         )}
       </Route>
     </Routes>
