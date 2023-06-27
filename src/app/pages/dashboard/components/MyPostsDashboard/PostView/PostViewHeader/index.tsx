@@ -138,7 +138,7 @@ const PostViewHeader = (props: Props) => {
                 data={post}
               />{' '}
               <Typography>
-                {`${post?.user?.first_name} ${post?.user?.last_name}`} posted on{' '}
+                {`${post?.user?.account?.non_profit_name}`} posted on{' '}
                 {moment(post?.created_at).format('MM/DD/YY')} at{' '}
                 {moment(post?.created_at).format('h:mm A')}
               </Typography>
