@@ -133,10 +133,20 @@ const PostViewActions = (props: Props) => {
               )}
               <Button
                 onClick={() => {
-                  if (type === 'post' && post.comments_count && post.comments_count > 0) {
+                  if (
+                    type === 'post' &&
+                    post.comments_count &&
+                    post.comments_count > 0 &&
+                    !expand
+                  ) {
                     dispatch(getLatestCommentByPostId(post.id))
                   }
-                  if (type === 'comment' && post.replies_count && post.replies_count > 0) {
+                  if (
+                    type === 'comment' &&
+                    post.replies_count &&
+                    post.replies_count > 0 &&
+                    !expand
+                  ) {
                     dispatch(getLatestRepliesByCommentId(post.id))
                   }
                   // if (type === 'comment') {
