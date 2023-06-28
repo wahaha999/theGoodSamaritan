@@ -22,10 +22,19 @@ const ConnectionDialog = (props: Props) => {
     const mdata: IMessage = {...data, receiver: info.id}
     dispatch(createChatRoom(mdata))
     dispatch(closeConnDialog())
+    reset({})
   }
 
   return (
-    <Dialog open={open} maxWidth='sm' fullWidth onClose={() => dispatch(closeConnDialog())}>
+    <Dialog
+      open={open}
+      maxWidth='sm'
+      fullWidth
+      onClose={() => {
+        dispatch(closeConnDialog())
+        reset({})
+      }}
+    >
       <FormProvider {...methods}>
         <DialogTitle>
           <ConnectionTitle info={info} />
@@ -34,7 +43,14 @@ const ConnectionDialog = (props: Props) => {
           <ConnectionContent />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => dispatch(closeConnDialog())}>Cancel</Button>
+          <Button
+            onClick={() => {
+              dispatch(closeConnDialog())
+              reset({})
+            }}
+          >
+            Cancel
+          </Button>
           <Button variant='contained' sx={{ml: 2}} onClick={handleSubmit(handleMessage)}>
             Send
           </Button>

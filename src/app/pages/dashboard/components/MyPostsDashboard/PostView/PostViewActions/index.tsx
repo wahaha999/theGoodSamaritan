@@ -35,12 +35,13 @@ type Props = {
   type: 'comment' | 'post' | 'reply'
   comments_count?: number
   replies_count?: number
+  expand: boolean
 }
 
 const PostViewActions = (props: Props) => {
   const {id} = useAppSelector(({user}) => user.user)
 
-  const {setExpand, post, type} = props
+  const {setExpand, post, type, expand} = props
   const dispatch = useAppDispatch()
   const [open, setOpen] = useState(false)
   const [data, setData] = useState([])
@@ -87,6 +88,7 @@ const PostViewActions = (props: Props) => {
                 {Object.keys(title).map((item: any, index: number) => (
                   <Grid item key={index}>
                     <Chip
+                      sx={{cursor: 'pointer'}}
                       size='small'
                       color={
                         _.find(post?.likes, {user_id: id})?.like_type === emoji[item - 1].id
@@ -132,15 +134,25 @@ const PostViewActions = (props: Props) => {
               )}
               <Button
                 onClick={() => {
-                  if (type === 'post' && post.comments_count && post.comments_count > 0) {
+                  if (
+                    type === 'post' &&
+                    post.comments_count &&
+                    post.comments_count > 0 &&
+                    !expand
+                  ) {
                     dispatch(getLatestCommentByPostId(post.id))
                   }
-                  if (type === 'comment' && post.replies_count && post.replies_count > 0) {
+                  if (
+                    type === 'comment' &&
+                    post.replies_count &&
+                    post.replies_count > 0 &&
+                    !expand
+                  ) {
                     dispatch(getLatestRepliesByCommentId(post.id))
                   }
                   // if (type === 'comment') {
                   // } else {
-                  setExpand(true)
+                  setExpand(!expand)
                   // }
                 }}
                 startIcon={<ChatBubbleOutlineIcon />}

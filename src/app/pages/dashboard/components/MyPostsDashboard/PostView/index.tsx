@@ -85,6 +85,7 @@ const PostView = (props: Props) => {
         comments_count={comments_count}
         replies_count={replies_count}
         setExpand={setExpand}
+        expand={expanded}
         post={post}
         type={type}
       />
