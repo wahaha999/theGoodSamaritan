@@ -88,6 +88,7 @@ const PostViewActions = (props: Props) => {
                 {Object.keys(title).map((item: any, index: number) => (
                   <Grid item key={index}>
                     <Chip
+                      sx={{cursor: 'pointer'}}
                       size='small'
                       color={
                         _.find(post?.likes, {user_id: id})?.like_type === emoji[item - 1].id
