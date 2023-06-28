@@ -9,7 +9,7 @@ import {
   Button,
 } from '@mui/material'
 import {AnimatePresence, motion} from 'framer-motion'
-import React from 'react'
+import React, {useEffect, useMemo} from 'react'
 import {FormProvider, useForm} from 'react-hook-form'
 import Post from '../../../Post'
 import {yupResolver} from '@hookform/resolvers/yup'
@@ -20,6 +20,8 @@ import {createComment, createPost, createReply} from '../../../store/postSlice'
 import {IPostDialog, closePostDialog} from '../../../store/postDialogSlice'
 import {showMessage} from 'src/app/store/fuse/messageSlice'
 import {POST_DIALOG_TITLE} from 'src/app/constants/post'
+import _ from 'src/app/modules/@lodash/@lodash'
+import {usePrevious} from 'src/app/modules/hooks'
 
 type Props = {}
 
@@ -81,7 +83,9 @@ const PostDialog = (props: Props) => {
   const {
     reset,
     formState: {isValid},
+    watch,
   } = methods
+  const data = watch()
   const {handleSubmit} = methods
   React.useEffect(() => {
     if (user.account) {
@@ -158,6 +162,17 @@ const PostDialog = (props: Props) => {
         })
     }
   }
+  const prevData = usePrevious(data ? _.merge({}, data) : null)
+  const editIsValid = useMemo(() => {
+    if (postType.includes('edit')) {
+      if (_.isEqual(prevData, data)) {
+        return false
+      } else {
+        return true
+      }
+    }
+  }, [postType, data, prevData])
+  //TODO: edit valid feature
   return (
     <AnimatedDialog
       open={open}
@@ -193,7 +208,7 @@ const PostDialog = (props: Props) => {
                     // color: 'white',
                   },
                 }}
-                disabled={!isValid}
+                disabled={postType.includes('edit') ? !editIsValid : !isValid}
                 onClick={() => handleSubmit(onSubmit)()}
               >
                 {postType.includes('post')
