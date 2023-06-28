@@ -35,12 +35,13 @@ type Props = {
   type: 'comment' | 'post' | 'reply'
   comments_count?: number
   replies_count?: number
+  expand: boolean
 }
 
 const PostViewActions = (props: Props) => {
   const {id} = useAppSelector(({user}) => user.user)
 
-  const {setExpand, post, type} = props
+  const {setExpand, post, type, expand} = props
   const dispatch = useAppDispatch()
   const [open, setOpen] = useState(false)
   const [data, setData] = useState([])
@@ -140,7 +141,7 @@ const PostViewActions = (props: Props) => {
                   }
                   // if (type === 'comment') {
                   // } else {
-                  setExpand(true)
+                  setExpand(!expand)
                   // }
                 }}
                 startIcon={<ChatBubbleOutlineIcon />}
