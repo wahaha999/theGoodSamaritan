@@ -52,6 +52,12 @@ const chatRoomSlice = createSlice({
     removeOnlineUser: (state, action) => {
       state.onlineUsers = _.filter(state.onlineUsers, (e: any) => e !== action.payload)
     },
+    addLastMessage: (state, action) => {
+      const foundChannel = _.find(state.chatRooms, {id: action.payload.channel_id})
+      if (foundChannel) {
+        foundChannel.last_message = action.payload.message
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -78,6 +84,6 @@ const chatRoomSlice = createSlice({
       })
   },
 })
-export const {addOnlineUser, removeOnlineUser} = chatRoomSlice.actions
+export const {addOnlineUser, removeOnlineUser, addLastMessage} = chatRoomSlice.actions
 
 export default chatRoomSlice.reducer
