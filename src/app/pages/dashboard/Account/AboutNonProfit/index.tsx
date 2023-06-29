@@ -48,7 +48,7 @@ const AboutNonProfit = (props: Props) => {
 
   return (
     <>
-      <Typography>
+      <Typography paddingTop={4}>
         How many people do you have in your non-profit(please include congregations as well)
       </Typography>
       <Grid container justifyContent='space-between' gap={4} sx={{my: 3}}>
@@ -81,9 +81,9 @@ const AboutNonProfit = (props: Props) => {
         <Typography color='red'>{errors.organize.message?.toString()}</Typography>
       )}
       <Box sx={{display: 'flex', mb: 3}}>
-        <Typography paddingRight={4}>Tell us about your Non-Profit Organization</Typography>
+        
         <Typography>
-          Tell us about your Mission. This information will be displayed by other users to learn
+          Tell us about your Non-Profit. What is your Mission? This information will be displayed to others in your netork to learn
           more about you and your organization
         </Typography>
       </Box>
