@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import axios from 'axios'
 import {API_URL} from 'src/app/modules/auth/core/_requests'
-import {selectChatRoom} from './chatRoomSlice'
+import {addLastMessage, selectChatRoom} from './chatRoomSlice'
 
 export interface IMessage {
   message: string
@@ -40,7 +40,9 @@ export const dmSelect = createAsyncThunk(
           user: event.user,
           message: event.message.message,
         }
+        console.log('event==', event)
         dispatch(addMessage(event.message))
+        dispatch(addLastMessage(event.message))
       })
       .listenForWhisper('typing', (event: any) => {
         let timer

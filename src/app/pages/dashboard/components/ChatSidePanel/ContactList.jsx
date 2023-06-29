@@ -48,6 +48,7 @@ const ContactList = (props) => {
               {chatRooms?.map((item, index) => (
                 <motion.div variants={variant} key={index}>
                   <ContactButton
+                    data={item}
                     channel_id={item.id}
                     info={item.sender.id === id ? item.receiver : item.sender}
                   />
