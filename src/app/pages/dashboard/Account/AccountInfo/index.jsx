@@ -64,7 +64,7 @@ const AccountInfo = (props) => {
   return (
     <Root>
       <Controller
-        name='dbkey'
+        name='account_id'
         control={control}
         defaultValue='30'
         render={({field: {value}}) => <Typography>Your Account Number: {value}</Typography>}
