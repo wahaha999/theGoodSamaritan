@@ -22,7 +22,7 @@ export const echoInit = createAsyncThunk('dashboard/echoinit', (token: string, {
   window.Echo = new Echo({
     broadcaster: 'pusher',
     key: process.env.REACT_APP_MIX_PUSHER_APP_KEY || 'websocketkey',
-    wsHost: window.location.hostname,
+    wsHost: process.env.REACT_APP_MIX_WS_HOST_URL||window.location.hostname,
     cluster: process.env.REACT_APP_PUSHER_APP_CLUSTER || 'mt1',
     wsPort: 6001,
     wssPort: 6001,
