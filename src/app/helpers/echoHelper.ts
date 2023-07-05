@@ -32,7 +32,7 @@ export const echoInit = createAsyncThunk('dashboard/echoinit', (token: string, {
       process.env.REACT_APP_MIX_AUTH_ENDPOINT ||
       'https://apiportal.samaritanmarketplace.com/broadcasting/auth',
   })
-
+console.log('echo==',window)
   window.Echo.connector.options.auth.headers['Authorization'] = 'Bearer ' + token
   window.Echo.options.auth = {
     headers: {
