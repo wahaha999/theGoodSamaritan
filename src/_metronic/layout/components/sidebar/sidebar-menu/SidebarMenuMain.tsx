@@ -300,28 +300,28 @@ function SidebarMenuMain() {
           labelText='Sharing a Message'
           name='purpose.sharing_message'
           labelIcon={Label}
-          labelInfo='90'
+          labelInfo=''
         />
         <StyledTreeItem
           nodeId='4'
           labelText='Resources to Share'
           name='purpose.resource_to_share'
           labelIcon={Label}
-          labelInfo='3,566'
+          labelInfo=''
         />
         <StyledTreeItem
           nodeId='5'
           labelText='In need of Resources'
           name='purpose.need_resources'
           labelIcon={Label}
-          labelInfo='733'
+          labelInfo=''
         />
         <StyledTreeItem
           nodeId='6'
           labelText='Event'
           name='purpose.have_event'
           labelIcon={Label}
-          labelInfo='1037'
+          labelInfo=''
         />
         <div className='menu-item'>
           <div className='menu-content pt-8 pb-2'>

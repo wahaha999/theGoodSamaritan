@@ -83,7 +83,7 @@ const AboutNonProfit = (props: Props) => {
       <Box sx={{display: 'flex', mb: 3}}>
         
         <Typography>
-          Tell us about your Non-Profit. What is your Mission? This information will be displayed to others in your netork to learn
+          Tell us about your Non-Profit. What is your Mission? This information will be displayed to others in your network to learn
           more about you and your organization
         </Typography>
       </Box>
