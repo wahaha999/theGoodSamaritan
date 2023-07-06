@@ -1,7 +1,6 @@
 import Echo from 'laravel-echo'
 import axios from 'axios'
 import {API_URL} from '../modules/auth/core/_requests'
-import {useAppDispatch} from '../store/hook'
 import {
   addOnlineUser,
   removeOnlineUser,
@@ -32,7 +31,6 @@ export const echoInit = createAsyncThunk('dashboard/echoinit', (token: string, {
       process.env.REACT_APP_MIX_AUTH_ENDPOINT ||
       'https://apiportal.samaritanmarketplace.com/broadcasting/auth',
   })
-console.log('echo==',window)
   window.Echo.connector.options.auth.headers['Authorization'] = 'Bearer ' + token
   window.Echo.options.auth = {
     headers: {
@@ -44,7 +42,6 @@ console.log('echo==',window)
     .here((users: any) => {
       let users_id: any = []
       for (let i = 0; i < users.length; i++) {
-        const element = users[i]
         users_id.push(users[i].id)
       }
 
