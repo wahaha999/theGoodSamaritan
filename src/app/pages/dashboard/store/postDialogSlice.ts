@@ -1,10 +1,9 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit'
 
-type PostType = 'new_post' | 'edit_post' | 'new_comment' | 'edit_comment'
 
 type PostDialogBase = {
   open: boolean
-  postOption?: object
+  postOption?: any
 }
 
 type NewOrEditPost = PostDialogBase & {
@@ -35,6 +34,15 @@ export const postDialogSlice = createSlice({
   initialState,
   reducers: {
     openPostDialog: (state, action: PayloadAction<IPostDialog>) => {
+      if (action.payload.postOption) {
+        const updatedPostOption = {
+          ...action.payload.postOption,
+          category: JSON.parse(action.payload.postOption.category),
+          images:JSON.parse(action.payload.postOption.images),
+          keyword:JSON.parse(action.payload.postOption.keyword),
+        };
+        action.payload.postOption = updatedPostOption;
+      }
       Object.assign(state, action.payload)
     },
     closePostDialog: () => initialState,
