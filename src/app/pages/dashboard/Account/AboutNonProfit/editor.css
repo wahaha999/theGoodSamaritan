@@ -1,6 +1,6 @@
 /* .ck.ck-editor__main>.ck-editor__editable{
     height: 300px;
 } */
-.ck-content {
+#editor-container .ck-content {
     height: 280px;
 }
