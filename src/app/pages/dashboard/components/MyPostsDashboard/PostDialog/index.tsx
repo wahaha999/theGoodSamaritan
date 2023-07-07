@@ -9,7 +9,7 @@ import {
   Button,
 } from '@mui/material'
 import {AnimatePresence, motion} from 'framer-motion'
-import React, {useEffect, useMemo} from 'react'
+import React, {useMemo} from 'react'
 import {FormProvider, useForm} from 'react-hook-form'
 import Post from '../../../Post'
 import {yupResolver} from '@hookform/resolvers/yup'
@@ -54,7 +54,7 @@ const post_schema: any = yup.object().shape({
       'Event name is required when Purpose is That have an Event',
       function (value) {
         const {purpose} = this.parent
-        if (purpose == 4 && !value) {
+        if (Number(purpose) === 4 && !value) {
           return false
         }
         return true
@@ -162,7 +162,7 @@ const PostDialog = (props: Props) => {
         })
     }
   }
-  const prevData = usePrevious(data ? _.merge({}, data) : null)
+  const prevData = usePrevious(data ? _.merge({}, data) : null);
   const editIsValid = useMemo(() => {
     if (postType.includes('edit')) {
       if (_.isEqual(prevData, data)) {
@@ -171,7 +171,8 @@ const PostDialog = (props: Props) => {
         return true
       }
     }
-  }, [postType, data, prevData])
+  }, [postType, data, prevData]);
+
   //TODO: edit valid feature
   return (
     <AnimatedDialog
@@ -208,7 +209,7 @@ const PostDialog = (props: Props) => {
                     // color: 'white',
                   },
                 }}
-                disabled={postType.includes('edit') ? !editIsValid : !isValid}
+                disabled={postType.includes('edit') ? (editIsValid ? !isValid: !editIsValid) : !isValid}
                 onClick={() => handleSubmit(onSubmit)()}
               >
                 {postType.includes('post')
