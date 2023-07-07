@@ -8,7 +8,7 @@ export interface IMessage {
   receiver: number
 }
 
-const initialState: any = []
+const initialState: any = {messages:[],typeEvent:null}
 
 export const sendMessage = createAsyncThunk(
   'dashboard/chat/sendMessage',
@@ -30,6 +30,20 @@ export const dmSelect = createAsyncThunk(
     const res = await axios.get(`${API_URL}/getMessages/${channel_id}`)
     dispatch(getMessages(res.data))
     window.Echo.join(`chat.dm.${channel_id}`)
+    .here((users:any) => {
+    }).joining((user:any) => {
+    })
+    .leaving((user:any )=> {
+
+      const message = {
+          user: user,
+          message: "Left",
+          status: true
+      };
+      // if (selectedChannelInState.type === "channel") {
+      //     dispatch({ type: ADD_MESSAGE, payload: message });
+      // }
+  })
       .listen('MessageSent', (event: any) => {
         const typingEvent = {
           user: event.user,
@@ -40,23 +54,21 @@ export const dmSelect = createAsyncThunk(
           user: event.user,
           message: event.message.message,
         }
-        console.log('event==', event)
         dispatch(addMessage(event.message))
         dispatch(addLastMessage(event.message))
       })
       .listenForWhisper('typing', (event: any) => {
         let timer
-        console.log('TYPING')
-        console.log(event.name)
-        const message = {
-          user: event.name,
-          type: 'typing',
-        }
+        // const message = {
+        //   user: event.name,
+        //   type: 'typing',
+        // }
+        dispatch(addTypingEvent(event))
 
         clearTimeout(timer)
 
         timer = setTimeout(() => {
-          // dispatch({type: REMOVE_TYPING_EVENT, payload: message});
+          dispatch(removeTypingEvent())
         }, 2000)
       })
   }
@@ -67,19 +79,28 @@ const messageSlice = createSlice({
   initialState,
   reducers: {
     getMessages: (state, action) => {
-      return action.payload
-    },
+      console.log('message=',action.payload)
+      return {
+        ...state,
+        messages:  action.payload,
+      };    },
     addMessage: (state, action) => {
-      state.push(action.payload)
+      state.messages.push(action.payload)
     },
+    addTypingEvent:(state,action) => {
+      state.typeEvent = {...action.payload}
+    },
+    removeTypingEvent:(state) => {
+      state.typeEvent = null
+    }
   },
-  extraReducers(builder) {
-    builder.addCase(dmSelect.fulfilled, (state, action) => {
-      return action.payload
-    })
-  },
+  // extraReducers(builder) {
+  //   builder.addCase(dmSelect.fulfilled, (state, action) => {
+  //     return state.messages = action.payload
+  //   })
+  // },
 })
 
-export const {getMessages, addMessage} = messageSlice.actions
+export const {getMessages, addMessage,addTypingEvent,removeTypingEvent} = messageSlice.actions
 
 export default messageSlice.reducer

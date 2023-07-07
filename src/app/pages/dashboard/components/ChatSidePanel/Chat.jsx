@@ -7,10 +7,12 @@ import {useDispatch} from 'react-redux'
 import InputBase from '@mui/material/InputBase'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 import FuseScrollbars from 'src/app/modules/core/FuseScrollbars/FuseScrollbars'
-import {Typography} from '@mui/material'
+import {Avatar, Typography} from '@mui/material'
 import {sendMessage} from './store/messageSlice'
 import {useAppSelector} from 'src/app/store/hook'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
+import './chat.css'
+import {toServerUrl} from 'src/_metronic/helpers'
 
 const StyledMessageRow = styled('div')(({theme}) => ({
   '&.contact': {
@@ -89,7 +91,8 @@ const StyledMessageRow = styled('div')(({theme}) => ({
 function Chat(props) {
   const dispatch = useDispatch()
   const selectedChatRoom = useAppSelector(({chat}) => chat.chatRoom.selectedChatRoom)
-  const {messages} = useAppSelector(({chat}) => chat)
+  const {messages, typeEvent} = useAppSelector(({chat}) => chat.messages)
+  console.log('typeEvent===', typeEvent)
   const {user} = useAppSelector(({user}) => user)
   //   const selectedContactId = useSelector(selectSelectedContactId)
   //   const chat = useSelector(selectChat)
@@ -114,13 +117,15 @@ function Chat(props) {
 
   const onInputChange = (ev, selectedChatRoom) => {
     setMessageText(ev.target.value)
-
+    let channel = window.Echo.join(`chat.dm.${selectedChatRoom}`)
     setTimeout(() => {
-      console.log('🚀 ~ file: Chat.jsx:92 ~ Chat ~ selectedChatRoom:', selectedChatRoom)
-
-      window.Echo.join(`chat.dm.${selectedChatRoom}`).whisper('typing', {
-        name: user,
+      // console.log('win0==',window.Echo)
+      channel.whisper('typing', {
+        name: user.last_name,
+        avatar: user.avatar,
       })
+
+      // console.log('win1==',window.Echo)
     }, 300)
   }
 
@@ -134,7 +139,7 @@ function Chat(props) {
         className='flex flex-1 flex-col overflow-y-auto overscroll-contain'
         option={{suppressScrollX: true, wheelPropagation: false}}
       >
-        <div className='flex flex-col flex-1 pt-8'>
+        <div className='flex flex-col flex-1 pb-16'>
           {useMemo(() => {
             function isFirstMessageOfGroup(item, i) {
               return i === 0 || (messages[i - 1] && messages[i - 1].user_id !== item.user_id)
@@ -153,7 +158,7 @@ function Chat(props) {
                     <StyledMessageRow
                       key={i}
                       className={clsx(
-                        'flex flex-col grow-0 shrink-0 items-start justify-end relative px-4 pb-2',
+                        'flex flex-col grow-0 shrink-0 items-start justify-end relative px-4 pb-1',
                         item.user_id === user.id ? 'me' : 'contact',
                         {'first-of-group': isFirstMessageOfGroup(item, i)},
                         {'last-of-group': isLastMessageOfGroup(item, i)},
@@ -212,6 +217,23 @@ function Chat(props) {
           <>
             {/* {chat && ( */}
             <form onSubmit={onMessageSubmit} className='pb-6 px-8 absolute bottom-0 left-0 right-0'>
+              {/* <Typography variant='caption' textAlign="center">Typing</Typography> */}
+              {typeEvent ? (
+                <div className='typing-container'>
+                  <Avatar sx={{width:30,height:30}} src={toServerUrl('/media/user/avatar/' + typeEvent?.avatar)}  />
+
+                  <div>
+                    <div className='typingBubble'>
+                      <div className='dot'></div>
+                      <div className='dot'></div>
+                      <div className='dot'></div>
+                    </div>
+                    <span>{typeEvent?.name} is typing... </span>
+                  </div>
+                </div>
+              ) : null}
+
+              {/* {typingArrayReady()} */}
               <Paper className='flex items-center relative shadow' sx={{borderRadius: '2.4rem'}}>
                 <InputBase
                   autoFocus={false}
@@ -235,7 +257,7 @@ function Chat(props) {
             {/* )} */}
           </>
         )
-      }, [dispatch, messageText, selectedChatRoom])}
+      }, [dispatch, messageText, selectedChatRoom,typeEvent])}
     </Paper>
   )
 }
