@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { useAppDispatch, useAppSelector } from 'src/app/store/hook';
 import { getPosts } from './store/postSlice';
 
+
 const container = {
   show: {
     transition: {
@@ -33,7 +34,41 @@ const Box = styled('div')({
   border: '0px solid black', // Add border styles here
   position: 'relative', // Add position relative to create a new stacking context
   '&::before': {
-    content: '"We embrace your feed back. Click here"',
+    content: '"We embrace your feedback. Click here"',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    fontSize: '1.2rem',
+    color: '#fff',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    padding: '8px',
+    borderRadius: '4px',
+    visibility: 'hidden',
+    opacity: 0,
+    transition: 'visibility 0s, opacity 0.3s linear',
+  },
+  '&:hover::before': {
+    visibility: 'visible',
+    opacity: 1,
+    backgroundColor: '#F9BF3B',
+  },
+});
+
+const Box_Support = styled('div')({
+  backgroundImage: 'url("/media/misc/support.png")',
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  width: 300,
+  height: 300,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
+  border: '0px solid black', // Add border styles here
+  position: 'relative', // Add position relative to create a new stacking context
+  '&::before': {
+    content: '"Need Help? Click here"',
     position: 'absolute',
     top: '50%',
     left: '50%',
@@ -67,6 +102,20 @@ const BoxWithBackground = () => {
   );
 };
 
+
+const BoxWithBackground_support = () => {
+  const handleLinkClick = () => {
+    // Replace 'https://www.example.com' with your desired external website URL
+    window.open('https://docs.google.com/forms/d/e/1FAIpQLSc83BeNQnjY9HaTLZvrJJxbuEmzw4DmWBQr_gZKjIG7g32H4w/viewform?usp=sf_link', '_blank');
+  };
+
+  return (
+    <Box_Support onClick={handleLinkClick}>
+      {/* You can add content inside the box if needed */}
+    </Box_Support>
+  );
+};
+
 const DashboardPage: FC = () => {
   const theme = useTheme();
   // const media = useMediaQuery()
@@ -81,11 +130,15 @@ const DashboardPage: FC = () => {
             </motion.div>
           </Grid>
           <Hidden xlDown>
-            <Grid item md={2} sx={{ position: 'fixed', right: 250 }}>
+            <Grid item md={2} sx={{ position: 'fixed', right: 350 }}>
               <BoxWithBackground />
+              <BoxWithBackground_support />
             </Grid>
+            
           </Hidden>
+          
         </Grid>
+        
       </motion.div>
     </>
   );
