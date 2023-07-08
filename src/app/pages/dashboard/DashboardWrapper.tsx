@@ -21,7 +21,7 @@ const item = {
 };
 
 const Box = styled('div')({
-  backgroundImage: 'url("/media/misc/feedback-opinion-28072609.webp")',
+  backgroundImage: 'url("/media/misc/balanced-feedback.webp")',
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   width: 300,
@@ -30,6 +30,28 @@ const Box = styled('div')({
   alignItems: 'center',
   justifyContent: 'center',
   cursor: 'pointer',
+  border: '0px solid black', // Add border styles here
+  position: 'relative', // Add position relative to create a new stacking context
+  '&::before': {
+    content: '"We embrace your feed back. Click here"',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    fontSize: '1.2rem',
+    color: '#fff',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    padding: '8px',
+    borderRadius: '4px',
+    visibility: 'hidden',
+    opacity: 0,
+    transition: 'visibility 0s, opacity 0.3s linear',
+  },
+  '&:hover::before': {
+    visibility: 'visible',
+    opacity: 1,
+    backgroundColor: '#F9BF3B',
+  },
 });
 
 const BoxWithBackground = () => {
