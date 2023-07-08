@@ -31,8 +31,8 @@ const Box = styled('div')({
   alignItems: 'center',
   justifyContent: 'center',
   cursor: 'pointer',
-  border: '0px solid black', // Add border styles here
-  position: 'relative', // Add position relative to create a new stacking context
+  border: '0px solid black',
+  position: 'relative',
   '&::before': {
     content: '"We embrace your feedback. Click here"',
     position: 'absolute',
@@ -52,6 +52,14 @@ const Box = styled('div')({
     visibility: 'visible',
     opacity: 1,
     backgroundColor: '#F9BF3B',
+  },
+  '@media (max-width: 1800px)': {
+    width: 200,
+    height: 200,
+  },
+  '@media (max-width: 400px)': {
+    width: 150,
+    height: 150,
   },
 });
 
@@ -86,6 +94,14 @@ const Box_Support = styled('div')({
     visibility: 'visible',
     opacity: 1,
     backgroundColor: '#F9BF3B',
+  },
+  '@media (max-width: 1800px)': {
+    width: 200,
+    height: 200,
+  },
+  '@media (max-width: 400px)': {
+    width: 150,
+    height: 150,
   },
 });
 
@@ -130,7 +146,7 @@ const DashboardPage: FC = () => {
             </motion.div>
           </Grid>
           <Hidden xlDown>
-            <Grid item md={2} sx={{ position: 'fixed', right: 350 }}>
+            <Grid item md={2} sx={{ position: 'fixed', right: 300 }}>
               <BoxWithBackground />
               <BoxWithBackground_support />
             </Grid>
