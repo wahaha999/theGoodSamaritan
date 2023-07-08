@@ -11,6 +11,7 @@ import ConnectWithoutContactOutlinedIcon from '@mui/icons-material/ConnectWithou
 import {toServerUrl} from 'src/_metronic/helpers'
 import {maxWidth} from '@mui/system'
 import {Link} from '@react-email/link'
+import LocationOnIcon from '@mui/icons-material/LocationOn'
 
 const params = ['0~50', '51~100', '101~200', '201~500', '501~1000', '1000~']
 
@@ -144,6 +145,27 @@ const PostAccountView = (props) => {
                           </Grid>
                         </Grid>
                       </Grid>
+                      <Grid item>
+                        <Grid container alignItems='center' spacing={2} marginTop={3}>
+                          <Grid item>
+                            <LocationOnIcon color='primary' sx={{mr: 2}} />
+
+                            <Typography
+                              color='purple'
+                              component='a'
+                              target='_blank'
+                              href={`https://www.google.com/maps/place/${
+                                user.account.address || ''
+                              } ${user.account.city || ''} ${user.account.state || ''} ${
+                                user.zip_code || ''
+                              }`}
+                            >
+                              {user.account.address} , {user.account.city} {user.account.state}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+
                       <Grid container spacing={1} my={1}>
                         <Grid item md={12}></Grid>
                       </Grid>
