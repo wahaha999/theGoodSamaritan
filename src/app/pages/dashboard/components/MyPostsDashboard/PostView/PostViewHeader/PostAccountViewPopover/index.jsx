@@ -12,6 +12,8 @@ import {toServerUrl} from 'src/_metronic/helpers'
 import {maxWidth} from '@mui/system'
 import {Link} from '@react-email/link'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
+import { useAppDispatch } from 'src/app/store/hook'
+import { openConnDialog } from 'src/app/pages/dashboard/store/connectDialogSlice'
 
 const params = ['0~50', '51~100', '101~200', '201~500', '501~1000', '1000~']
 
@@ -19,6 +21,7 @@ const PostAccountView = (props) => {
   const {avatar, data} = props
   const {user} = data
   const {account} = user
+  const dispatch = useAppDispatch()
   const [open, setOpened] = useState(false)
   const handleToggle = useDebounce((open) => {
     setOpened(open)
@@ -200,6 +203,9 @@ const PostAccountView = (props) => {
                               startIcon={<ForumOutlinedIcon />}
                               sx={{mr: 2}}
                               variant='outlined'
+                              onClick={() => {
+                                dispatch(openConnDialog({open: true, info: user}))
+                              }}
                             >
                               Chat
                             </Button>
