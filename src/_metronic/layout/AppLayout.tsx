@@ -113,6 +113,7 @@ const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})<{
   open?: boolean
 }>(({theme, open}) => ({
   flexGrow: 1,
+  background: '#f5f8fa',
   padding: theme.spacing(3),
   // [theme.breakpoints.down('sm')]: {
   //   width: `calc(100% - ${drawerWidth}px)`,
