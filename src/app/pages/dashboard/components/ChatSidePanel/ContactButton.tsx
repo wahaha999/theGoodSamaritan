@@ -72,10 +72,10 @@ const StyledUreadBadge = styled('div', {
 const StyledStatus = styled('div', {shouldForwardProp: (prop) => prop !== 'value'})<any>(
   ({theme, value}) => ({
     position: 'absolute',
-    width: 12,
-    height: 12,
-    bottom: 4,
-    left: 44,
+    width: 16,
+    height: 16,
+    bottom: 8,
+    left: 48,
     border: `2px solid ${theme.palette.background.default}`,
     borderRadius: '50%',
     zIndex: 10,

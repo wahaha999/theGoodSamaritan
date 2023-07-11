@@ -4,7 +4,7 @@ import CardMedia from '@mui/material/CardMedia'
 import {Variants, motion} from 'framer-motion'
 import 'react-responsive-carousel/lib/styles/carousel.min.css' // requires a loader
 import {useAppSelector} from 'src/app/store/hook'
-import React, {memo} from 'react'
+import React, {memo, useEffect, useRef, useState} from 'react'
 import PostViewHeader from './PostViewHeader'
 import PostViewMedia from './PostViewMedia'
 import PostViewContent from './PostViewContent'
@@ -31,6 +31,30 @@ const itemVariants: Variants = {
 }
 
 const PostView = (props: Props) => {
+  const parentRef = useRef(null)
+  const [innerWidth, setInnerWidth] = useState<number>(700)
+  useEffect(() => {
+    const parentDiv: any = parentRef.current
+    let resizeObserver: any
+
+    const handleResize = () => {
+      const parentWidth = parentDiv.offsetWidth
+      setInnerWidth(parentWidth)
+      // console.log('Parent width:', parentWidth)
+      // Perform any other actions based on the updated width
+    }
+
+    if (parentDiv) {
+      resizeObserver = new ResizeObserver(handleResize)
+      resizeObserver.observe(parentDiv)
+    }
+
+    return () => {
+      if (resizeObserver) {
+        resizeObserver.disconnect()
+      }
+    }
+  }, [])
   const {post, type, comment, comments_count, replies_count, index, length} = props
   const [popup, setPopup] = React.useState(false)
 
@@ -59,6 +83,7 @@ const PostView = (props: Props) => {
 
   return (
     <motion.div
+      ref={parentRef}
       variants={itemVariants}
       style={{marginLeft: type === 'reply' ? 50 : '0px', paddingTop: '20px'}}
     >
@@ -76,9 +101,9 @@ const PostView = (props: Props) => {
         open={open}
         handleClose={handleClose}
       />
-      <CardMedia component='div'>
-        <PostViewMedia post={post} type={type} />
-      </CardMedia>
+      {/* <CardMedia component='div'> */}
+      <PostViewMedia post={post} type={type} innerWidth={innerWidth} />
+      {/* </CardMedia> */}
       {/* )} */}
       <PostViewContent post={post} type={type} />
       <PostViewActions
