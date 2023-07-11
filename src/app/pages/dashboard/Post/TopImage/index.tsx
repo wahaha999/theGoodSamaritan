@@ -71,7 +71,7 @@ function TopImage() {
         setIsPreviewSet(true)
       }
     }
-  }, [images, isPreviewSet])
+  }, [images, isPreviewSet, postType])
 
   return (
     <>
