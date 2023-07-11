@@ -34,13 +34,27 @@ export const postDialogSlice = createSlice({
   initialState,
   reducers: {
     openPostDialog: (state, action: PayloadAction<IPostDialog>) => {
+      console.log('action==', action.payload)
+      let updatedPostOption
       if (action.payload.postOption) {
-        const updatedPostOption = {
+        if (action.payload.postType.includes('comment')||action.payload.postType.includes('reply')) {
+          updatedPostOption = {
           ...action.payload.postOption,
-          category: JSON.parse(action.payload.postOption.category),
-          images:JSON.parse(action.payload.postOption.images),
+          
+          // category:action.payload.postOption.category ? JSON.parse(action.payload.postOption.category):[],
+          images:typeof action.payload.postOption.images === 'string' ?  JSON.parse(action.payload.postOption.images):action.payload.postOption.images,
+          // keyword:JSON.parse(action.payload.postOption.keyword),
+        };
+        } else {
+           updatedPostOption = {
+          ...action.payload.postOption,
+          
+          category:action.payload.postOption.category ? JSON.parse(action.payload.postOption.category):[],
+          images:typeof action.payload.postOption.images === 'string' ?  JSON.parse(action.payload.postOption.images):action.payload.postOption.images,
           keyword:JSON.parse(action.payload.postOption.keyword),
         };
+        }
+        
         action.payload.postOption = updatedPostOption;
       }
       Object.assign(state, action.payload)
