@@ -9,6 +9,8 @@ import {generateGUID} from 'src/app/helpers/generate_id'
 import {Typography} from '@mui/material'
 import {useEffect, useState} from 'react'
 import {toServerUrl} from 'src/_metronic/helpers'
+import {IPostDialog} from '../../store/postDialogSlice'
+import {useAppSelector} from 'src/app/store/hook'
 
 const Root = styled('div')(({theme}) => ({
   margin: 4,
@@ -53,13 +55,19 @@ function TopImage() {
   const [preview, setPreview] = useState<any>([])
   const [isPreviewSet, setIsPreviewSet] = useState<boolean>(false)
   const {control, watch, setValue} = methods
-
+  const {open, postType, postOption, postId}: IPostDialog = useAppSelector(
+    ({post}) => post.postDialog
+  )
   const images = watch('images')
   useEffect(() => {
     if (images.length > 0 && !isPreviewSet) {
       if (typeof images == 'string') {
         setPreview([...JSON.parse(images ? images : '[]')])
         setValue('images', [...JSON.parse(images ? images : '[]')])
+        setIsPreviewSet(true)
+      } else if (Array.isArray(images) && postType.includes('edit')) {
+        setPreview([...images])
+        setValue('images', [...images])
         setIsPreviewSet(true)
       }
     }
