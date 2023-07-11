@@ -101,8 +101,10 @@ const PostView = (props: Props) => {
         open={open}
         handleClose={handleClose}
       />
+      {JSON.parse(post.images).length > 0 && (
+        <PostViewMedia post={post} type={type} innerWidth={innerWidth} />
+      )}
       {/* <CardMedia component='div'> */}
-      <PostViewMedia post={post} type={type} innerWidth={innerWidth} />
       {/* </CardMedia> */}
       {/* )} */}
       <PostViewContent post={post} type={type} />
