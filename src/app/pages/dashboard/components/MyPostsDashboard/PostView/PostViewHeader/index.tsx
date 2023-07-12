@@ -10,16 +10,18 @@ import {
   Typography,
 } from '@mui/material'
 import moment from 'moment'
-import React from 'react'
+import React, {useMemo} from 'react'
 import {toServerUrl} from 'src/_metronic/helpers'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 import {labels} from 'src/app/pages/dashboard/Post'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
-import {useAppDispatch} from 'src/app/store/hook'
+import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {openPostDialog} from 'src/app/pages/dashboard/store/postDialogSlice'
 import {openCheckDialog} from 'src/app/pages/dashboard/store/checkDialog'
 import {getCommentsByPostId, getRepliesByCommentId} from 'src/app/pages/dashboard/store/postSlice'
 import PostAccountView from './PostAccountViewPopover'
+import {createConnection} from 'src/app/pages/dashboard/store/connectionSlice'
+import _ from 'src/app/modules/@lodash/@lodash'
 
 type Props = {
   post: any
@@ -37,14 +39,30 @@ type Props = {
 const PostViewHeader = (props: Props) => {
   const {post, user, handleClick, anchorEl, open, handleClose, type, count, index, length} = props
   const dispatch = useAppDispatch()
+  const {connections} = useAppSelector(({post}) => post)
+  const disabled = useMemo(() => {
+    let temp = _.find(
+      connections,
+      (e: any) => e.receiver_id === post.user.id || e.sender_id === post.user.id
+    )
+    return temp ? temp.status : false
+  }, [connections, post])
+  console.log('disable==', disabled)
   return (
     <>
       <CardHeader
         action={
           <>
-            <Button variant='outlined' sx={{mr: 4}}>
-              Make A Connection
-            </Button>
+            {user.id !== post?.user.id && (
+              <Button
+                variant='outlined'
+                sx={{mr: 4}}
+                disabled={disabled}
+                onClick={() => dispatch(createConnection(post.user.id))}
+              >
+                {disabled ? disabled : 'Make A Connection'}
+              </Button>
+            )}
             {post?.user?.account_dbkey === user.account_dbkey && (
               <>
                 <IconButton aria-label='settings' onClick={(e) => handleClick(e, post)}>
@@ -136,6 +154,7 @@ const PostViewHeader = (props: Props) => {
               <PostAccountView
                 avatar={toServerUrl('/media/account/avatar/' + post?.user.account.avatar)}
                 data={post}
+                status={disabled}
               />{' '}
               <Typography>
                 {`${post?.user?.account?.non_profit_name}`} posted on{' '}

@@ -1,13 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import {Box, Grid, useTheme, Hidden, useMediaQuery} from '@mui/material'
-import {FC, memo, useCallback, useEffect} from 'react'
-import {useIntl} from 'react-intl'
-import FollowingDashboard from './components/FollowingDashboard'
+import {Grid, useTheme, Hidden} from '@mui/material'
+import {FC, memo, useEffect} from 'react'
 import MyPostsDashboard from './components/MyPostsDashboard'
-import PostTitleItem from './components/PostTitleItem'
 import {motion} from 'framer-motion'
-import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
-import {getPosts} from './store/postSlice'
+import {useAppDispatch} from 'src/app/store/hook'
+import {getConnections} from './store/connectionSlice'
+import Connections from './components/Connections'
 
 const container = {
   show: {
@@ -23,7 +21,6 @@ const item = {
 }
 
 const DashboardWrapper: FC = () => {
-  const theme = useTheme()
   // const media = useMediaQuery()
   return (
     <>
@@ -37,50 +34,7 @@ const DashboardWrapper: FC = () => {
           </Grid>
           <Hidden xlDown>
             <Grid item md={3}>
-              <motion.div variants={item} initial='hidden' animate='show'>
-                <FollowingDashboard title='3 Connections Pending Your Approval'>
-                  <PostTitleItem
-                    pending
-                    title='Faith Convenant Church'
-                    img='/media/avatars/300-1.jpg'
-                  />
-                  <PostTitleItem
-                    pending
-                    title='Brownsville Church of Saints'
-                    img='/media/avatars/300-3.jpg'
-                  />
-                  <PostTitleItem
-                    pending
-                    title='Faith Convenant Church'
-                    img='/media/avatars/300-5.jpg'
-                  />
-                </FollowingDashboard>
-              </motion.div>
-              <Box sx={{my: 2}}></Box>
-              <motion.div variants={item} initial='hidden' animate='show'>
-                <FollowingDashboard title='2 Pending Connections'>
-                  <PostTitleItem
-                    title='Brownsville Church of Saints'
-                    img='/media/avatars/300-3.jpg'
-                  />
-                  <PostTitleItem title='Faith Convenant Church' img='/media/avatars/300-5.jpg' />
-                </FollowingDashboard>
-              </motion.div>
-              <Box sx={{my: 2}}></Box>
-              <motion.div variants={item} initial='hidden' animate='show'>
-                <FollowingDashboard placeholder='Search your connections' title='32 Connections'>
-                  <PostTitleItem
-                    request
-                    title='Faith Convenant Church'
-                    img='/media/avatars/300-1.jpg'
-                  />
-                  <PostTitleItem
-                    title='Brownsville Church of Saints'
-                    img='/media/avatars/300-3.jpg'
-                  />
-                  <PostTitleItem title='Faith Convenant Church' img='/media/avatars/300-5.jpg' />
-                </FollowingDashboard>
-              </motion.div>
+              <Connections />
             </Grid>
           </Hidden>
         </Grid>

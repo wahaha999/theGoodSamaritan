@@ -6,6 +6,7 @@ import filter from './filterSlice'
 import postDialog from './postDialogSlice'
 import checkDialog from './checkDialog'
 import connDialog from './connectDialogSlice'
+import connections from './connectionSlice'
 
 const reducer = combineReducers({
   plan,
@@ -15,6 +16,7 @@ const reducer = combineReducers({
   postDialog,
   checkDialog,
   connDialog,
+  connections,
 })
 
 export default reducer
