@@ -12,13 +12,13 @@ import {toServerUrl} from 'src/_metronic/helpers'
 import {maxWidth} from '@mui/system'
 import {Link} from '@react-email/link'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
-import { useAppDispatch } from 'src/app/store/hook'
-import { openConnDialog } from 'src/app/pages/dashboard/store/connectDialogSlice'
+import {useAppDispatch} from 'src/app/store/hook'
+import {openConnDialog} from 'src/app/pages/dashboard/store/connectDialogSlice'
 
 const params = ['0~50', '51~100', '101~200', '201~500', '501~1000', '1000~']
 
 const PostAccountView = (props) => {
-  const {avatar, data} = props
+  const {avatar, data, width, height, status} = props
   const {user} = data
   const {account} = user
   const dispatch = useAppDispatch()
@@ -34,7 +34,13 @@ const PostAccountView = (props) => {
           {({ref}) => (
             <Avatar
               ref={ref}
-              sx={{bgcolor: red[500], mr: 2, cursor: 'pointer'}}
+              sx={{
+                bgcolor: red[500],
+                mr: 2,
+                cursor: 'pointer',
+                width: width ? width : 'none',
+                height: height ? height : 'none',
+              }}
               onMouseEnter={() => handleToggle(true)}
               onMouseLeave={() => handleToggle(false)}
               aria-label='recipe'
@@ -186,10 +192,11 @@ const PostAccountView = (props) => {
                         >
                           <Tooltip title='Connect and follow conversations with this organization'>
                             <Button
+                              disabled={status}
                               variant='contained'
                               startIcon={<ConnectWithoutContactOutlinedIcon />}
                             >
-                              Connect
+                              {status ? status : 'Connect'}
                             </Button>
                           </Tooltip>
                         </motion.div>

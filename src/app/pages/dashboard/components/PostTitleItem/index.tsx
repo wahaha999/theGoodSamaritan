@@ -6,16 +6,19 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import {useAppDispatch} from 'src/app/store/hook'
 import {updateConnection} from '../../store/connectionSlice'
+import PostAccountView from '../MyPostsDashboard/PostView/PostViewHeader/PostAccountViewPopover'
 type Props = {
   title: string
   img: string
   pending?: boolean
   request?: boolean
   connection_id: number
+  data?: any
+  status?: string
 }
 
 const PostTitleItem = (props: Props) => {
-  const {title, img, request, pending, connection_id} = props
+  const {title, img, data, request, pending, connection_id, status} = props
   const dispatch = useAppDispatch()
   return (
     <Stack sx={{my: 1}}>
@@ -27,22 +30,37 @@ const PostTitleItem = (props: Props) => {
                 anchorOrigin={{vertical: 'top', horizontal: 'left'}}
                 badgeContent={<NotificationsActiveIcon color='secondary' />}
               >
-                <img
+                <PostAccountView
+                  avatar={toServerUrl(`/media/user/avatar/${img}`)}
+                  data={data}
+                  status={status}
+                  width='30px'
+                  height='30px'
+                />
+                {/* <img
                   width='30px'
                   height='30px'
                   style={{borderRadius: '6px'}}
                   src={toServerUrl(`/media/user/avatar/${img}`)}
                   alt=''
-                />
+                /> */}
               </Badge>
             ) : (
-              <img
+              <PostAccountView
+                avatar={toServerUrl(`/media/user/avatar/${img}`)}
+                data={data}
+                status={status}
                 width='30px'
                 height='30px'
-                style={{borderRadius: '6px'}}
-                src={toServerUrl(`/media/user/avatar/${img}`)}
-                alt=''
               />
+
+              // <img
+              //   width='30px'
+              //   height='30px'
+              //   style={{borderRadius: '6px'}}
+              //   src={toServerUrl(`/media/user/avatar/${img}`)}
+              //   alt=''
+              // />
             )}
 
             <Typography sx={{pl: 4}}>{title}</Typography>

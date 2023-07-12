@@ -154,6 +154,7 @@ const PostViewHeader = (props: Props) => {
               <PostAccountView
                 avatar={toServerUrl('/media/account/avatar/' + post?.user.account.avatar)}
                 data={post}
+                status={disabled}
               />{' '}
               <Typography>
                 {`${post?.user?.account?.non_profit_name}`} posted on{' '}

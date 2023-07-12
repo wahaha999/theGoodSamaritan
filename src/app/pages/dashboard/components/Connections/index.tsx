@@ -42,7 +42,7 @@ const Connections = (props: Props) => {
     return {pending, pendingWithUser, accepts}
   }, [connections, user])
   return (
-    <>
+    <Box sx={{position: 'fixed', width: 400}}>
       <motion.div variants={item} initial='hidden' animate='show'>
         <FollowingDashboard
           title={`${conns.pendingWithUser.length} Connections Pending Your Approval`}
@@ -50,7 +50,9 @@ const Connections = (props: Props) => {
           {conns.pendingWithUser?.map((item: any, index: number) => (
             <PostTitleItem
               connection_id={item.id}
+              status='pending'
               key={index}
+              data={{user: item.sender}}
               pending
               title={`${item.sender.first_name} ${item.sender.last_name}`}
               img={item.sender.avatar}
@@ -72,6 +74,8 @@ const Connections = (props: Props) => {
             <PostTitleItem
               connection_id={item.id}
               key={index}
+              status='pending'
+              data={{user: item.receiver}}
               title={`${item.receiver.first_name} ${item.receiver.last_name}`}
               img={item.receiver.avatar}
             />
@@ -90,7 +94,9 @@ const Connections = (props: Props) => {
             <PostTitleItem
               connection_id={item.id}
               request
+              status='accepted'
               key={index}
+              data={{user: user.id === item.sender.id ? item.receiver : item.sender}}
               title={
                 user.id === item.sender.id
                   ? `${item.receiver.first_name} ${item.receiver.last_name}`
@@ -101,7 +107,7 @@ const Connections = (props: Props) => {
           ))}
         </FollowingDashboard>
       </motion.div>
-    </>
+    </Box>
   )
 }
 

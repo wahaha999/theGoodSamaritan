@@ -370,6 +370,7 @@ export function MenuInner(props) {
   }, [reset])
   const data = watch()
   const saved_posts = watch('saved_posts')
+  const connections = watch('connections')
 
   const prevData = usePrevious(data ? _.merge({}, data) : null)
   useEffect(() => {
@@ -474,11 +475,27 @@ export function MenuInner(props) {
                       />
                     </Grid>
                   </Grid>
-                  <Grid item>
-                    <Button startIcon={<NotificationsActiveIcon color='secondary' />} sx={{ml: 2}}>
-                      Your Connections
-                    </Button>
-                  </Grid>
+                  <Controller
+                    name='connections'
+                    control={control}
+                    defaultValue={false}
+                    render={({field}) => (
+                      <Grid item>
+                        <Button
+                          onClick={() => field.onChange(!field.value)}
+                          startIcon={
+                            <NotificationsActiveIcon
+                              color={connections ? 'primary' : 'secondary'}
+                            />
+                          }
+                          sx={{ml: 2}}
+                        >
+                          Your Connections
+                        </Button>
+                      </Grid>
+                    )}
+                  />
+
                   <Controller
                     name='saved_posts'
                     control={control}
