@@ -47,7 +47,6 @@ const PostViewHeader = (props: Props) => {
     )
     return temp ? temp.status : false
   }, [connections, post])
-  console.log('disable==', disabled)
   return (
     <>
       <CardHeader
