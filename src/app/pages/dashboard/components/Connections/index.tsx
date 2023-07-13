@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {motion} from 'framer-motion'
 import FollowingDashboard from '../FollowingDashboard'
 import PostTitleItem from '../PostTitleItem'
@@ -8,6 +8,7 @@ import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import _ from 'src/app/modules/@lodash/@lodash'
 import SupportIcon from '../SupportFeedback/SupportIcon'
 import FeedbackIcon from '../SupportFeedback/FeedbackIcon'
+import {addFilterForHeader} from '../../store/filterSlice'
 
 const container = {
   show: {
@@ -30,6 +31,10 @@ const Connections = (props: Props) => {
   const {connections} = useAppSelector(({post}) => post)
   const {user} = useAppSelector(({user}) => user)
   const dispatch = useAppDispatch()
+  const [selectedUser, setSelectedUser] = useState<any>([])
+  useEffect(() => {
+    dispatch(addFilterForHeader({selectedUser}))
+  }, [dispatch, selectedUser])
   useEffect(() => {
     dispatch(getConnections())
   }, [dispatch])
@@ -65,13 +70,6 @@ const Connections = (props: Props) => {
                   img={item.sender.avatar}
                 />
               ))}
-              {/* <PostTitleItem pending title='Faith Convenant Church' img='/media/avatars/300-1.jpg' />
-          <PostTitleItem
-            pending
-            title='Brownsville Church of Saints'
-            img='/media/avatars/300-3.jpg'
-          />
-          <PostTitleItem pending title='Faith Convenant Church' img='/media/avatars/300-5.jpg' /> */}
             </FollowingDashboard>
           </motion.div>
           <Box sx={{my: 2}}></Box>
@@ -110,6 +108,8 @@ const Connections = (props: Props) => {
                   connection_id={item.id}
                   request
                   status='accepted'
+                  selectedUser={selectedUser}
+                  setSelectedUser={setSelectedUser}
                   key={index}
                   data={{user: user.id === item.sender.id ? item.receiver : item.sender}}
                   title={
