@@ -7,10 +7,11 @@ type Props = {
   children: ReactNode
   placeholder?: string
   title: string
+  setSearch?: any
 }
 
 const FollowingDashboard = (props: Props) => {
-  const {children, placeholder, title} = props
+  const {children, placeholder, title, setSearch} = props
   return (
     <Paper sx={{width: '100%', padding: '12px'}}>
       <Typography variant='h6'>{title}</Typography>
@@ -33,6 +34,7 @@ const FollowingDashboard = (props: Props) => {
               sx={{ml: 1, flex: 1}}
               placeholder={placeholder}
               inputProps={{'aria-label': 'search google maps'}}
+              onChange={(e: any) => setSearch(e.target.value)}
             />
           </>
         )}
