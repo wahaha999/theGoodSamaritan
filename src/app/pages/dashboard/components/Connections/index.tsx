@@ -31,6 +31,8 @@ const Connections = (props: Props) => {
   const {connections} = useAppSelector(({post}) => post)
   const {user} = useAppSelector(({user}) => user)
   const dispatch = useAppDispatch()
+  const [search, setSearch] = useState<string>('')
+
   const [selectedUser, setSelectedUser] = useState<any>([])
   useEffect(() => {
     dispatch(addFilterForHeader({selectedUser}))
@@ -51,6 +53,18 @@ const Connections = (props: Props) => {
     let accepts = _.filter(connections, (e: any) => e.status === 'accepted')
     return {pending, pendingWithUser, accepts}
   }, [connections, user])
+
+  const searchConnections = useMemo(() => {
+    return _.filter(
+      conns.accepts,
+      (e: any) =>
+        e.sender.first_name.includes(search) ||
+        e.sender.last_name.includes(search) ||
+        e.receiver.first_name.includes(search) ||
+        e.receiver.last_name.includes(search)
+    )
+  }, [search, conns.accepts])
+
   return (
     <Box sx={{position: position}}>
       {conns.pendingWithUser.length > 0 && (
@@ -102,8 +116,9 @@ const Connections = (props: Props) => {
             <FollowingDashboard
               placeholder='Search your connections'
               title={conns.accepts.length + ' Connections'}
+              setSearch={setSearch}
             >
-              {conns.accepts?.map((item: any, index: number) => (
+              {searchConnections?.map((item: any, index: number) => (
                 <PostTitleItem
                   connection_id={item.id}
                   request
