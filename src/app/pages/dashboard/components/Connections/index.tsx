@@ -58,10 +58,10 @@ const Connections = (props: Props) => {
     return _.filter(
       conns.accepts,
       (e: any) =>
-        e.sender.first_name.includes(search) ||
-        e.sender.last_name.includes(search) ||
-        e.receiver.first_name.includes(search) ||
-        e.receiver.last_name.includes(search)
+        e.sender.account.non_profit_name.includes(search) ||
+        e.sender.account.non_profit_name.includes(search) ||
+        e.receiver.account.non_profit_name.includes(search) ||
+        e.receiver.account.non_profit_name.includes(search)
     )
   }, [search, conns.accepts])
 
@@ -80,8 +80,8 @@ const Connections = (props: Props) => {
                   key={index}
                   data={{user: item.sender}}
                   pending
-                  title={`${item.sender.first_name} ${item.sender.last_name}`}
-                  img={item.sender.avatar}
+                  title={`${item.sender.account.non_profit_name}`}
+                  img={item.sender.account.avatar}
                 />
               ))}
             </FollowingDashboard>
@@ -99,8 +99,8 @@ const Connections = (props: Props) => {
                   key={index}
                   status='pending'
                   data={{user: item.receiver}}
-                  title={`${item.receiver.first_name} ${item.receiver.last_name}`}
-                  img={item.receiver.avatar}
+                  title={`${item.receiver.account.non_profit_name}`}
+                  img={item.receiver.account.avatar}
                 />
               ))}
 
@@ -129,10 +129,14 @@ const Connections = (props: Props) => {
                   data={{user: user.id === item.sender.id ? item.receiver : item.sender}}
                   title={
                     user.id === item.sender.id
-                      ? `${item.receiver.first_name} ${item.receiver.last_name}`
-                      : `${item.sender.first_name} ${item.sender.last_name}`
+                      ? `${item.receiver.account.non_profit_name}`
+                      : `${item.sender.account.non_profit_name}`
                   }
-                  img={user.id === item.sender.id ? item.receiver.avatar : item.sender.avatar}
+                  img={
+                    user.id === item.sender.id
+                      ? item.receiver.account.avatar
+                      : item.sender.account.avatar
+                  }
                 />
               ))}
             </FollowingDashboard>

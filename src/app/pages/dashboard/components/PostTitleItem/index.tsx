@@ -51,7 +51,7 @@ const PostTitleItem = (props: Props) => {
                 badgeContent={<NotificationsActiveIcon color='secondary' />}
               >
                 <PostAccountView
-                  avatar={toServerUrl(`/media/user/avatar/${img}`)}
+                  avatar={toServerUrl(`/media/account/avatar/${img}`)}
                   data={data}
                   status={status}
                   width='30px'
@@ -67,7 +67,7 @@ const PostTitleItem = (props: Props) => {
               </Badge>
             ) : (
               <PostAccountView
-                avatar={toServerUrl(`/media/user/avatar/${img}`)}
+                avatar={toServerUrl(`/media/account/avatar/${img}`)}
                 data={data}
                 status={status}
                 width='30px'
