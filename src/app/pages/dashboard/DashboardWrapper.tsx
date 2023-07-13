@@ -23,7 +23,7 @@ const item = {
 }
 
 const DashboardWrapper: FC = () => {
-  const {connections} = useAppSelector(({post}) => post.filter.filter)
+  const {connections, saved_posts} = useAppSelector(({post}) => post.filter.filter)
   // const media = useMediaQuery()
   return (
     <>
@@ -31,9 +31,20 @@ const DashboardWrapper: FC = () => {
         <Grid container justifyContent='center' columnSpacing={4} sx={{mt: 5}}>
           {/* <Grid item md={1}></Grid> */}
           <Grid item md={6}>
-            {connections && (
+            {connections && !saved_posts && (
               <Typography color='GrayText' textAlign='center'>
                 Viewing your Connections. Click "Your Connections" above to view all posts
+              </Typography>
+            )}
+            {!connections && saved_posts && (
+              <Typography color='GrayText' textAlign='center'>
+                Viewing your Saved Posts. Click "Saved Posts" above to view all posts
+              </Typography>
+            )}
+            {connections && saved_posts && (
+              <Typography color='GrayText' textAlign='center'>
+                Viewing your Connections and Save Posts. Click "Your Connections” and “Saved Posts"
+                above to view all posts
               </Typography>
             )}
             <motion.div variants={item} initial='hidden' animate='show' className='mt-2'>
