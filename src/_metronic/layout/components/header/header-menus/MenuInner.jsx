@@ -28,7 +28,7 @@ import {Link, useParams} from 'react-router-dom'
 import {Controller, FormProvider, useForm, useFormContext} from 'react-hook-form'
 import {useEffect} from 'react'
 import {useDispatch} from 'react-redux'
-import {useAppDispatch} from 'src/app/store/hook'
+import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {addFilterForHeader} from 'src/app/pages/dashboard/store/filterSlice'
 import {usePrevious} from 'src/app/modules/hooks'
 import _ from 'src/app/modules/@lodash/@lodash'
@@ -241,7 +241,9 @@ export function MenuInner(props) {
   const methods = useForm({
     mode: 'onChange',
   })
-  const {control, watch, reset} = methods
+  const {control, watch, reset, setValue} = methods
+
+  const {selectedUser} = useAppSelector(({post}) => post.filter.filter)
 
   useEffect(() => {
     const initialState = {
@@ -251,6 +253,12 @@ export function MenuInner(props) {
     }
     reset({...initialState})
   }, [reset])
+
+  useEffect(() => {
+    if (selectedUser?.length > 0) {
+      setValue('connections', true)
+    }
+  }, [selectedUser])
   const data = watch()
   const saved_posts = watch('saved_posts')
   const connections = watch('connections')
