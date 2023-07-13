@@ -107,7 +107,7 @@ const inputGlobalStyles = (
 )
 
 const drawerWidth = 240
-const filterDrawerWidth = 300
+const filterDrawerWidth = 350
 
 const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})<{
   open?: boolean
@@ -424,7 +424,7 @@ export default function AppLayout(props: Props) {
         </Drawer>
         <Drawer
           anchor='right'
-          sx={{'& .MuiDrawer-paper': {width: filterDrawerWidth}}}
+          sx={{'& .MuiDrawer-paper': {width: filterDrawerWidth, px: 2}}}
           open={filterOpen}
           onClose={() => setFilterOpen(false)}
         >

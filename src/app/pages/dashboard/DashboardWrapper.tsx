@@ -6,6 +6,8 @@ import {motion} from 'framer-motion'
 import {useAppDispatch} from 'src/app/store/hook'
 import {getConnections} from './store/connectionSlice'
 import Connections from './components/Connections'
+import SupportIcon from './components/SupportFeedback/SupportIcon'
+import FeedbackIcon from './components/SupportFeedback/FeedbackIcon'
 
 const container = {
   show: {
@@ -27,14 +29,14 @@ const DashboardWrapper: FC = () => {
       <motion.div variants={container} initial='hidden' animate='show'>
         <Grid container justifyContent='center' columnSpacing={4} sx={{mt: 6}}>
           {/* <Grid item md={1}></Grid> */}
-          <Grid item md={8} xl={6}>
+          <Grid item md={6}>
             <motion.div variants={item} initial='hidden' animate='show'>
               <MyPostsDashboard />
             </motion.div>
           </Grid>
-          <Hidden xlDown>
+          <Hidden mdDown>
             <Grid item md={3}>
-              <Connections />
+              <Connections position='fixed' />
             </Grid>
           </Hidden>
         </Grid>
