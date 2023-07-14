@@ -92,6 +92,7 @@ function Chat(props) {
   const dispatch = useDispatch()
   const selectedChatRoom = useAppSelector(({chat}) => chat.chatRoom.selectedChatRoom)
   const {messages, typeEvent} = useAppSelector(({chat}) => chat.messages)
+  const {chatRoomInfo} = useAppSelector(({chat}) => chat.chatRoom)
   console.log('typeEvent===', typeEvent)
   const {user} = useAppSelector(({user}) => user)
   //   const selectedContactId = useSelector(selectSelectedContactId)
@@ -207,6 +208,7 @@ function Chat(props) {
               message: messageText,
               channel_id: selectedChatRoom,
               channel_type: 'dm',
+              receiver_id: chatRoomInfo.id,
             })
           ).then(() => {
             setMessageText('')
@@ -220,7 +222,10 @@ function Chat(props) {
               {/* <Typography variant='caption' textAlign="center">Typing</Typography> */}
               {typeEvent ? (
                 <div className='typing-container'>
-                  <Avatar sx={{width:30,height:30}} src={toServerUrl('/media/user/avatar/' + typeEvent?.avatar)}  />
+                  <Avatar
+                    sx={{width: 30, height: 30}}
+                    src={toServerUrl('/media/user/avatar/' + typeEvent?.avatar)}
+                  />
 
                   <div>
                     <div className='typingBubble'>
@@ -257,7 +262,7 @@ function Chat(props) {
             {/* )} */}
           </>
         )
-      }, [dispatch, messageText, selectedChatRoom,typeEvent])}
+      }, [dispatch, messageText, selectedChatRoom, typeEvent])}
     </Paper>
   )
 }

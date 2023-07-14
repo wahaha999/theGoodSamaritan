@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import axios from 'axios'
 import {API_URL} from 'src/app/modules/auth/core/_requests'
-import {addLastMessage, selectChatRoom} from './chatRoomSlice'
+import {addLastMessage, readMarkMessage, selectChatRoom} from './chatRoomSlice'
 
 export interface IMessage {
   message: string
@@ -28,6 +28,7 @@ export const dmSelect = createAsyncThunk(
 
     const res = await axios.get(`${API_URL}/getMessages/${channel_id}`)
     dispatch(getMessages(res.data))
+    dispatch(readMarkMessage({channel_id}))
     window.Echo.join(`chat.dm.${channel_id}`)
       .here((users: any) => {})
       .joining((user: any) => {})
@@ -76,7 +77,6 @@ const messageSlice = createSlice({
   initialState,
   reducers: {
     getMessages: (state, action) => {
-      console.log('message=', action.payload)
       return {
         ...state,
         messages: action.payload,

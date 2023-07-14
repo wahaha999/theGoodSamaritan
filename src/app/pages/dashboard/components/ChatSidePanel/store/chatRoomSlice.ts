@@ -54,8 +54,15 @@ const chatRoomSlice = createSlice({
     },
     addLastMessage: (state, action) => {
       const foundChannel = _.find(state.chatRooms, {id: action.payload.channel_id})
+
       if (foundChannel) {
         foundChannel.last_message = action.payload.message
+      }
+    },
+    readMarkMessage: (state, action) => {
+      const foundChannel = _.find(state.chatRooms, {id: action.payload.channel_id})
+      if (foundChannel) {
+        foundChannel.unread_count = 0
       }
     },
   },
@@ -84,6 +91,7 @@ const chatRoomSlice = createSlice({
       })
   },
 })
-export const {addOnlineUser, removeOnlineUser, addLastMessage} = chatRoomSlice.actions
+export const {addOnlineUser, removeOnlineUser, addLastMessage, readMarkMessage} =
+  chatRoomSlice.actions
 
 export default chatRoomSlice.reducer

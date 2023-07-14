@@ -113,7 +113,7 @@ const ContactButton = (props: Props) => {
       >
         <Grid container alignItems='center' columnGap={1}>
           <Grid item>
-            <StyledUreadBadge>{info.id}</StyledUreadBadge>
+            {data.unread_count > 0 && <StyledUreadBadge>{data.unread_count}</StyledUreadBadge>}
             <StyledStatus value={onlineUsers.includes(info.id) ? 'online' : 'offline'} />
             <Avatar
               src={toServerUrl('/media/user/avatar/' + info?.avatar)}
