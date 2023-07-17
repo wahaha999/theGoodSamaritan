@@ -21,7 +21,7 @@ const AuthLayout = () => {
     <div
       className='d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed'
       style={{
-        backgroundImage: `url(${toAbsoluteUrl('/media/illustrations/sketchy-1/14.png')})`,
+       // backgroundImage: `url(${toAbsoluteUrl('/media/illustrations/sketchy-1/14.png')})`,
       }}
     >
       {/* begin::Content */}
@@ -41,17 +41,24 @@ const AuthLayout = () => {
       {/* begin::Footer */}
       <div className='d-flex flex-center flex-column-auto p-10'>
         <div className='d-flex align-items-center fw-bold fs-6'>
-          <a href='#' className='text-muted text-hover-primary px-2'>
+          <a  href='https://www.samaritanmarketplace.com/about'   className='text-muted text-hover-primary px-2'>
             About
           </a>
 
-          <a href='#' className='text-muted text-hover-primary px-2'>
-            Contact
-          </a>
-
-          <a href='#' className='text-muted text-hover-primary px-2'>
-            Contact Us
-          </a>
+          <a
+              href='/media/policy/Terms_and_Services.pdf'
+              target='_blank'
+              className='text-muted text-hover-primary px-2'
+            >
+              Terms & Services, 
+            </a>
+            <a
+              href='/media/policy/Privacy_Policy.pdf'
+              target='_blank'
+              className='text-muted text-hover-primary px-2'
+            >
+              Privacy Policy
+            </a>
         </div>
       </div>
       {/* end::Footer */}
