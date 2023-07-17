@@ -91,6 +91,9 @@ const messageSlice = createSlice({
     removeTypingEvent: (state) => {
       state.typeEvent = null
     },
+    removeMessages: (state) => {
+      state.messages = []
+    },
   },
   // extraReducers(builder) {
   //   builder.addCase(dmSelect.fulfilled, (state, action) => {
@@ -99,6 +102,7 @@ const messageSlice = createSlice({
   // },
 })
 
-export const {getMessages, addMessage, addTypingEvent, removeTypingEvent} = messageSlice.actions
+export const {getMessages, addMessage, addTypingEvent, removeTypingEvent, removeMessages} =
+  messageSlice.actions
 
 export default messageSlice.reducer

@@ -101,6 +101,13 @@ function Chat(props) {
 
   const chatScroll = useRef(null)
   const [messageText, setMessageText] = useState('')
+  const inputRef = useRef(null)
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [])
 
   useEffect(() => {
     scrollToBottom()
@@ -241,7 +248,8 @@ function Chat(props) {
               {/* {typingArrayReady()} */}
               <Paper className='flex items-center relative shadow' sx={{borderRadius: '2.4rem'}}>
                 <InputBase
-                  autoFocus={false}
+                  autoFocus
+                  ref={inputRef}
                   id='message-input'
                   className='flex flex-1 grow shrink-0 mx-16 ltr:mr-48 rtl:ml-48 my-6'
                   placeholder='Type your message'

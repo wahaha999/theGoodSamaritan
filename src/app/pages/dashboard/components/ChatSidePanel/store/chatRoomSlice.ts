@@ -65,6 +65,10 @@ const chatRoomSlice = createSlice({
         foundChannel.unread_count = 0
       }
     },
+    deselectChatRoom: (state) => {
+      state.selectedChatRoom = null
+      state.chatRoomInfo = {}
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -91,7 +95,7 @@ const chatRoomSlice = createSlice({
       })
   },
 })
-export const {addOnlineUser, removeOnlineUser, addLastMessage, readMarkMessage} =
+export const {addOnlineUser, removeOnlineUser, addLastMessage, readMarkMessage, deselectChatRoom} =
   chatRoomSlice.actions
 
 export default chatRoomSlice.reducer
