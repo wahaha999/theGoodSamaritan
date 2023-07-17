@@ -59,7 +59,7 @@ const PostViewHeader = (props: Props) => {
                 disabled={disabled}
                 onClick={() => dispatch(createConnection(post.user.id))}
               >
-                {disabled ? disabled : 'Make A Connection'}
+                {disabled ? `connection ${disabled}` : 'Make A Connection'}
               </Button>
             )}
             {post?.user?.account_dbkey === user.account_dbkey && (
