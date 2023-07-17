@@ -29,6 +29,7 @@ import _ from 'src/app/modules/@lodash/@lodash'
 import FuseLoading from 'src/app/modules/core/FuseLoading/FuseLoading'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
+import {useNavigate} from 'react-router-dom'
 
 const steps = ['Account Info', 'About Your Non Profit', 'Non Profit Verification', 'Address']
 
@@ -180,6 +181,7 @@ export default function Account() {
   const [completed, setCompleted] = React.useState({})
   const dispatch = useAppDispatch()
   const theme = useTheme()
+  const navigate = useNavigate()
   const user = useAppSelector(({user}) => user.user)
   const methods = useForm({
     mode: 'onChange',
@@ -232,6 +234,8 @@ export default function Account() {
             steps.findIndex((step, i) => !(i in completed))
           : activeStep + 1
       setActiveStep(newActiveStep)
+      const newCompleted = completed
+      newCompleted[activeStep] = true
     }
   }
 
@@ -270,8 +274,7 @@ export default function Account() {
   }
 
   const handleReset = () => {
-    setActiveStep(0)
-    setCompleted({})
+    navigate('/dashboard')
   }
 
   if (_.isEmpty(form) || !user) {
@@ -312,7 +315,7 @@ export default function Account() {
               <Box sx={{display: 'flex', flexDirection: 'row', pt: 2}}>
                 <Box sx={{flex: '1 1 auto'}} />
                 <Button variant='contained' onClick={handleReset}>
-                  Update Account
+                  Back to Dashboard
                 </Button>
               </Box>
             </React.Fragment>
@@ -356,7 +359,7 @@ export default function Account() {
                     variant='contained'
                     onClick={handleSubmit(handleNext, handleComplete)}
                   >
-                    {completedSteps() === totalSteps() - 1 ? 'Finish' : 'Continue'}
+                    {completedSteps() === totalSteps() - 1 ? 'Update' : 'Continue'}
                   </Button>
                   {/* <input type="submit"/> */}
                   {/* ))} */}

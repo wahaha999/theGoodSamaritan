@@ -17,7 +17,6 @@ const ChatButton = (props: Props) => {
   const channel: any = useMemo(() => {
     return _.find(chatRooms, (e: any) => e.sender_id === info.id || e.receiver_id === info.id)
   }, [chatRooms, info])
-  console.log('channel_id===', channel)
 
   const sendChat = () => {
     if (channel) {
