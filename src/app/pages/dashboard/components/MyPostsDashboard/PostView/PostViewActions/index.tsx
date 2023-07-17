@@ -28,6 +28,7 @@ import {setLoading} from 'src/app/pages/dashboard/store/filterSlice'
 import {emoji} from 'src/app/constants/emoji'
 import _ from 'src/app/modules/@lodash/@lodash'
 import {openConnDialog} from 'src/app/pages/dashboard/store/connectDialogSlice'
+import ChatButton from '../component/ChatButton'
 
 type Props = {
   setExpand: React.Dispatch<React.SetStateAction<boolean>>
@@ -106,18 +107,19 @@ const PostViewActions = (props: Props) => {
           <Grid item>
             <Grid container flexDirection='row-reverse'>
               {id !== post.user.id && (
-                <Tooltip title='Chat with this organization'>
-                  <Button
-                    startIcon={<ForumOutlinedIcon />}
-                    sx={{mr: 2}}
-                    variant='outlined'
-                    onClick={() => {
-                      dispatch(openConnDialog({open: true, info: post.user}))
-                    }}
-                  >
-                    Chat
-                  </Button>
-                </Tooltip>
+                // <Tooltip title='Chat with this organization'>
+                //   <Button
+                //     startIcon={<ForumOutlinedIcon />}
+                //     sx={{mr: 2}}
+                //     variant='outlined'
+                //     onClick={() => {
+                //       dispatch(openConnDialog({open: true, info: post.user}))
+                //     }}
+                //   >
+                //     Chat
+                //   </Button>
+                // </Tooltip>
+                <ChatButton info={post.user} />
               )}
               {type === 'post' && (
                 <Tooltip title='Save this post and follow it for updates.'>

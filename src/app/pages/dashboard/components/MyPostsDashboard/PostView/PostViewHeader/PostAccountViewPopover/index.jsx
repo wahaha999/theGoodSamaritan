@@ -14,6 +14,7 @@ import {Link} from '@react-email/link'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import {useAppDispatch} from 'src/app/store/hook'
 import {openConnDialog} from 'src/app/pages/dashboard/store/connectDialogSlice'
+import ChatButton from '../../component/ChatButton'
 
 const params = ['0~50', '51~100', '101~200', '201~500', '501~1000', '1000~']
 
@@ -205,7 +206,7 @@ const PostAccountView = (props) => {
                           // transition={{duration: 1}}
                           animate={{opacity: 1}}
                         >
-                          <Tooltip title='Chat with this organization'>
+                          {/* <Tooltip title='Chat with this organization'>
                             <Button
                               startIcon={<ForumOutlinedIcon />}
                               sx={{mr: 2}}
@@ -216,7 +217,8 @@ const PostAccountView = (props) => {
                             >
                               Chat
                             </Button>
-                          </Tooltip>
+                          </Tooltip> */}
+                          <ChatButton info={user} />
                         </motion.div>
                       </Grid>
                       {/* </Paper> */}

@@ -30,6 +30,8 @@ import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 import ChatSidePanel from 'src/app/pages/dashboard/components/ChatSidePanel'
 import GlobalStyles from '@mui/material/GlobalStyles'
 import {alpha} from '@mui/material/styles'
+import {deselectChatRoom} from 'src/app/pages/dashboard/components/ChatSidePanel/store/chatRoomSlice'
+import {removeMessages} from 'src/app/pages/dashboard/components/ChatSidePanel/store/messageSlice'
 
 interface Props {
   /**
@@ -165,6 +167,7 @@ const DrawerHeader = styled('div')(({theme}) => ({
 }))
 
 export default function AppLayout(props: Props) {
+  const {selectedChatRoom} = useAppSelector(({chat}) => chat.chatRoom)
   const theme = useTheme()
   const [open, setOpen] = React.useState(true)
   const dispatch = useAppDispatch()
@@ -435,16 +438,22 @@ export default function AppLayout(props: Props) {
           <MenuInner type='drawer' />
         </Drawer>
         <Drawer
-          open={chatOpen}
+          open={chatOpen || selectedChatRoom}
           anchor='right'
           variant='persistent'
           PaperProps={{sx: {overflowY: 'clip'}}}
-          onClose={() => setChatOpen(false)}
+          onClose={() => {
+            setChatOpen(false)
+            dispatch(deselectChatRoom())
+            dispatch(removeMessages())
+          }}
         >
           <ChatSidePanel
             opened={chatOpen}
             onClose={() => {
               setChatOpen(false)
+              dispatch(deselectChatRoom())
+              dispatch(removeMessages())
             }}
           />
         </Drawer>
