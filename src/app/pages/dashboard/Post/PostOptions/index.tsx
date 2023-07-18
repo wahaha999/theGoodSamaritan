@@ -49,11 +49,11 @@ const PostOptions = (props: Props) => {
           }}
         >
           <Grid container alignItems='center' justifyContent='space-between' mt={2}>
-            <Grid item container md={6} alignItems='center'>
-              <Grid item md={4}>
+            <Grid item container md={6} xs={12} alignItems='center'>
+              <Grid item md={4} xs={12}>
                 <Typography>Event Name*</Typography>
               </Grid>
-              <Grid item md={8}>
+              <Grid item md={8} xs={12}>
                 <Controller
                   defaultValue=''
                   name='event_name'
@@ -80,11 +80,11 @@ const PostOptions = (props: Props) => {
                 />
               </Grid>
             </Grid>
-            <Grid item container md={4} alignItems='center'>
-              <Grid item md={4}>
+            <Grid item container md={4} xs={12} alignItems='center'>
+              <Grid item md={4} xs={12}>
                 <Typography>Timezone</Typography>
               </Grid>
-              <Grid item md={8}>
+              <Grid item md={8} xs={12}>
                 <Controller
                   name='timezone'
                   control={control}
@@ -115,11 +115,11 @@ const PostOptions = (props: Props) => {
             </Grid>
           </Grid>
           <Grid container alignItems='center' mt={2}>
-            <Grid item container alignItems='center' md={6} gap={2}>
+            <Grid item container alignItems='center' md={6} xs={12} gap={2}>
               <Grid item>
                 <Typography>Start Date</Typography>
               </Grid>
-              <Grid item md='auto' container justifyContent='flex-end'>
+              <Grid item md='auto' xs={12} container justifyContent='flex-end'>
                 <Controller
                   name='start'
                   control={control}
@@ -141,7 +141,15 @@ const PostOptions = (props: Props) => {
                 />
               </Grid>
             </Grid>
-            <Grid item container alignItems='center' md={6} justifyContent='flex-end' gap={2}>
+            <Grid
+              item
+              container
+              alignItems='center'
+              md={6}
+              xs={12}
+              justifyContent='flex-end'
+              gap={2}
+            >
               <Grid item>
                 <Typography>End Date</Typography>
               </Grid>

@@ -52,8 +52,8 @@ const Location = (props: Props) => {
         select
       </Typography>
       <Box component='form'>
-        <Grid container spacing={4} maxWidth='md'>
-          <Grid item md={6}>
+        <Grid container spacing={4}>
+          <Grid item md={6} sm={12} xs={12}>
             <Controller
               name='phone_number'
               control={control}
@@ -81,7 +81,7 @@ const Location = (props: Props) => {
               )}
             />
           </Grid>
-          <Grid item md={6}>
+          <Grid item md={6} sm={12} xs={12}>
             <Controller
               control={control}
               name='fax_number'
@@ -112,7 +112,7 @@ const Location = (props: Props) => {
             />
             {/* <TextField label='Fax Number' fullWidth /> */}
           </Grid>
-          <Grid item md={12}>
+          <Grid item md={12} sm={12} xs={12}>
             <Controller
               control={control}
               defaultValue=''
@@ -140,7 +140,7 @@ const Location = (props: Props) => {
               )}
             />
           </Grid>
-          <Grid item md={6}>
+          <Grid item md={6} sm={12} xs={12}>
             <Controller
               control={control}
               defaultValue=''
@@ -168,7 +168,7 @@ const Location = (props: Props) => {
               )}
             />
           </Grid>
-          <Grid item md={6}>
+          <Grid item md={6} sm={12} xs={12}>
             <Controller
               name='timezone'
               control={control}
@@ -179,7 +179,7 @@ const Location = (props: Props) => {
                   <Select
                     {...field}
                     label='Timezone'
-                    fullWidth
+                    // fullWidth
                     startAdornment={
                       <InputAdornment position='start'>
                         <AccessTimeIcon />
@@ -197,7 +197,7 @@ const Location = (props: Props) => {
               )}
             />
           </Grid>
-          <Grid item md={6}>
+          <Grid item md={6} sm={12} xs={12}>
             {state && (
               <Controller
                 control={control}
@@ -207,9 +207,9 @@ const Location = (props: Props) => {
                   return (
                     <Autocomplete
                       id='state'
-                      fullWidth
                       value={value ?? ''}
                       inputValue={value ?? ''}
+                      fullWidth
                       // defaultValue={value}
                       // onOpen={() => {
                       //   setOpen(true)
@@ -227,21 +227,23 @@ const Location = (props: Props) => {
                       getOptionLabel={(option) => option}
                       options={tempState}
                       loading={loading}
-                      renderInput={(params) => (
-                        <TextField
-                          error={!!errors.state}
-                          helperText={errors?.state?.message as string}
-                          {...params}
-                          label='state'
-                        />
-                      )}
+                      renderInput={(params) => {
+                        return (
+                          <TextField
+                            error={!!errors.state}
+                            helperText={errors?.state?.message as string}
+                            {...params}
+                            label='state'
+                          />
+                        )
+                      }}
                     />
                   )
                 }}
               />
             )}
           </Grid>
-          <Grid item md={6}>
+          <Grid item md={6} sm={12} xs={12}>
             <Controller
               control={control}
               name='zip_code'

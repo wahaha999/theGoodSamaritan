@@ -109,7 +109,7 @@ const inputGlobalStyles = (
 )
 
 const drawerWidth = 240
-const filterDrawerWidth = 350
+const filterDrawerWidth = 300
 
 const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})<{
   open?: boolean
@@ -134,6 +134,11 @@ const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})<{
     }),
     marginLeft: 0,
   }),
+  [theme.breakpoints.down('sm')]: {
+    paddingRight: theme.spacing(1),
+    paddingLeft: theme.spacing(1), // Modify the value here to adjust the padding for small devices
+    // Modify the value here to adjust the padding for small devices
+  },
 }))
 
 interface AppBarProps extends MuiAppBarProps {

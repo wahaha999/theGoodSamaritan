@@ -366,44 +366,48 @@ export function MenuInner(props) {
                       />
                     </Grid>
                   </Grid>
-                </Hidden>
-                <Controller
-                  name='connections'
-                  control={control}
-                  defaultValue={false}
-                  render={({field}) => (
-                    <Grid item>
-                      <Button
-                        onClick={() => field.onChange(!field.value)}
-                        startIcon={
-                          <NotificationsActiveIcon color={connections ? 'primary' : 'secondary'} />
-                        }
-                        sx={{ml: 2}}
-                      >
-                        Your Connections
-                      </Button>
-                    </Grid>
-                  )}
-                />
+                  <Controller
+                    name='connections'
+                    control={control}
+                    defaultValue={false}
+                    render={({field}) => (
+                      <Grid item>
+                        <Button
+                          onClick={() => field.onChange(!field.value)}
+                          startIcon={
+                            <NotificationsActiveIcon
+                              color={connections ? 'primary' : 'secondary'}
+                            />
+                          }
+                          sx={{ml: 2}}
+                        >
+                          Your Connections
+                        </Button>
+                      </Grid>
+                    )}
+                  />
 
-                <Controller
-                  name='saved_posts'
-                  control={control}
-                  defaultValue={false}
-                  render={({field}) => (
-                    <Grid item>
-                      <Button
-                        onClick={() => field.onChange(!field.value)}
-                        startIcon={
-                          <NotificationsActiveIcon color={saved_posts ? 'primary' : 'secondary'} />
-                        }
-                        sx={{ml: 2}}
-                      >
-                        Saved Posts
-                      </Button>
-                    </Grid>
-                  )}
-                />
+                  <Controller
+                    name='saved_posts'
+                    control={control}
+                    defaultValue={false}
+                    render={({field}) => (
+                      <Grid item>
+                        <Button
+                          onClick={() => field.onChange(!field.value)}
+                          startIcon={
+                            <NotificationsActiveIcon
+                              color={saved_posts ? 'primary' : 'secondary'}
+                            />
+                          }
+                          sx={{ml: 2}}
+                        >
+                          Saved Posts
+                        </Button>
+                      </Grid>
+                    )}
+                  />
+                </Hidden>
               </Grid>
             </FormProvider>
           )}
@@ -477,13 +481,20 @@ export function MenuInner(props) {
               )}
             />
           </ListItem>
-          {/* <ListItem>
-            <ListItemButton>
-              <ListItemIcon>
-                <NotificationsActiveIcon color='secondary' />
-              </ListItemIcon>
-              <ListItemText primary='Your Connections' />
-            </ListItemButton>
+          <ListItem>
+            <Controller
+              name='connections'
+              control={control}
+              defaultValue={false}
+              render={({field}) => (
+                <ListItemButton onClick={() => field.onChange(!field.value)}>
+                  <ListItemIcon>
+                    <NotificationsActiveIcon color={connections ? 'primary' : 'secondary'} />
+                  </ListItemIcon>
+                  <ListItemText primary='Your Connections' />
+                </ListItemButton>
+              )}
+            />
           </ListItem>
           <ListItem>
             <Controller
@@ -499,7 +510,7 @@ export function MenuInner(props) {
                 </ListItemButton>
               )}
             />
-          </ListItem> */}
+          </ListItem>
         </List>
         <Connections position='none' />
       </FormProvider>

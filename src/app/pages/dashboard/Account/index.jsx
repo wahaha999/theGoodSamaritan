@@ -30,6 +30,7 @@ import FuseLoading from 'src/app/modules/core/FuseLoading/FuseLoading'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import {useNavigate} from 'react-router-dom'
+import {toAbsoluteUrl} from 'src/_metronic/helpers'
 
 const steps = ['Account Info', 'About Your Non Profit', 'Non Profit Verification', 'Address']
 
@@ -55,6 +56,11 @@ const ColorlibConnector = styled(StepConnector)(({theme}) => ({
     backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#eaeaf0',
     borderRadius: 1,
   },
+  [theme.breakpoints.down('sm')]: {
+    [`&.${stepConnectorClasses.alternativeLabel}`]: {
+      top: 25,
+    },
+  },
 }))
 
 const ColorlibStepIconRoot = styled('div')(({theme, ownerState}) => ({
@@ -77,6 +83,10 @@ const ColorlibStepIconRoot = styled('div')(({theme, ownerState}) => ({
     backgroundImage:
       'linear-gradient( 136deg, rgb(105,39,183) 0%, rgb(98,39,183) 50%, rgb(138,35,135) 100%)',
   }),
+  [theme.breakpoints.down('sm')]: {
+    width: 50,
+    height: 50,
+  },
 }))
 
 function validateEIN(ein) {
@@ -284,14 +294,14 @@ export default function Account() {
   return (
     <FormProvider {...methods}>
       {/* <form onSubmit={handleSubmit(handleComplete)}> */}
-      <Paper sx={{width: '100%', m: 1, p: 4}}>
+      <Paper sx={{m: 1, p: 4}}>
         <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
           {steps.map((label, index) => (
             <Step key={label} completed={completed[index]}>
               <StepLabel
                 StepIconComponent={ColorlibStepIcon}
                 onClick={handleStep(index)}
-                sx={{'& .MuiStepLabel-label': {fontSize: 16, fontWeight: 600}}}
+                sx={{'& .MuiStepLabel-label': {fontSize: 12, fontWeight: 600}}}
               >
                 {label}
               </StepLabel>
@@ -301,7 +311,20 @@ export default function Account() {
         <div>
           {allStepsCompleted() ? (
             <React.Fragment>
-              <Grid container justifyContent='center' alignItems='center' sx={{height: '60vh'}}>
+              <Grid
+                container
+                justifyContent='center'
+                direction='column'
+                alignItems='center'
+                sx={{height: '60vh'}}
+              >
+                <Grid item md={6}>
+                  <img
+                    src={toAbsoluteUrl('/media/misc/congratulation.png')}
+                    width='200px'
+                    alt='congratulation'
+                  />
+                </Grid>
                 <Box>
                   <Typography
                     variant='h6'
@@ -321,52 +344,54 @@ export default function Account() {
             </React.Fragment>
           ) : (
             <React.Fragment>
-              <Grid container justifyContent='center' alignItems='center' sx={{height: '60vh'}}>
+              <Grid container justifyContent='center' alignItems='center'>
                 <Box sx={{}}>{activeStep == 0 && <AccountInfo />}</Box>
                 <Box sx={{}}>{activeStep == 1 && <AboutNonProfit />}</Box>
                 <Box sx={{}}>{activeStep == 2 && <Verification />}</Box>
                 <Box sx={{}}>{activeStep == 3 && <Location />}</Box>
               </Grid>
-              <AppBar
-                position='sticky'
+              <Grid container justifyContent='space-around' sx={{my: 4}}>
+                {/* <AppBar
+                position='relative'
                 sx={{top: 'auto', bottom: 0, boxShadow: 'none'}}
                 color='inherit'
               >
-                <Toolbar>
-                  {/* <Box sx={{display: 'flex', flexDirection: 'row', pt: 2}}> */}
-                  <Button
-                    color='primary'
-                    disabled={activeStep === 0}
-                    onClick={handleBack}
-                    sx={{mr: 1}}
-                    variant='contained'
-                    startIcon={<ChevronLeftIcon />}
-                  >
-                    Back
-                  </Button>
-                  <Box sx={{flex: '1 1 auto'}} />
-                  {/* <Button onClick={handleNext} sx={{mr: 1}}>
+                <Toolbar> */}
+                {/* <Box sx={{display: 'flex', flexDirection: 'row', pt: 2}}> */}
+                <Button
+                  color='primary'
+                  disabled={activeStep === 0}
+                  onClick={handleBack}
+                  sx={{mr: 1}}
+                  variant='contained'
+                  startIcon={<ChevronLeftIcon />}
+                >
+                  Back
+                </Button>
+                {/* <Box sx={{flex: '1 1 auto'}} /> */}
+                {/* <Button onClick={handleNext} sx={{mr: 1}}>
                     Next
                   </Button> */}
-                  {/* {activeStep !== steps.length &&
+                {/* {activeStep !== steps.length &&
                     (completed[activeStep] ? (
                       <Typography variant='caption' sx={{display: 'inline-block'}}>
                         Step {activeStep + 1} already completed
                       </Typography>
                     ) : ( */}
-                  <Button
-                    endIcon={<ChevronRightIcon />}
-                    variant='contained'
-                    onClick={handleSubmit(handleNext, handleComplete)}
-                  >
-                    {completedSteps() === totalSteps() - 1 ? 'Update' : 'Continue'}
-                  </Button>
-                  {/* <input type="submit"/> */}
-                  {/* ))} */}
-                  {/* </Box> */}
-                </Toolbar>
-              </AppBar>
-              {/* <Typography sx={{mt: 2, mb: 1, py: 1}}>Step {activeStep + 1}</Typography> */}
+                <Button
+                  endIcon={<ChevronRightIcon />}
+                  variant='contained'
+                  onClick={handleSubmit(handleNext, handleComplete)}
+                >
+                  {completedSteps() === totalSteps() - 1 ? 'Update' : 'Continue'}
+                </Button>
+                {/* <input type="submit"/> */}
+                {/* ))} */}
+                {/* </Box> */}
+                {/* </Toolbar>
+              </AppBar> */}
+                {/* <Typography sx={{mt: 2, mb: 1, py: 1}}>Step {activeStep + 1}</Typography> */}
+              </Grid>
             </React.Fragment>
           )}
         </div>

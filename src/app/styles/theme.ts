@@ -1,6 +1,6 @@
-import { createTheme } from '@mui/material/styles';
+import {createTheme, responsiveFontSizes} from '@mui/material/styles'
 
-export const theme = createTheme({
+let theme1 = createTheme({
   palette: {
     primary: {
       main: '#6927B7 ',
@@ -10,33 +10,31 @@ export const theme = createTheme({
       main: '#F9BF3B',
     },
     action: {
-      disabled: "#64748B",
-      
-    }
-    
-  },
-  
-  typography: {
-      fontFamily:'Inter',
-        h5: {
-            fontWeight:700
-        },
-        h6: {
-            fontWeight:700
+      disabled: '#64748B',
     },
-        body1:{fontSize:14,fontWeight:600}
   },
-  
+
+  typography: {
+    fontFamily: 'Inter',
+    h5: {
+      fontWeight: 700,
+    },
+    h6: {
+      fontWeight: 700,
+    },
+    body1: {fontSize: 14, fontWeight: 500},
+  },
+
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
           borderRadius: '8px',
           textTransform: 'capitalize',
-          fontWeight:600
-          }
-        }
-      }
+          fontWeight: 600,
+        },
+      },
+    },
   },
   breakpoints: {
     values: {
@@ -45,8 +43,8 @@ export const theme = createTheme({
       md: 1040,
       lg: 1200,
       xl: 1536,
-    }
-  }
-  
-    
-});
+    },
+  },
+})
+
+export const theme = responsiveFontSizes(theme1)

@@ -8,6 +8,7 @@ import TGSNavItem from '../../TGSNavItem';
 import withRouter from 'src/app/modules/core/withRouter/withRouter';
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon';
 import NavLinkAdapter from 'src/app/modules/core/NavLinkAdapter/NavLinkAdapter';
+import { Hidden } from '@mui/material';
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
   color: theme.palette.text.primary,
@@ -55,12 +56,14 @@ function FuseNavHorizontalItem(props) {
             {item.icon}
           </FuseSvgIcon>
         )}
-
+        <Hidden smDown>
+          
         <ListItemText
           className="fuse-list-item-text"
           primary={item.title}
           classes={{ primary: 'text-13 fuse-list-item-text-primary truncate' }}
         />
+</Hidden>
 
         {/* {item.badge && <FuseNavBadge className="ltr:ml-8 rtl:mr-8" badge={item.badge} />} */}
       </StyledListItem>
