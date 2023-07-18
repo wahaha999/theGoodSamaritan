@@ -1,6 +1,13 @@
 /* .ck.ck-editor__main>.ck-editor__editable{
     height: 300px;
 } */
-#editor-container .ck-content {
+ .ck .ck-content {
     height: 280px;
+    /* max-width: 80vw; */
+}
+
+@media screen and (max-width:600px) {
+    .ck-editor {
+        max-width: 80vw;
+    }
 }

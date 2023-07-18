@@ -14,6 +14,7 @@ import TGSNavItem from '../../TGSNavItem';
 import withRouter from 'src/app/modules/core/withRouter/withRouter';
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon';
 import { useDebounce } from 'src/app/modules/hooks';
+import { Hidden } from '@mui/material';
 // import withRouter from '@fuse/core/withRouter';
 // import FuseNavItem from '../../FuseNavItem';
 // import FuseSvgIcon from '../../../FuseSvgIcon';
@@ -113,12 +114,14 @@ function FuseNavHorizontalGroup(props) {
                     {item.icon}
                   </FuseSvgIcon>
                 )}
-
-                <ListItemText
-                  className="fuse-list-item-text"
-                  primary={item.title}
-                  classes={{ primary: 'text-13 truncate' }}
-                />
+                <Hidden smDown>
+                  
+                  <ListItemText
+                    className="fuse-list-item-text"
+                    primary={item.title}
+                    classes={{ primary: 'text-13 truncate' }}
+                  />
+                </Hidden>
 
                 {nestedLevel > 0 && (
                   <IconButton

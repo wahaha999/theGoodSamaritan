@@ -7,6 +7,7 @@ import {
   Box,
   styled,
   InputAdornment,
+  Hidden,
 } from '@mui/material'
 import {useState} from 'react'
 import {useAppSelector} from 'src/app/store/hook'
@@ -16,6 +17,7 @@ import {Controller, useFormContext} from 'react-hook-form'
 import {orange} from '@mui/material/colors'
 
 const Root = styled('div')(({theme}) => ({
+  marginTop: 12,
   '& .productImageFeaturedStar': {
     position: 'absolute',
     top: 0,
@@ -69,10 +71,10 @@ const AccountInfo = (props) => {
         defaultValue='30'
         render={({field: {value}}) => <Typography>Your Account Number: {value}</Typography>}
       />
-      <Grid container rowSpacing={4}>
+      <Grid container rowSpacing={4} mt={1}>
         <Grid item container alignItems='center' justifyContent='space-between'>
           <Typography>Upload an Image to represent your Non-Profit:</Typography>
-          <Grid item md={6} container justifyContent='center'>
+          <Grid item md={6} container justifyContent='center' mt={1}>
             <Controller
               name='avatar'
               control={control}
@@ -176,8 +178,10 @@ const AccountInfo = (props) => {
           </Grid> */}
         </Grid>
         <Grid item container alignItems='center' justifyContent='space-between'>
-          <Typography>Name of Non-Profit:</Typography>
-          <Grid item md={6}>
+          <Hidden smDown>
+            <Typography sx={{mb: 2}}>Name of Non-Profit:</Typography>
+          </Hidden>
+          <Grid item md={6} sm={12} xs={12}>
             <Controller
               control={control}
               defaultValue=''

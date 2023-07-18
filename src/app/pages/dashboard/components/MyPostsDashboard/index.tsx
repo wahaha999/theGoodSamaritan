@@ -33,7 +33,6 @@ import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {createPost, deletePost, getPosts} from '../../store/postSlice'
 import withReducer from 'src/app/store/withReducer'
 import reducer from '../../store'
-import 'react-responsive-carousel/lib/styles/carousel.min.css' // requires a loader
 import CircularProgress from '@mui/material/CircularProgress'
 import PostView from './PostView'
 import PostDialog from './PostDialog'

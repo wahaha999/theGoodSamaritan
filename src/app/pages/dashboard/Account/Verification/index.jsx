@@ -104,31 +104,35 @@ const Verification = (props) => {
         render={({field}) => (
           <>
             <Grid container alignItems='center'>
-              <TextField
-                className='mt-32'
-                required
-                {...field}
-                label='Enter your EIN'
-                placeholder='12-3456789'
-                id='EIN'
-                error={!!errors.EIN}
-                helperText={errors?.EIN?.message}
-                variant='outlined'
-                // fullWidth
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position='start'>
-                      <FuseSvgIcon size={20}>heroicons-solid:location-marker</FuseSvgIcon>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <LightTooltip
-                placement='right'
-                title='A valid non-profit EIN number, like any other EIN number, is a unique nine-digit number assigned by the Internal Revenue Service (IRS) for tax purposes. Non-profit organizations can apply for an EIN number if they are required to file certain tax returns, such as Form 990, Return of Organization Exempt from Income Tax'
-              >
-                <ErrorOutlineIcon sx={{ml: 4}} />
-              </LightTooltip>
+              <Grid item xs={10}>
+                <TextField
+                  className='mt-32'
+                  required
+                  {...field}
+                  label='Enter your EIN'
+                  placeholder='12-3456789'
+                  id='EIN'
+                  error={!!errors.EIN}
+                  helperText={errors?.EIN?.message}
+                  variant='outlined'
+                  // fullWidth
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position='start'>
+                        <FuseSvgIcon size={20}>heroicons-solid:location-marker</FuseSvgIcon>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <LightTooltip
+                  placement='right'
+                  title='A valid non-profit EIN number, like any other EIN number, is a unique nine-digit number assigned by the Internal Revenue Service (IRS) for tax purposes. Non-profit organizations can apply for an EIN number if they are required to file certain tax returns, such as Form 990, Return of Organization Exempt from Income Tax'
+                >
+                  <ErrorOutlineIcon sx={{ml: 4}} />
+                </LightTooltip>
+              </Grid>
             </Grid>
           </>
         )}

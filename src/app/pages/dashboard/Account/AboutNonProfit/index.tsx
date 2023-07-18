@@ -81,40 +81,43 @@ const AboutNonProfit = (props: Props) => {
         <Typography color='red'>{errors.organize.message?.toString()}</Typography>
       )}
       <Box sx={{display: 'flex', mb: 3}}>
-        
         <Typography>
-          Tell us about your Non-Profit. What is your Mission? This information will be displayed to others in your network to learn
-          more about you and your organization
+          Tell us about your Non-Profit. What is your Mission? This information will be displayed to
+          others in your network to learn more about you and your organization
         </Typography>
       </Box>
-      <Controller
-        name='mission'
-        control={control}
-        render={({field: {onChange, value}}) => (
-          // <ReactQuill
-          //   theme='snow'
-          //   style={{height: '250px', marginTop: 2}}
-          //   value={value}
-          //   onChange={(e) => {
-          //     onChange(e)
-          //   }}
-          // />
-          <div id='editor-container' style={{height: '300px'}}>
-            <CKEditor
-              config={{extraPlugins: [uploadPlugin]}}
-              editor={ClassicEditor}
-              data={value}
-              onReady={(editor) => {
-                // You can store the "editor" and use when it is needed.
-              }}
-              onChange={(event, editor) => {
-                const data = editor.getData()
-                onChange(data)
-              }}
-            />
-          </div>
-        )}
-      />
+      <Grid container>
+        <Grid item xs={12}>
+          <Controller
+            name='mission'
+            control={control}
+            render={({field: {onChange, value}}) => (
+              // <ReactQuill
+              //   theme='snow'
+              //   style={{height: '250px', marginTop: 2}}
+              //   value={value}
+              //   onChange={(e) => {
+              //     onChange(e)
+              //   }}
+              // />
+              <div id='editor-container' style={{height: '300px', width: '100%'}}>
+                <CKEditor
+                  config={{extraPlugins: [uploadPlugin]}}
+                  editor={ClassicEditor}
+                  data={value}
+                  onReady={(editor) => {
+                    // You can store the "editor" and use when it is needed.
+                  }}
+                  onChange={(event, editor) => {
+                    const data = editor.getData()
+                    onChange(data)
+                  }}
+                />
+              </div>
+            )}
+          />
+        </Grid>
+      </Grid>
     </>
   )
 }

@@ -96,10 +96,10 @@ const Post = (props: Props) => {
       {postType.includes('post') && (
         <>
           <Grid container alignItems='center' my={4}>
-            <Grid item md={4}>
+            <Grid item md={4} xs={12}>
               <Typography>Select the Purpose*</Typography>
             </Grid>
-            <Grid item md={8}>
+            <Grid item md={8} xs={12}>
               <Controller
                 name='purpose'
                 defaultValue=''
@@ -141,7 +141,7 @@ const Post = (props: Props) => {
             </Grid>
           </Grid>
           <Grid container spacing={4}>
-            <Grid item md={7}>
+            <Grid item md={7} xs={12}>
               <Controller
                 name='category'
                 defaultValue={[]}
@@ -189,7 +189,7 @@ const Post = (props: Props) => {
                 }}
               />
             </Grid>
-            <Grid item md={5}>
+            <Grid item md={5} xs={12} sx={{mb: 2}}>
               <Controller
                 name='keyword'
                 control={control}
