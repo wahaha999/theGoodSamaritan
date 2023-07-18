@@ -1,6 +1,5 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit'
 
-
 type PostDialogBase = {
   open: boolean
   postOption?: any
@@ -34,28 +33,38 @@ export const postDialogSlice = createSlice({
   initialState,
   reducers: {
     openPostDialog: (state, action: PayloadAction<IPostDialog>) => {
-      console.log('action==', action.payload)
       let updatedPostOption
       if (action.payload.postOption) {
-        if (action.payload.postType.includes('comment')||action.payload.postType.includes('reply')) {
+        if (
+          action.payload.postType.includes('comment') ||
+          action.payload.postType.includes('reply')
+        ) {
           updatedPostOption = {
-          ...action.payload.postOption,
-          
-          // category:action.payload.postOption.category ? JSON.parse(action.payload.postOption.category):[],
-          images:typeof action.payload.postOption.images === 'string' ?  JSON.parse(action.payload.postOption.images):action.payload.postOption.images,
-          // keyword:JSON.parse(action.payload.postOption.keyword),
-        };
+            ...action.payload.postOption,
+
+            // category:action.payload.postOption.category ? JSON.parse(action.payload.postOption.category):[],
+            images:
+              typeof action.payload.postOption.images === 'string'
+                ? JSON.parse(action.payload.postOption.images)
+                : action.payload.postOption.images,
+            // keyword:JSON.parse(action.payload.postOption.keyword),
+          }
         } else {
-           updatedPostOption = {
-          ...action.payload.postOption,
-          
-          category:action.payload.postOption.category ? JSON.parse(action.payload.postOption.category):[],
-          images:typeof action.payload.postOption.images === 'string' ?  JSON.parse(action.payload.postOption.images):action.payload.postOption.images,
-          keyword:JSON.parse(action.payload.postOption.keyword),
-        };
+          updatedPostOption = {
+            ...action.payload.postOption,
+
+            category: action.payload.postOption.category
+              ? JSON.parse(action.payload.postOption.category)
+              : [],
+            images:
+              typeof action.payload.postOption.images === 'string'
+                ? JSON.parse(action.payload.postOption.images)
+                : action.payload.postOption.images,
+            keyword: JSON.parse(action.payload.postOption.keyword),
+          }
         }
-        
-        action.payload.postOption = updatedPostOption;
+
+        action.payload.postOption = updatedPostOption
       }
       Object.assign(state, action.payload)
     },
