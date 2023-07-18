@@ -93,7 +93,6 @@ function Chat(props) {
   const selectedChatRoom = useAppSelector(({chat}) => chat.chatRoom.selectedChatRoom)
   const {messages, typeEvent} = useAppSelector(({chat}) => chat.messages)
   const {chatRoomInfo} = useAppSelector(({chat}) => chat.chatRoom)
-  console.log('typeEvent===', typeEvent)
   const {user} = useAppSelector(({user}) => user)
   //   const selectedContactId = useSelector(selectSelectedContactId)
   //   const chat = useSelector(selectChat)
