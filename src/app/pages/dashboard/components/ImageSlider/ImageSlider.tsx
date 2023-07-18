@@ -109,6 +109,7 @@ const ImageSlider = ({slides}: IImageSlider) => {
       showPlayButton={false}
       showBullets={true}
       showFullscreenButton={false}
+      autoPlay={true}
       renderItem={(item: any) => (
         <div
           style={{
