@@ -57,10 +57,31 @@ const chatRoomSlice = createSlice({
 
       if (foundChannel) {
         foundChannel.last_message = action.payload.message
+        if (state.selectedChatRoom !== action.payload.channel_id) {
+          foundChannel.unread_count += 1
+        }
       }
+    },
+    addUnreadMessage: (state, action) => {
+      let {channel_id} = action.payload.message
+      let {id} = action.payload.receiver
+      state.total_unread_count += 1
+      // console.log('state==', state, id, message)
+      const foundChannel = _.find(state.chatRooms, {id: channel_id})
+      console.log('f===', foundChannel)
+
+      // if (foundChannel) {
+      //   //   // foundChannel.last_message = action.payload.message
+      //   //   state.total_unread_count += 1
+      // } else {
+      //   getChatRooms(id)
+      // }
     },
     readMarkMessage: (state, action) => {
       const foundChannel = _.find(state.chatRooms, {id: action.payload.channel_id})
+      let read_count = foundChannel.unread_count
+      let total = state.total_unread_count - read_count
+      state.total_unread_count = total < 0 ? 0 : total
       if (foundChannel) {
         foundChannel.unread_count = 0
       }
@@ -84,8 +105,13 @@ const chatRoomSlice = createSlice({
         }
       })
       .addCase(getChatRooms.fulfilled, (state, action) => {
-        // Replace the existing chatRooms array with the received chat rooms
-        state.chatRooms = action.payload
+        let chatRooms = action.payload
+        state.chatRooms = chatRooms
+        let total_unread_count = 0
+        _.map(chatRooms, (e: any, index: number) => {
+          total_unread_count += e.unread_count
+        })
+        state.total_unread_count = total_unread_count
       })
       .addCase(selectChatRoom.fulfilled, (state, action: any) => {
         // Update the selectedChatRoom with the received data
@@ -95,7 +121,13 @@ const chatRoomSlice = createSlice({
       })
   },
 })
-export const {addOnlineUser, removeOnlineUser, addLastMessage, readMarkMessage, deselectChatRoom} =
-  chatRoomSlice.actions
+export const {
+  addOnlineUser,
+  removeOnlineUser,
+  addLastMessage,
+  readMarkMessage,
+  deselectChatRoom,
+  addUnreadMessage,
+} = chatRoomSlice.actions
 
 export default chatRoomSlice.reducer
