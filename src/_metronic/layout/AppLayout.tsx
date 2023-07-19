@@ -21,7 +21,7 @@ import MailIcon from '@mui/icons-material/Mail'
 import {Link, Outlet, useLocation} from 'react-router-dom'
 import SidebarMenuMain from './components/sidebar/sidebar-menu/SidebarMenuMain'
 import {toAbsoluteUrl, toServerUrl} from '../helpers'
-import {Avatar, Fab, Hidden, Menu, MenuItem, useMediaQuery} from '@mui/material'
+import {Avatar, Badge, Fab, Hidden, Menu, MenuItem, useMediaQuery} from '@mui/material'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {logoutUser} from 'src/app/store/userSlice'
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined'
@@ -172,7 +172,7 @@ const DrawerHeader = styled('div')(({theme}) => ({
 }))
 
 export default function AppLayout(props: Props) {
-  const {selectedChatRoom} = useAppSelector(({chat}) => chat.chatRoom)
+  const {selectedChatRoom, total_unread_count} = useAppSelector(({chat}) => chat.chatRoom)
   const theme = useTheme()
   const [open, setOpen] = React.useState(true)
   const dispatch = useAppDispatch()
@@ -182,6 +182,7 @@ export default function AppLayout(props: Props) {
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const [filterOpen, setFilterOpen] = React.useState(false)
   const [chatOpen, setChatOpen] = React.useState<boolean>(false)
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
   }
@@ -265,7 +266,9 @@ export default function AppLayout(props: Props) {
                 setChatOpen(true)
               }}
             >
-              <FuseSvgIcon size={24}>heroicons-outline:chat-alt-2</FuseSvgIcon>
+              <Badge badgeContent={total_unread_count} color='error'>
+                <FuseSvgIcon size={24}>heroicons-outline:chat-alt-2</FuseSvgIcon>
+              </Badge>
             </IconButton>
             <Avatar
               sx={{cursor: 'pointer'}}
