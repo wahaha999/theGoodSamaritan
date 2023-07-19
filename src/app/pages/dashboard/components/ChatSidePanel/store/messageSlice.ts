@@ -23,7 +23,11 @@ export const dmSelect = createAsyncThunk(
     const {channel_id} = data
     const {selectedChatRoom} = getState().chat.chatRoom
     window.Echo.leave('chat.channel.5')
-    window.Echo.leave(`chat.dm.${selectedChatRoom}`)
+    if (selectedChatRoom) {
+      window.Echo.leave(`chat.dm.${selectedChatRoom}`)
+    } else {
+      window.Echo.leave(`chat.dm.${channel_id}`)
+    }
     dispatch(selectChatRoom(data))
 
     const res = await axios.get(`${API_URL}/getMessages/${channel_id}`)
