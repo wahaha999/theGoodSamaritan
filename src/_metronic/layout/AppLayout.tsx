@@ -344,7 +344,7 @@ export default function AppLayout(props: Props) {
               // m: 'auto',
               p: '10px 30px 10px 10px',
               borderRadius: 8,
-              background: theme.palette.background.paper,
+              background: theme.palette.secondary.main,
               transition: 'right 0.3s ease',
               boxShadow: theme.shadows[1],
               zIndex: 1200,
