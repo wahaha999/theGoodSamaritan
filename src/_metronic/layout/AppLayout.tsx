@@ -2,6 +2,7 @@ import * as React from 'react'
 import {styled, useTheme} from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Drawer from '@mui/material/Drawer'
+import { Tooltip } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline'
 import MuiAppBar, {AppBarProps as MuiAppBarProps} from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
@@ -32,6 +33,7 @@ import GlobalStyles from '@mui/material/GlobalStyles'
 import {alpha} from '@mui/material/styles'
 import {deselectChatRoom} from 'src/app/pages/dashboard/components/ChatSidePanel/store/chatRoomSlice'
 import {removeMessages} from 'src/app/pages/dashboard/components/ChatSidePanel/store/messageSlice'
+import { blueGrey } from '@mui/material/colors';
 
 interface Props {
   /**
@@ -197,7 +199,9 @@ export default function AppLayout(props: Props) {
     setAnchorElUser(event.currentTarget)
   }
 
-  const handleCloseUserMenu = () => {
+  const externalLink = 'https://www.example.com'; // Replace this with your external link
+
+   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
   }
   const {pathname} = useLocation()
@@ -260,6 +264,30 @@ export default function AppLayout(props: Props) {
               <MenuInner type='header' />
               {/* </Hidden> */}
             </Box>
+            <Tooltip title="Help us improve this platform. We need your Feedback." arrow>
+            <a href={"https://docs.google.com/forms/d/e/1FAIpQLSc83BeNQnjY9HaTLZvrJJxbuEmzw4DmWBQr_gZKjIG7g32H4w/viewform?pli=1"} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', background: 'transparent' }}>
+            <IconButton
+              className='mx-0'
+              
+            >
+                <FuseSvgIcon size={24}
+                color={'primary'}
+                >heroicons-solid:star</FuseSvgIcon>
+            </IconButton>
+            </a>
+            </Tooltip>
+            <Tooltip title="Need Help?" arrow>
+            <a href={"https://docs.google.com/forms/d/e/1FAIpQLSc83BeNQnjY9HaTLZvrJJxbuEmzw4DmWBQr_gZKjIG7g32H4w/viewform?pli=1"} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', background: 'transparent'}}>
+             <IconButton
+              className='mx-0'
+            >
+                <FuseSvgIcon size={24}
+                color={'primary'}
+                >heroicons-solid:question-mark-circle</FuseSvgIcon>
+            </IconButton>
+            </a>
+            </Tooltip>
+            <Tooltip title="Click to open chat" arrow>
             <IconButton
               className='mx-8'
               onClick={() => {
@@ -270,11 +298,14 @@ export default function AppLayout(props: Props) {
                 <FuseSvgIcon size={24}>heroicons-outline:chat-alt-2</FuseSvgIcon>
               </Badge>
             </IconButton>
-            <Avatar
+            </Tooltip>
+            <Tooltip title="Click to open Profile" arrow>
+               <Avatar
               sx={{cursor: 'pointer'}}
               src={toServerUrl('/media/user/avatar/' + user?.avatar)}
               onClick={handleOpenUserMenu}
             />
+            </Tooltip>
             <Menu
               sx={{mt: '45px'}}
               id='menu-appbar'
