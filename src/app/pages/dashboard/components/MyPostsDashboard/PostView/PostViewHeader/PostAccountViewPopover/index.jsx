@@ -192,13 +192,15 @@ const PostAccountView = (props) => {
                           animate={{opacity: 1}}
                         >
                           <Tooltip title='Connect and follow conversations with this organization'>
-                            <Button
-                              disabled={status}
-                              variant='contained'
-                              startIcon={<ConnectWithoutContactOutlinedIcon />}
-                            >
-                              {status ? status : 'Connect'}
-                            </Button>
+                            <span>
+                              <Button
+                                disabled={status}
+                                variant='contained'
+                                startIcon={<ConnectWithoutContactOutlinedIcon />}
+                              >
+                                {status ? status : 'Connect'}
+                              </Button>
+                            </span>
                           </Tooltip>
                         </motion.div>
                         <motion.div
