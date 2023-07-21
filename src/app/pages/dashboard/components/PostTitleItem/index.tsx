@@ -22,6 +22,7 @@ import {updateConnection} from '../../store/connectionSlice'
 import PostAccountView from '../MyPostsDashboard/PostView/PostViewHeader/PostAccountViewPopover'
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
+import {createChatRoom} from '../ChatSidePanel/store/chatRoomSlice'
 
 type Props = {
   title: string
@@ -92,7 +93,15 @@ const PostTitleItem = (props: Props) => {
               <Tooltip title='Approve Connection'>
                 <IconButton
                   sx={{color: 'green'}}
-                  onClick={() => dispatch(updateConnection({status: 1, connection_id}))}
+                  onClick={() => {
+                    dispatch(updateConnection({status: 1, connection_id}))
+                    dispatch(
+                      createChatRoom({
+                        message: 'Hi, I just approved your connection',
+                        receiver: data.user.id,
+                      })
+                    )
+                  }}
                 >
                   <CheckCircleOutlineIcon />
                 </IconButton>
