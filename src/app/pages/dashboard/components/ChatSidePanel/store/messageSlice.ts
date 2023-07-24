@@ -8,7 +8,7 @@ export interface IMessage {
   receiver: number
 }
 
-const initialState: any = {messages: [], typeEvent: null, loading_messages: false}
+const initialState: any = {messages: [], typeEvent: null, searchText: ''}
 
 export const sendMessage = createAsyncThunk(
   'dashboard/chat/sendMessage',
@@ -29,11 +29,9 @@ export const dmSelect = createAsyncThunk(
       window.Echo.leave(`chat.dm.${channel_id}`)
     }
     dispatch(selectChatRoom(data))
-    dispatch(loadingMessage(true))
     const res = await axios.get(`${API_URL}/getMessages/${channel_id}`)
     dispatch(getMessages(res.data))
     dispatch(readMarkMessage({channel_id}))
-    dispatch(loadingMessage(false))
     window.Echo.join(`chat.dm.${channel_id}`)
       .here((users: any) => {})
       .joining((user: any) => {})
@@ -99,8 +97,8 @@ const messageSlice = createSlice({
     removeMessages: (state) => {
       state.messages = []
     },
-    loadingMessage: (state, action) => {
-      state.loading_messages = action.payload
+    handleSearch: (state, action) => {
+      state.searchText = action.payload
     },
   },
   // extraReducers(builder) {
@@ -116,7 +114,7 @@ export const {
   addTypingEvent,
   removeTypingEvent,
   removeMessages,
-  loadingMessage,
+  handleSearch,
 } = messageSlice.actions
 
 export default messageSlice.reducer
