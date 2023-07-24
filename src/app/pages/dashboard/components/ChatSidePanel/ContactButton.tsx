@@ -117,7 +117,7 @@ const ContactButton = (props: Props) => {
             <StyledStatus value={onlineUsers.includes(info.id) ? 'online' : 'offline'} />
             <Avatar
               src={toServerUrl('/media/user/avatar/' + info?.avatar)}
-              sx={{width: 60, height: 60}}
+              sx={{width: 50, height: 50}}
             />{' '}
           </Grid>
           <Grid item sm zeroMinWidth container>

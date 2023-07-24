@@ -1,10 +1,12 @@
-import React, {useEffect, useMemo, useRef} from 'react'
+import React, {useEffect, useMemo, useRef, useState} from 'react'
 import {styled} from '@mui/material/styles'
 import FuseScrollbars from 'src/app/modules/core/FuseScrollbars/FuseScrollbars'
 import {motion} from 'framer-motion'
 import ContactButton from './ContactButton'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {getChatRooms} from './store/chatRoomSlice'
+import _ from 'src/app/modules/@lodash/@lodash'
+import {FormControlLabel, Radio, RadioGroup} from '@mui/material'
 const Root = styled(FuseScrollbars)(({theme}) => ({
   background: theme.palette.background.paper,
 }))
@@ -12,12 +14,53 @@ const Root = styled(FuseScrollbars)(({theme}) => ({
 const ContactList = (props) => {
   const {id} = useAppSelector(({user}) => user.user)
   const {chatRooms} = useAppSelector(({chat}) => chat.chatRoom)
+  const {searchText} = useAppSelector(({chat}) => chat.messages)
+  const [sort, setSort] = useState('unread')
+
   // console.log('🚀 ~ file: ContactList.jsx:15 ~ ContactList ~ chatRoom:', chatRoom)
   const contactListScroll = useRef(null)
   const dispatch = useAppDispatch()
+
   useEffect(() => {
     dispatch(getChatRooms(id))
   }, [dispatch])
+
+  const contactList = useMemo(() => {
+    let list = _.filter(chatRooms, (e) => {
+      if (id !== e.receiver.id) {
+        return (
+          e.receiver.first_name.includes(searchText) ||
+          e.receiver.last_name.includes(searchText) ||
+          e.receiver.account.non_profit_name.includes(searchText)
+        )
+      } else {
+        return (
+          e.sender.first_name.includes(searchText) ||
+          e.sender.last_name.includes(searchText) ||
+          e.sender.account.non_profit_name.includes(searchText)
+        )
+      }
+    })
+
+    if (sort === 'unread') {
+      return list.sort((a, b) => a.unread_count - b.unread_count)
+    } else if (sort === 'last') {
+      return list.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+    }
+  }, [searchText, chatRooms, id, sort])
+  // console.log('contact===', contactList)
+  // const sortContactList = useMemo(() => {
+  //   if (sort === 'unread') {
+  //     return contactList.sort((a, b) => a.unread_count - b.unread_count)
+  //   } else if (sort === 'last') {
+  //     return contactList.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+  //   }
+  // }, [contactList, sort])
+
+  const handleRadio = (e) => {
+    console.log('e===', e.target.value)
+    setSort(e.target.value)
+  }
 
   return (
     <Root
@@ -25,6 +68,10 @@ const ContactList = (props) => {
       ref={contactListScroll}
       option={{suppressScrollX: true, wheelPropagation: false}}
     >
+      <RadioGroup value={sort} row onChange={handleRadio}>
+        <FormControlLabel value='unread' control={<Radio />} label='Unread' />
+        <FormControlLabel value='last' control={<Radio />} label='Last message' />
+      </RadioGroup>
       {useMemo(() => {
         const container = {
           show: {
@@ -45,7 +92,7 @@ const ContactList = (props) => {
               animate='show'
               className='flex flex-col shrink-0'
             >
-              {chatRooms?.map((item, index) => (
+              {contactList?.map((item, index) => (
                 <motion.div variants={variant} key={index}>
                   <ContactButton
                     data={item}
@@ -57,7 +104,7 @@ const ContactList = (props) => {
             </motion.div>
           </>
         )
-      }, [chatRooms])}
+      }, [contactList])}
     </Root>
   )
 }
