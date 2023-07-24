@@ -7,7 +7,7 @@ import {useDispatch} from 'react-redux'
 import InputBase from '@mui/material/InputBase'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 import FuseScrollbars from 'src/app/modules/core/FuseScrollbars/FuseScrollbars'
-import {Avatar, Typography} from '@mui/material'
+import {Avatar, Box, CircularProgress, Grid, Typography} from '@mui/material'
 import {sendMessage} from './store/messageSlice'
 import {useAppSelector} from 'src/app/store/hook'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
@@ -91,7 +91,7 @@ const StyledMessageRow = styled('div')(({theme}) => ({
 function Chat(props) {
   const dispatch = useDispatch()
   const selectedChatRoom = useAppSelector(({chat}) => chat.chatRoom.selectedChatRoom)
-  const {messages, typeEvent} = useAppSelector(({chat}) => chat.messages)
+  const {messages, typeEvent, loading_messages} = useAppSelector(({chat}) => chat.messages)
   const {chatRoomInfo} = useAppSelector(({chat}) => chat.chatRoom)
   const {user} = useAppSelector(({user}) => user)
   //   const selectedContactId = useSelector(selectSelectedContactId)
@@ -141,12 +141,30 @@ function Chat(props) {
       className={clsx('flex flex-col relative pb-64 shadow', props.className)}
       sx={{background: (theme) => theme.palette.background.default}}
     >
+      <Grid container justifyContent='center'>
+        {loading_messages && (
+          <Box
+            sx={{
+              position: 'fixed',
+              zIndex: 2000,
+              background: 'white',
+              borderRadius: '50%',
+              width: 40,
+              height: 40,
+              boxShadow: 1,
+              display: 'flex',
+            }}
+          >
+            <CircularProgress sx={{margin: 'auto'}} size={20} />
+          </Box>
+        )}
+      </Grid>
       <FuseScrollbars
         ref={chatScroll}
         className='flex flex-1 flex-col overflow-y-auto overscroll-contain'
         option={{suppressScrollX: true, wheelPropagation: false}}
       >
-        <div className='flex flex-col flex-1 pb-16'>
+        <div className='flex flex-col flex-1 pb-16 pt-4'>
           {useMemo(() => {
             function isFirstMessageOfGroup(item, i) {
               return i === 0 || (messages[i - 1] && messages[i - 1].user_id !== item.user_id)

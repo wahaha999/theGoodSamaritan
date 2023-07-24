@@ -5,7 +5,6 @@ import {
   Grid,
   Hidden,
   InputBase,
-  InputLabel,
   List,
   ListItem,
   ListItemButton,
@@ -13,30 +12,19 @@ import {
   ListItemText,
   MenuItem,
   Select,
-  TextField,
   alpha,
   styled,
 } from '@mui/material'
-import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs'
-import {DatePicker} from '@mui/x-date-pickers/DatePicker'
-import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider'
-import {useIntl} from 'react-intl'
-import {MenuInnerWithSub} from './MenuInnerWithSub'
-import {MenuItemBy} from './MenuItem'
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
-import {Link, useParams} from 'react-router-dom'
-import {Controller, FormProvider, useForm, useFormContext} from 'react-hook-form'
-import {useEffect} from 'react'
-import {useDispatch} from 'react-redux'
+import {useParams} from 'react-router-dom'
+import {Controller, FormProvider, useForm} from 'react-hook-form'
+import {useEffect, useState} from 'react'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {addFilterForHeader} from 'src/app/pages/dashboard/store/filterSlice'
-import {usePrevious} from 'src/app/modules/hooks'
+import {useDebounce, usePrevious} from 'src/app/modules/hooks'
 import _ from 'src/app/modules/@lodash/@lodash'
-import HoverPopover from 'src/app/pages/dashboard/components/MyPostsDashboard/PostView/PostViewHeader/PostAccountViewPopover/index'
 import Navigation from '../Navigation'
 import FuseScrollbars from 'src/app/modules/core/FuseScrollbars/FuseScrollbars'
-import SupportIcon from 'src/app/pages/dashboard/components/SupportFeedback/SupportIcon'
-import FeedbackIcon from 'src/app/pages/dashboard/components/SupportFeedback/FeedbackIcon'
 import Connections from 'src/app/pages/dashboard/components/Connections'
 
 const Search = styled('div')(({theme}) => ({
@@ -79,164 +67,10 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
   },
 }))
 
-const navigationConfig = [
-  {
-    id: 'dashboards',
-    title: 'Dashboards',
-    subtitle: 'Unique dashboard designs',
-    type: 'group',
-    icon: 'heroicons-outline:home',
-    translate: 'DASHBOARDS',
-    children: [
-      {
-        id: 'dashboards.project',
-        title: 'Project',
-        type: 'item',
-        icon: 'heroicons-outline:clipboard-check',
-        url: '/dashboards/project',
-      },
-      {
-        id: 'dashboards.analytics',
-        title: 'Analytics',
-        type: 'item',
-        icon: 'heroicons-outline:chart-pie',
-        url: '/dashboards/analytics',
-      },
-    ],
-  },
-  {
-    id: 'apps',
-    title: 'Applications',
-    subtitle: 'Custom made application designs',
-    type: 'group',
-    icon: 'heroicons-outline:home',
-    translate: 'APPLICATIONS',
-    children: [
-      {
-        id: 'apps.academy',
-        title: 'Academy',
-        type: 'item',
-        icon: 'heroicons-outline:academic-cap',
-        url: '/apps/academy',
-        translate: 'ACADEMY',
-      },
-      {
-        id: 'apps.calendar',
-        title: 'Calendar',
-        subtitle: '3 upcoming events',
-        type: 'item',
-        icon: 'heroicons-outline:calendar',
-        url: '/apps/calendar',
-        translate: 'CALENDAR',
-      },
-      {
-        id: 'apps.chat',
-        title: 'Chat',
-        type: 'item',
-        icon: 'heroicons-outline:chat-alt',
-        url: '/apps/chat',
-        translate: 'CHAT',
-      },
-      {
-        id: 'apps.contacts',
-        title: 'Contacts',
-        type: 'item',
-        icon: 'heroicons-outline:user-group',
-        url: '/apps/contacts',
-        translate: 'CONTACTS',
-      },
-      {
-        id: 'apps.ecommerce',
-        title: 'ECommerce',
-        type: 'collapse',
-        icon: 'heroicons-outline:shopping-cart',
-        translate: 'ECOMMERCE',
-        children: [
-          {
-            id: 'e-commerce-products',
-            title: 'Products',
-            type: 'item',
-            url: 'apps/e-commerce/products',
-            end: true,
-          },
-          {
-            id: 'e-commerce-product-detail',
-            title: 'Product Detail',
-            type: 'item',
-            url: 'apps/e-commerce/products/1/a-walk-amongst-friends-canvas-print',
-          },
-          {
-            id: 'e-commerce-new-product',
-            title: 'New Product',
-            type: 'item',
-            url: 'apps/e-commerce/products/new',
-          },
-          {
-            id: 'e-commerce-orders',
-            title: 'Orders',
-            type: 'item',
-            url: 'apps/e-commerce/orders',
-            end: true,
-          },
-          {
-            id: 'e-commerce-order-detail',
-            title: 'Order Detail',
-            type: 'item',
-            url: 'apps/e-commerce/orders/1',
-          },
-        ],
-      },
-      {
-        id: 'apps.file-manager',
-        title: 'File Manager',
-        type: 'item',
-        icon: 'heroicons-outline:cloud',
-        url: '/apps/file-manager',
-        end: true,
-        translate: 'FILE_MANAGER',
-      },
-      {
-        id: 'apps.help-center',
-        title: 'Help Center',
-        type: 'collapse',
-        icon: 'heroicons-outline:support',
-        url: '/apps/help-center',
-        children: [
-          {
-            id: 'apps.help-center.home',
-            title: 'Home',
-            type: 'item',
-            url: '/apps/help-center',
-            end: true,
-          },
-          {
-            id: 'apps.help-center.faqs',
-            title: 'FAQs',
-            type: 'item',
-            url: '/apps/help-center/faqs',
-          },
-          {
-            id: 'apps.help-center.guides',
-            title: 'Guides',
-            type: 'item',
-            url: '/apps/help-center/guides',
-          },
-          {
-            id: 'apps.help-center.support',
-            title: 'Support',
-            type: 'item',
-            url: '/apps/help-center/support',
-          },
-        ],
-      },
-    ],
-  },
-]
-
 export function MenuInner(props) {
   const {type} = props
-  const intl = useIntl()
   const params = useParams()
+  const [searchText, setSearchText] = useState('')
   const dispatch = useAppDispatch()
   const methods = useForm({
     mode: 'onChange',
@@ -271,6 +105,17 @@ export function MenuInner(props) {
     dispatch(addFilterForHeader(watch()))
   }, [data, prevData])
 
+  const watchSearch = (value) => {
+    // console.log('value==', value)
+    setValue('search', value)
+  }
+  const debounced = useDebounce(watchSearch, 500)
+
+  const handleChange = (e) => {
+    setSearchText(e.target.value)
+    debounced(e.target.value)
+  }
+
   if (type === 'header') {
     return (
       <>
@@ -290,18 +135,22 @@ export function MenuInner(props) {
                       name='search'
                       defaultValue=''
                       control={control}
-                      render={({field}) => (
-                        <Search>
-                          <SearchIconWrapper>
-                            <SearchIcon />
-                          </SearchIconWrapper>
-                          <StyledInputBase
-                            {...field}
-                            placeholder='Search…'
-                            inputProps={{'aria-label': 'search'}}
-                          />
-                        </Search>
-                      )}
+                      render={({}) => {
+                        // console.log('field==', field)
+                        return (
+                          <Search>
+                            <SearchIconWrapper>
+                              <SearchIcon />
+                            </SearchIconWrapper>
+                            <StyledInputBase
+                              value={searchText}
+                              onChange={handleChange}
+                              placeholder='Search…'
+                              inputProps={{'aria-label': 'search'}}
+                            />
+                          </Search>
+                        )
+                      }}
                     />
                   </Grid>
                   <Grid item>
@@ -423,13 +272,13 @@ export function MenuInner(props) {
               name='search'
               defaultValue=''
               control={control}
-              render={({field}) => (
+              render={() => (
                 <Search>
                   <SearchIconWrapper>
                     <SearchIcon />
                   </SearchIconWrapper>
                   <StyledInputBase
-                    {...field}
+                    onChange={handleChange}
                     placeholder='Search…'
                     inputProps={{'aria-label': 'search'}}
                   />

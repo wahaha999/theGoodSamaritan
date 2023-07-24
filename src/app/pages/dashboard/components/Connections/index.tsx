@@ -145,10 +145,7 @@ const Connections = (props: Props) => {
         </>
       )}
 
-      <motion.div variants={item} initial='hidden' animate='show' className='d-flex justify-around'>
-        <SupportIcon />
-        <FeedbackIcon />
-      </motion.div>
+      
     </Box>
   )
 }
