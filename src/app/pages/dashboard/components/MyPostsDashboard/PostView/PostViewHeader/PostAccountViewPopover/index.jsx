@@ -50,7 +50,7 @@ const PostAccountView = (props) => {
           )}
         </Reference>
         {ReactDOM.createPortal(
-          <Popper placement='bottom-start' eventsEnabled={open} disablePortal={true}>
+          <Popper placement='auto' eventsEnabled={open} disablePortal={true}>
             {({ref, style, placement}) => {
               return (
                 <AnimatePresence>
