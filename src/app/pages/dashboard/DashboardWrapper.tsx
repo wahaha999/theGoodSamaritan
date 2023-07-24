@@ -1,13 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import {Grid, useTheme, Hidden, Typography} from '@mui/material'
-import {FC, memo, useEffect} from 'react'
+import {Grid, Hidden, Typography} from '@mui/material'
+import {FC, memo} from 'react'
 import MyPostsDashboard from './components/MyPostsDashboard'
 import {motion} from 'framer-motion'
-import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
-import {getConnections} from './store/connectionSlice'
+import {useAppSelector} from 'src/app/store/hook'
 import Connections from './components/Connections'
-import SupportIcon from './components/SupportFeedback/SupportIcon'
-import FeedbackIcon from './components/SupportFeedback/FeedbackIcon'
 
 const container = {
   show: {
@@ -53,7 +50,7 @@ const DashboardWrapper: FC = () => {
           </Grid>
           <Hidden mdDown>
             <Grid item md={3}>
-              <Connections position='fixed' />
+              <Connections position='none' />
             </Grid>
           </Hidden>
         </Grid>
