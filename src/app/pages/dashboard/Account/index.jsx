@@ -152,7 +152,7 @@ const schema = yup.object().shape({
 
         if (
           nonProfitDocument === undefined ||
-          typeof nonProfitDocument === 'string' ||
+          (typeof nonProfitDocument === 'string' && JSON.parse(nonProfitDocument).length) === 0 ||
           nonProfitDocument.length === 0
         ) {
           // If Non Profit Document is not loaded, then EIN is required
