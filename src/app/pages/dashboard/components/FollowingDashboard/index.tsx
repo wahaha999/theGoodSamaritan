@@ -44,7 +44,7 @@ const FollowingDashboard = (props: Props) => {
           <DirectionsIcon />
         </IconButton> */}
       </Paper>
-      <Box sx={{height: 100, overflowY: 'auto'}}>{children}</Box>
+      <Box sx={{minHeight: 50, maxHeight: 300, overflowY: 'auto'}}>{children}</Box>
     </Paper>
   )
 }

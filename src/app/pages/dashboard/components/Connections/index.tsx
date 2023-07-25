@@ -144,8 +144,6 @@ const Connections = (props: Props) => {
           <Box sx={{my: 2}}></Box>
         </>
       )}
-
-      
     </Box>
   )
 }
