@@ -63,7 +63,7 @@ const PostAccountView = (props) => {
                       ref={ref}
                       style={{
                         ...style,
-                        zIndex: 1000,
+                        zIndex: 9999,
                         //width: 'auto',
                         minWidth: '500px',
                         // minWidth: 500,
