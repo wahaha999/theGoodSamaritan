@@ -107,7 +107,6 @@ const Verification = (props) => {
               <Grid item xs={10}>
                 <TextField
                   className='mt-32'
-                  required
                   {...field}
                   label='Enter your EIN'
                   placeholder='12-3456789'
@@ -152,6 +151,7 @@ const Verification = (props) => {
               <Grid container alignItems='center'>
                 <Button startIcon={<CloudUploadIcon />} variant='contained' component='label'>
                   <input
+                    id='doc'
                     hidden
                     accept='.doc, .docx, .pdf'
                     type='file'
@@ -166,6 +166,8 @@ const Verification = (props) => {
                       const newFilePreviews = await Promise.all(filePreviewsPromises)
                       setFilePreviews([...filePreviews, ...newFilePreviews])
                       onChange([...filePreviews, ...newFilePreviews])
+                      // After file loaded, recheck the EIN field validation
+                      props.trigger('EIN')
                     }}
                     multiple
                   />
