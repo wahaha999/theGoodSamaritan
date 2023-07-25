@@ -6,7 +6,7 @@ import ContactButton from './ContactButton'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {getChatRooms} from './store/chatRoomSlice'
 import _ from 'src/app/modules/@lodash/@lodash'
-import {FormControlLabel, Radio, RadioGroup} from '@mui/material'
+import {FormControlLabel, Radio, RadioGroup, Tooltip} from '@mui/material'
 const Root = styled(FuseScrollbars)(({theme}) => ({
   background: theme.palette.background.paper,
 }))
@@ -69,8 +69,12 @@ const ContactList = (props) => {
       option={{suppressScrollX: true, wheelPropagation: false}}
     >
       <RadioGroup value={sort} row onChange={handleRadio}>
-        <FormControlLabel value='unread' control={<Radio />} label='Unread' />
-        <FormControlLabel value='last' control={<Radio />} label='Last message' />
+        <Tooltip title='Click here to sort by un-read messages first...' placement='right'>
+          <FormControlLabel value='unread' control={<Radio />} label='Unread' />
+        </Tooltip>
+        <Tooltip title='Click here to sort by latest Messages.' placement='right'>
+          <FormControlLabel value='last' control={<Radio />} label='Last message' />
+        </Tooltip>
       </RadioGroup>
       {useMemo(() => {
         const container = {
