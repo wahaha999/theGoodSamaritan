@@ -144,8 +144,24 @@ const schema = yup.object().shape({
     .required('organize is required'),
   EIN: yup
     .string()
-    .required('EIN is required')
-    .validateEIN('Please enter the correct format to enter your EIN ##-#######'),
+    .test(
+      'EINRequired',
+      'EIN is required when Non Profit Document is not loaded.',
+      function (value) {
+        const nonProfitDocument = this.resolve(yup.ref('doc'))
+
+        if (
+          nonProfitDocument === undefined ||
+          typeof nonProfitDocument === 'string' ||
+          nonProfitDocument.length === 0
+        ) {
+          // If Non Profit Document is not loaded, then EIN is required
+          return !!value
+        }
+        // If Non Profit Document is loaded, then EIN is not required
+        return true
+      }
+    ),
   address: yup.string().required('You must enter a address'),
   city: yup.string().required('You must enter a city'),
   state: yup.string().required('You must enter a state'),
@@ -202,7 +218,7 @@ export default function Account() {
 
     resolver: yupResolver(schema),
   })
-  const {reset, watch, control, formState, getValues, handleSubmit} = methods
+  const {reset, watch, control, formState, trigger, getValues, handleSubmit} = methods
   const form = watch()
   const {errors, isValid} = formState
 
@@ -347,7 +363,7 @@ export default function Account() {
               <Grid container justifyContent='center' alignItems='center'>
                 <Box sx={{}}>{activeStep == 0 && <AccountInfo />}</Box>
                 <Box sx={{}}>{activeStep == 1 && <AboutNonProfit />}</Box>
-                <Box sx={{}}>{activeStep == 2 && <Verification />}</Box>
+                <Box sx={{}}>{activeStep == 2 && <Verification trigger={trigger} />}</Box>
                 <Box sx={{}}>{activeStep == 3 && <Location />}</Box>
               </Grid>
               <Grid container justifyContent='space-around' sx={{my: 4}}>
