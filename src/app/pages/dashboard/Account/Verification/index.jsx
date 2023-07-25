@@ -66,6 +66,8 @@ const Verification = (props) => {
     setFilePreviews([...filePreviews])
     onChange([...filePreviews])
     // reset('doc',[...filePreviews])
+    // After file removed, recheck the EIN field validation
+    props.trigger('EIN')
   }
 
   const handleDownLoad = useCallback((event, name) => {
