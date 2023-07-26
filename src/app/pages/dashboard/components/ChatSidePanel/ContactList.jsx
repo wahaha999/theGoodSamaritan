@@ -43,7 +43,7 @@ const ContactList = (props) => {
     })
 
     if (sort === 'unread') {
-      return list.sort((a, b) => a.unread_count - b.unread_count)
+      return list.sort((a, b) => b.unread_count - a.unread_count)
     } else if (sort === 'last') {
       return list.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
     }
