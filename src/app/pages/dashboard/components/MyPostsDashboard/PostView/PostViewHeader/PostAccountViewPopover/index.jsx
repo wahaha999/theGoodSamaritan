@@ -65,7 +65,7 @@ const PostAccountView = (props) => {
                         ...style,
                         zIndex: 9999,
                         //width: 'auto',
-                        minWidth: '500px',
+                        minWidth: '400px',
                         // minWidth: 500,
                         height: 'auto',
                         borderRadius: '8px',
@@ -123,8 +123,8 @@ const PostAccountView = (props) => {
                         dangerouslySetInnerHTML={{__html: account.mission}}
                         style={{
                           padding: '4px',
-                          maxWidth: '500px',
-                          maxHeight: '200px',
+                          maxWidth: '400px',
+                          maxHeight: '70px',
                           overflowY: 'auto',
                         }}
                       ></div>
