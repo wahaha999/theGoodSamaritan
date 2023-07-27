@@ -57,6 +57,7 @@ const chatRoomSlice = createSlice({
 
       if (foundChannel) {
         foundChannel.last_message = action.payload.message
+        foundChannel.updated_at = action.payload.updated_at
         if (state.selectedChatRoom !== action.payload.channel_id) {
           foundChannel.unread_count += 1
         }
@@ -70,12 +71,13 @@ const chatRoomSlice = createSlice({
       const foundChannel = _.find(state.chatRooms, {id: channel_id})
       console.log('f===', foundChannel)
 
-      // if (foundChannel) {
-      //   //   // foundChannel.last_message = action.payload.message
-      //   //   state.total_unread_count += 1
-      // } else {
-      //   getChatRooms(id)
-      // }
+      if (foundChannel) {
+        foundChannel.updated_at = action.payload.updated_at
+        //   //   // foundChannel.last_message = action.payload.message
+        //   //   state.total_unread_count += 1
+        // } else {
+        //   getChatRooms(id)
+      }
     },
     readMarkMessage: (state, action) => {
       const foundChannel = _.find(state.chatRooms, {id: action.payload.channel_id})
