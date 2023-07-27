@@ -44,7 +44,7 @@ const PostTitleItem = (props: Props) => {
   return (
     <Stack sx={{my: 1, cursor: 'pointer', '&: hover': {background: '#f7f7f7'}}}>
       <Grid container alignItems='center' justifyContent='space-between'>
-        <Grid item>
+        <Grid item className='flex-grow-1'>
           <Grid container alignItems='center'>
             {request ? (
               <Badge
@@ -84,7 +84,9 @@ const PostTitleItem = (props: Props) => {
               // />
             )}
 
-            <Typography sx={{pl: 4}}>{title}</Typography>
+            <Typography sx={{pl: 2, width: 'min-content'}} className='flex-grow-1'>
+              {title}
+            </Typography>
           </Grid>
         </Grid>
         <Grid item>
