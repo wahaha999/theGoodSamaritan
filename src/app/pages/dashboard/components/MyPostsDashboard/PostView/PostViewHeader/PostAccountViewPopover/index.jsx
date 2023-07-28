@@ -103,7 +103,7 @@ const PostAccountView = (props) => {
                             <Grid item direction='column'>
                               <Typography>{user?.account.non_profit_name}</Typography>
                               <Typography variant='subtitle1'>
-                                Phone: {account.phone_number}
+                                Phone: {account.phone_number !== 'null' ? account.phone_number : ''}
                               </Typography>
                               <Typography variant='subtitle1'>
                                 {' '}
