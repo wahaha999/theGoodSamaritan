@@ -8,7 +8,7 @@ export interface IMessage {
   receiver: number
 }
 
-const initialState: any = {messages: [], typeEvent: null, searchText: ''}
+const initialState: any = {messages: [], typeEvent: null, searchText: '', searchMode: 1}
 
 export const sendMessage = createAsyncThunk(
   'dashboard/chat/sendMessage',
@@ -100,6 +100,9 @@ const messageSlice = createSlice({
     handleSearch: (state, action) => {
       state.searchText = action.payload
     },
+    handleSearchMode: (state, action) => {
+      state.searchMode = action.payload
+    },
   },
   // extraReducers(builder) {
   //   builder.addCase(dmSelect.fulfilled, (state, action) => {
@@ -115,6 +118,7 @@ export const {
   removeTypingEvent,
   removeMessages,
   handleSearch,
+  handleSearchMode,
 } = messageSlice.actions
 
 export default messageSlice.reducer

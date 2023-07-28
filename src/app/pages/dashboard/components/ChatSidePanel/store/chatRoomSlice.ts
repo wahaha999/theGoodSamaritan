@@ -8,7 +8,13 @@ export interface IMessage {
   message: string
   receiver: number
 }
-const initialState: any = {chatRooms: [], selectedChatRoom: null, chatRoomInfo: {}, onlineUsers: []}
+const initialState: any = {
+  chatRooms: [],
+  selectedChatRoom: null,
+  filteredChannels: [],
+  chatRoomInfo: {},
+  onlineUsers: [],
+}
 
 export const createChatRoom = createAsyncThunk(
   'dashboard/chat/createChatRoom',
@@ -27,6 +33,20 @@ export const getChatRooms = createAsyncThunk(
   async (id: number, {getState, dispatch}) => {
     const res = await axios.get(`${API_URL}/getChatRooms/${id}`)
     // console.log('message===', res)
+
+    return res.data
+  }
+)
+
+export const getFilteredChannels = createAsyncThunk(
+  'dashboard/chat/getFilteredChannels',
+  async (searchText: string, {getState, dispatch}) => {
+    const {chat}: any = getState()
+    const channelIds = chat.chatRoom.chatRooms.map((channel: any) => channel.id)
+
+    const res = await axios.get(
+      `${API_URL}/getFilteredChannels?searchText=${searchText}&channelIds=${channelIds}`
+    )
 
     return res.data
   }
@@ -120,6 +140,9 @@ const chatRoomSlice = createSlice({
         state.selectedChatRoom = action.payload.channel_id
         state.chatRoomInfo = action.payload.info
         // state.selectedChatRoom.messages = action.payload.messages
+      })
+      .addCase(getFilteredChannels.fulfilled, (state, action) => {
+        state.filteredChannels = action.payload
       })
   },
 })

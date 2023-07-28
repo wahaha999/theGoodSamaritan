@@ -4,7 +4,7 @@ import FuseScrollbars from 'src/app/modules/core/FuseScrollbars/FuseScrollbars'
 import {motion} from 'framer-motion'
 import ContactButton from './ContactButton'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
-import {getChatRooms} from './store/chatRoomSlice'
+import {getChatRooms, getFilteredChannels} from './store/chatRoomSlice'
 import _ from 'src/app/modules/@lodash/@lodash'
 import {FormControlLabel, Radio, RadioGroup, Tooltip} from '@mui/material'
 const Root = styled(FuseScrollbars)(({theme}) => ({
@@ -13,8 +13,8 @@ const Root = styled(FuseScrollbars)(({theme}) => ({
 
 const ContactList = (props) => {
   const {id} = useAppSelector(({user}) => user.user)
-  const {chatRooms} = useAppSelector(({chat}) => chat.chatRoom)
-  const {searchText} = useAppSelector(({chat}) => chat.messages)
+  const {chatRooms, filteredChannels} = useAppSelector(({chat}) => chat.chatRoom)
+  const {searchText, searchMode} = useAppSelector(({chat}) => chat.messages)
   const [sort, setSort] = useState('unread')
 
   // console.log('🚀 ~ file: ContactList.jsx:15 ~ ContactList ~ chatRoom:', chatRoom)
@@ -25,20 +25,32 @@ const ContactList = (props) => {
     dispatch(getChatRooms(id))
   }, [dispatch])
 
+  useEffect(() => {
+    if (searchMode === 0) dispatch(getFilteredChannels(searchText))
+  }, [searchText, searchMode])
+
   const contactList = useMemo(() => {
     let list = _.filter(chatRooms, (e) => {
-      if (id !== e.receiver.id) {
-        return (
-          e.receiver.first_name.includes(searchText) ||
-          e.receiver.last_name.includes(searchText) ||
-          e.receiver.account.non_profit_name.includes(searchText)
-        )
+      if (_.trim(searchText) === '') {
+        return true
       } else {
-        return (
-          e.sender.first_name.includes(searchText) ||
-          e.sender.last_name.includes(searchText) ||
-          e.sender.account.non_profit_name.includes(searchText)
-        )
+        if (searchMode === 1) {
+          if (id !== e.receiver.id) {
+            return (
+              e.receiver.first_name.toLowerCase().includes(searchText.toLowerCase()) ||
+              e.receiver.last_name.toLowerCase().includes(searchText.toLowerCase()) ||
+              e.receiver.account.non_profit_name.toLowerCase().includes(searchText.toLowerCase())
+            )
+          } else {
+            return (
+              e.sender.first_name.toLowerCase().includes(searchText.toLowerCase()) ||
+              e.sender.last_name.toLowerCase().includes(searchText.toLowerCase()) ||
+              e.sender.account.non_profit_name.toLowerCase().includes(searchText.toLowerCase())
+            )
+          }
+        } else {
+          return filteredChannels.includes(e.id)
+        }
       }
     })
 
@@ -47,7 +59,7 @@ const ContactList = (props) => {
     } else if (sort === 'last') {
       return list.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
     }
-  }, [searchText, chatRooms, id, sort])
+  }, [searchText, chatRooms, filteredChannels, id, sort])
   // console.log('contact===', contactList)
   // const sortContactList = useMemo(() => {
   //   if (sort === 'unread') {

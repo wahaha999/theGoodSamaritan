@@ -21,7 +21,7 @@ import Chat from './Chat'
 import {echoInit} from 'src/app/helpers/echoHelper'
 import withReducer from 'src/app/store/withReducer'
 import reducer from './store'
-import {handleSearch} from './store/messageSlice'
+import {handleSearch, handleSearchMode} from './store/messageSlice'
 
 type Props = {
   opened: boolean
@@ -91,10 +91,10 @@ const ChatSidePanel = (props: Props) => {
   const user = useAppSelector(({user}) => user.user)
   const {access_token} = useAppSelector(({user}) => user)
   const {selectedChatRoom, chatRoomInfo} = useAppSelector(({chat}) => chat.chatRoom)
-  const {searchText} = useAppSelector(({chat}) => chat.messages)
+  const {searchText, searchMode} = useAppSelector(({chat}) => chat.messages)
   const {onClose} = props
   // const [searchText, setSearchText] = useState('')
-  const [type, setType] = useState(true)
+  // const [type, setType] = useState(true)
   const ref = useRef(null)
   useEffect(() => {
     console.log('hello')
@@ -105,8 +105,9 @@ const ChatSidePanel = (props: Props) => {
     dispatch(handleSearch(event.target.value))
   }
   const handleSwitch = (e: any) => {
-    setType(e.target.checked)
+    // setType(e.target.checked)
     // console.log('e==', e.target.checked)
+    dispatch(handleSearchMode(Number(e.target.checked)))
   }
 
   return (
@@ -148,7 +149,7 @@ const ChatSidePanel = (props: Props) => {
                   </FuseSvgIcon>
 
                   <Input
-                    placeholder={type ? 'Search user ' : 'Search message'}
+                    placeholder={searchMode === 1 ? 'Search user ' : 'Search message'}
                     className='flex flex-1 px-8'
                     disableUnderline
                     fullWidth
@@ -159,10 +160,10 @@ const ChatSidePanel = (props: Props) => {
                     }}
                     onChange={handleSearchText}
                   />
-                  <IOSSwitch checked={type} onChange={handleSwitch} />
+                  <IOSSwitch checked={searchMode === 1} onChange={handleSwitch} />
                 </Paper>
               ),
-              [searchText, type]
+              [searchText, searchMode]
             )}
             <div className='flex px-4'>
               <IconButton color='inherit' size='large' onClick={onClose}>
