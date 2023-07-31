@@ -411,7 +411,7 @@ function Chat(props) {
             {/* )} */}
           </>
         )
-      }, [dispatch, messageText, selectedChatRoom, typeEvent])}
+      }, [dispatch, messageText, selectedChatRoom, typeEvent, filePreviews])}
     </Paper>
   )
 }
