@@ -2,7 +2,8 @@ import {styled} from '@mui/material/styles'
 import IconButton from '@mui/material/IconButton'
 import Paper from '@mui/material/Paper'
 import clsx from 'clsx'
-import {useEffect, useMemo, useRef, useState} from 'react'
+import axios from 'axios'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {useDispatch} from 'react-redux'
 import InputBase from '@mui/material/InputBase'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
@@ -12,7 +13,10 @@ import {sendMessage} from './store/messageSlice'
 import {useAppSelector} from 'src/app/store/hook'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 import './chat.css'
+import {API_URL} from 'src/app/modules/auth/core/_requests'
 import {toServerUrl} from 'src/_metronic/helpers'
+import {showMessage} from 'src/app/store/fuse/messageSlice'
+import {formatBytes} from 'src/app/helpers/fileHelper'
 
 const StyledMessageRow = styled('div')(({theme}) => ({
   '&.contact': {
@@ -101,6 +105,7 @@ function Chat(props) {
   const chatScroll = useRef(null)
   const [messageText, setMessageText] = useState('')
   const inputRef = useRef(null)
+  const [filePreviews, setFilePreviews] = useState([])
 
   useEffect(() => {
     if (inputRef.current) {
@@ -135,6 +140,48 @@ function Chat(props) {
       // console.log('win1==',window.Echo)
     }, 300)
   }
+
+  const readFileAsync = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => {
+        if (typeof reader?.result === 'string') {
+          resolve(`data:${file.type};base64,${btoa(reader?.result)}`)
+        } else {
+          return
+        }
+      }
+      reader.onerror = reject
+      reader.readAsBinaryString(file)
+    })
+  }
+
+  const handleRemove = (index) => {
+    let files = filePreviews.splice(index, 1)
+    setFilePreviews([...filePreviews])
+  }
+
+  const handleDownLoad = useCallback((event, name) => {
+    event.stopPropagation()
+    axios
+      .post(
+        `${API_URL}/account/download-doc`,
+        {name},
+        {
+          responseType: 'blob',
+        }
+      )
+      .then((res) => {
+        let url = window.URL.createObjectURL(res.data)
+        let a = document.createElement('a')
+        a.href = url
+        a.download = name
+        a.click()
+      })
+      .catch((error) => {
+        dispatch(showMessage({message: 'This file is not founded', variant: 'error'}))
+      })
+  }, [])
 
   return (
     <Paper
@@ -263,25 +310,102 @@ function Chat(props) {
               ) : null}
 
               {/* {typingArrayReady()} */}
-              <Paper className='flex items-center relative shadow' sx={{borderRadius: '2.4rem'}}>
-                <InputBase
-                  autoFocus
-                  ref={inputRef}
-                  id='message-input'
-                  className='flex flex-1 grow shrink-0 mx-16 ltr:mr-48 rtl:ml-48 my-6'
-                  placeholder='Type your message'
-                  onChange={(e) => onInputChange(e, selectedChatRoom)}
-                  value={messageText}
-                />
-                <IconButton
-                  className='absolute ltr:right-0 rtl:left-0 top-0'
-                  type='submit'
-                  size='large'
+              <Paper className='relative shadow' sx={{borderRadius: '2.4rem'}}>
+                <Grid
+                  container
+                  direction={'row'}
+                  gap={1}
+                  sx={{paddingTop: filePreviews.length > 0 ? '12px' : '0px'}}
                 >
-                  <FuseSvgIcon className='rotate-90' color='action'>
-                    heroicons-outline:paper-airplane
-                  </FuseSvgIcon>
-                </IconButton>
+                  {filePreviews?.map((item, index) => (
+                    <div
+                      onClick={() => handleRemove(index)}
+                      role='button'
+                      tabIndex={0}
+                      className='w-120 h-120 rounded-8 mx-2 mb-2 pt-1 px-2 pb-3 overflow-hidden cursor-pointer outline-none shadow hover:shadow-lg'
+                      key={index}
+                    >
+                      <div className='flex justify-content-end'>
+                        <FuseSvgIcon>heroicons-outline:x-circle</FuseSvgIcon>
+                      </div>
+                      <FuseSvgIcon size={30}>heroicons-outline:document-text</FuseSvgIcon>
+                      <Typography
+                        variant='h6'
+                        color='text.secondary'
+                        sx={{
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                          paddingTop: '15px',
+                          paddingBottom: '20px',
+                        }}
+                      >
+                        {typeof item === 'string' ? item : item.file.name}
+                      </Typography>
+                      <Typography
+                        variant='caption'
+                        color='text.secondary'
+                        sx={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}
+                      >
+                        {typeof item === 'string' ? item : formatBytes(item.file.size)}
+                      </Typography>
+                    </div>
+                  ))}
+                </Grid>
+                <Grid container direction='row' alignItems={'center'}>
+                  <InputBase
+                    autoFocus
+                    ref={inputRef}
+                    id='message-input'
+                    className='flex flex-1 grow shrink-0 mx-16 ltr:mr-48 rtl:ml-48 my-6'
+                    placeholder='Type your message'
+                    onChange={(e) => onInputChange(e, selectedChatRoom)}
+                    value={messageText}
+                  />
+                  <IconButton
+                    className='absolute ltr:right-0 rtl:left-0 top-0'
+                    type='submit'
+                    size='large'
+                  >
+                    <FuseSvgIcon className='rotate-90' color='action'>
+                      heroicons-outline:paper-airplane
+                    </FuseSvgIcon>
+                  </IconButton>
+                  <IconButton
+                    className='absolute ltr:right-0 rtl:left-0 top-0'
+                    size='large'
+                    component='label'
+                  >
+                    <input
+                      id='chat-attachment'
+                      hidden
+                      accept='.doc, .docx, .pdf, .exe'
+                      type='file'
+                      onChange={async (e) => {
+                        const files = Array.from(e.target.files)
+                        if (files.length > 5) {
+                          dispatch(
+                            showMessage({
+                              message:
+                                'Only allow sizes up to 10 MB and only allow up to 5 attachments per chat.',
+                              variant: 'error',
+                            })
+                          )
+                        } else {
+                          const filePreviewsPromises = files.map(async (file) => {
+                            const fileDataUrl = await readFileAsync(file)
+                            return {file, fileDataUrl}
+                          })
+
+                          const newFilePreviews = await Promise.all(filePreviewsPromises)
+                          setFilePreviews([...filePreviews, ...newFilePreviews])
+                        }
+                      }}
+                      multiple
+                    />
+                    <FuseSvgIcon color='action'>heroicons-outline:paper-clip</FuseSvgIcon>
+                  </IconButton>
+                </Grid>
               </Paper>
             </form>
             {/* )} */}
