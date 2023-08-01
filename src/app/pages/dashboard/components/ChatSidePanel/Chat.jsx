@@ -17,6 +17,8 @@ import {API_URL} from 'src/app/modules/auth/core/_requests'
 import {toServerUrl} from 'src/_metronic/helpers'
 import {showMessage} from 'src/app/store/fuse/messageSlice'
 import {formatBytes} from 'src/app/helpers/fileHelper'
+import {addMessage} from './store/messageSlice'
+import Attach from './Attach'
 
 const StyledMessageRow = styled('div')(({theme}) => ({
   '&.contact': {
@@ -58,6 +60,9 @@ const StyledMessageRow = styled('div')(({theme}) => ({
         right: 0,
         marginRight: 12,
       },
+    },
+    '& .attachment': {
+      marginLeft: 'auto',
     },
     '&.first-of-group': {
       '& .bubble': {
@@ -183,6 +188,11 @@ function Chat(props) {
       })
   }, [])
 
+  const handleLoadComplete = (item, data) => {
+    if (item.type !== undefined) {
+    }
+  }
+
   return (
     <Paper
       className={clsx('flex flex-col relative pb-64 shadow', props.className)}
@@ -237,15 +247,23 @@ function Chat(props) {
                         i + 1 === messages.length && 'pb-72'
                       )}
                     >
-                      <div className='bubble flex relative items-center justify-center p-4 max-w-full'>
-                        <div className='leading-tight whitespace-pre-wrap'>{item.message}</div>
-                        <Typography
-                          variant='caption'
-                          className='time absolute hidden w-full mt-8 -mb-24 ltr:left-0 rtl:right-0 -bottom-12 whitespace-nowrap'
-                          color='text.secondary'
-                        >
-                          {formatDistanceToNow(new Date(item.created_at), {addSuffix: true})}
-                        </Typography>
+                      {item.message !== '' && (
+                        <div className='bubble flex relative items-center justify-center p-4 max-w-full'>
+                          <div className='leading-tight whitespace-pre-wrap'>{item.message}</div>
+                          <Typography
+                            variant='caption'
+                            className='time absolute hidden w-full mt-8 -mb-24 ltr:left-0 rtl:right-0 -bottom-12 whitespace-nowrap'
+                            color='text.secondary'
+                          >
+                            {formatDistanceToNow(new Date(item.created_at), {addSuffix: true})}
+                          </Typography>
+                        </div>
+                      )}
+                      <div className='attachment'>
+                        <Attach
+                          files={item.attachments !== undefined ? item.attachments : []}
+                          onLoadComplete={(data) => handleLoadComplete(item, data)}
+                        ></Attach>
                       </div>
                     </StyledMessageRow>
                   )
@@ -271,19 +289,37 @@ function Chat(props) {
       {useMemo(() => {
         const onMessageSubmit = (ev) => {
           ev.preventDefault()
-          if (messageText === '') {
+          if (messageText === '' && filePreviews.length === 0) {
             return
           }
-          dispatch(
-            sendMessage({
-              message: messageText,
-              channel_id: selectedChatRoom,
-              channel_type: 'dm',
-              receiver_id: chatRoomInfo.id,
+          if (filePreviews.length === 0) {
+            dispatch(
+              sendMessage({
+                message: messageText,
+                channel_id: selectedChatRoom,
+                channel_type: 'dm',
+                receiver_id: chatRoomInfo.id,
+              })
+            ).then(() => {
+              setMessageText('')
+              setFilePreviews([])
             })
-          ).then(() => {
+          } else {
+            dispatch(
+              addMessage({
+                id: new Date().getTime(),
+                type: 'temp',
+                message: messageText,
+                channel_id: selectedChatRoom,
+                user_id: user.id,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+                attachments: filePreviews,
+              })
+            )
             setMessageText('')
-          })
+            setFilePreviews([])
+          }
         }
 
         return (
