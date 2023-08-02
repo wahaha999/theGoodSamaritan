@@ -27,6 +27,8 @@ const StyledMessageRow = styled('div')(({theme}) => ({
       borderBottomLeftRadius: 5,
       borderTopRightRadius: 20,
       borderBottomRightRadius: 20,
+    },
+    '& .attachment': {
       '& .time': {
         marginLeft: 12,
       },
@@ -53,14 +55,14 @@ const StyledMessageRow = styled('div')(({theme}) => ({
       borderBottomLeftRadius: 20,
       borderTopRightRadius: 5,
       borderBottomRightRadius: 5,
+    },
+    '& .attachment': {
+      marginLeft: 'auto',
       '& .time': {
         justifyContent: 'flex-end',
         right: 0,
         marginRight: 12,
       },
-    },
-    '& .attachment': {
-      marginLeft: 'auto',
     },
     '&.first-of-group': {
       '& .bubble': {
@@ -88,6 +90,8 @@ const StyledMessageRow = styled('div')(({theme}) => ({
     '& .bubble': {
       borderBottomLeftRadius: 20,
       paddingBottom: 13,
+    },
+    '& .attachment': {
       '& .time': {
         display: 'flex',
       },
@@ -236,20 +240,20 @@ function Chat(props) {
                       {item.message !== '' && item.message !== null && (
                         <div className='bubble flex relative items-center justify-center p-4 max-w-full'>
                           <div className='leading-tight whitespace-pre-wrap'>{item.message}</div>
-                          <Typography
-                            variant='caption'
-                            className='time absolute hidden w-full mt-8 -mb-24 ltr:left-0 rtl:right-0 -bottom-12 whitespace-nowrap'
-                            color='text.secondary'
-                          >
-                            {formatDistanceToNow(new Date(item.created_at), {addSuffix: true})}
-                          </Typography>
                         </div>
                       )}
-                      <div className='attachment'>
+                      <div className='attachment flex relative flex-column max-w-full'>
                         <Attach
                           files={item.attachments !== undefined ? item.attachments : []}
                           onLoadComplete={(data) => handleLoadComplete(item, data)}
                         ></Attach>
+                        <Typography
+                          variant='caption'
+                          className='time absolute hidden w-full mt-8 -mb-24 ltr:left-0 rtl:right-0 -bottom-12 whitespace-nowrap'
+                          color='text.secondary'
+                        >
+                          {formatDistanceToNow(new Date(item.created_at), {addSuffix: true})}
+                        </Typography>
                       </div>
                     </StyledMessageRow>
                   )
