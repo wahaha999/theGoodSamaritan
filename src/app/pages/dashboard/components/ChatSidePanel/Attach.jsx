@@ -2,13 +2,13 @@ import React, {useEffect, useState} from 'react'
 import FileUploader from './FileUploader'
 
 function Attach({files, onLoadComplete}) {
-  const [uploadedData, setUploadedData] = useState([])
+  const [uploadedData, setUploadedData] = useState(files)
   const [completedUploads, setCompletedUploads] = useState(0)
   const handleUploadComplete = (data, fileIndex) => {
     setUploadedData((prevFiles) =>
       prevFiles.map((file, index) => {
         if (index !== fileIndex) return file
-        return {...file, data}
+        return data
       })
     )
 

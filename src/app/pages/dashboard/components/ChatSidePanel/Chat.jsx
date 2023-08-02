@@ -2,8 +2,7 @@ import {styled} from '@mui/material/styles'
 import IconButton from '@mui/material/IconButton'
 import Paper from '@mui/material/Paper'
 import clsx from 'clsx'
-import axios from 'axios'
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {useEffect, useMemo, useRef, useState} from 'react'
 import {useDispatch} from 'react-redux'
 import InputBase from '@mui/material/InputBase'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
@@ -13,11 +12,10 @@ import {sendMessage} from './store/messageSlice'
 import {useAppSelector} from 'src/app/store/hook'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 import './chat.css'
-import {API_URL} from 'src/app/modules/auth/core/_requests'
 import {toServerUrl} from 'src/_metronic/helpers'
 import {showMessage} from 'src/app/store/fuse/messageSlice'
 import {formatBytes} from 'src/app/helpers/fileHelper'
-import {addMessage} from './store/messageSlice'
+import {addMessage, removeMessage} from './store/messageSlice'
 import Attach from './Attach'
 
 const StyledMessageRow = styled('div')(({theme}) => ({
@@ -166,30 +164,18 @@ function Chat(props) {
     setFilePreviews([...filePreviews])
   }
 
-  const handleDownLoad = useCallback((event, name) => {
-    event.stopPropagation()
-    axios
-      .post(
-        `${API_URL}/account/download-doc`,
-        {name},
-        {
-          responseType: 'blob',
-        }
-      )
-      .then((res) => {
-        let url = window.URL.createObjectURL(res.data)
-        let a = document.createElement('a')
-        a.href = url
-        a.download = name
-        a.click()
-      })
-      .catch((error) => {
-        dispatch(showMessage({message: 'This file is not founded', variant: 'error'}))
-      })
-  }, [])
-
   const handleLoadComplete = (item, data) => {
     if (item.type !== undefined) {
+      dispatch(
+        sendMessage({
+          message: messageText,
+          channel_id: selectedChatRoom,
+          channel_type: 'dm',
+          receiver_id: chatRoomInfo.id,
+          attachments: data.filter((item) => item.success).map((item) => item.attachment.id),
+        })
+      )
+      dispatch(removeMessage(item.id))
     }
   }
 
@@ -247,7 +233,7 @@ function Chat(props) {
                         i + 1 === messages.length && 'pb-72'
                       )}
                     >
-                      {item.message !== '' && (
+                      {item.message !== '' && item.message !== null && (
                         <div className='bubble flex relative items-center justify-center p-4 max-w-full'>
                           <div className='leading-tight whitespace-pre-wrap'>{item.message}</div>
                           <Typography
@@ -300,10 +286,7 @@ function Chat(props) {
                 channel_type: 'dm',
                 receiver_id: chatRoomInfo.id,
               })
-            ).then(() => {
-              setMessageText('')
-              setFilePreviews([])
-            })
+            )
           } else {
             dispatch(
               addMessage({
@@ -317,9 +300,9 @@ function Chat(props) {
                 attachments: filePreviews,
               })
             )
-            setMessageText('')
-            setFilePreviews([])
           }
+          setMessageText('')
+          setFilePreviews([])
         }
 
         return (

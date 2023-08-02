@@ -94,6 +94,10 @@ const messageSlice = createSlice({
     removeTypingEvent: (state) => {
       state.typeEvent = null
     },
+    removeMessage: (state, action) => {
+      const index = state.messages.findIndex((msg: any) => msg.id === action.payload)
+      state.messages.splice(index, 1)
+    },
     removeMessages: (state) => {
       state.messages = []
     },
@@ -117,6 +121,7 @@ export const {
   addTypingEvent,
   removeTypingEvent,
   removeMessages,
+  removeMessage,
   handleSearch,
   handleSearchMode,
 } = messageSlice.actions
