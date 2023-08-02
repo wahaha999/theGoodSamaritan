@@ -13,6 +13,10 @@ import {useAppSelector} from 'src/app/store/hook'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 import './chat.css'
 import {toServerUrl} from 'src/_metronic/helpers'
+import {showMessage} from 'src/app/store/fuse/messageSlice'
+import {formatBytes} from 'src/app/helpers/fileHelper'
+import {addMessage, removeMessage} from './store/messageSlice'
+import Attach from './Attach'
 
 const StyledMessageRow = styled('div')(({theme}) => ({
   '&.contact': {
@@ -54,6 +58,9 @@ const StyledMessageRow = styled('div')(({theme}) => ({
         right: 0,
         marginRight: 12,
       },
+    },
+    '& .attachment': {
+      marginLeft: 'auto',
     },
     '&.first-of-group': {
       '& .bubble': {
@@ -101,6 +108,7 @@ function Chat(props) {
   const chatScroll = useRef(null)
   const [messageText, setMessageText] = useState('')
   const inputRef = useRef(null)
+  const [filePreviews, setFilePreviews] = useState([])
 
   useEffect(() => {
     if (inputRef.current) {
@@ -134,6 +142,41 @@ function Chat(props) {
 
       // console.log('win1==',window.Echo)
     }, 300)
+  }
+
+  const readFileAsync = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => {
+        if (typeof reader?.result === 'string') {
+          resolve(`data:${file.type};base64,${btoa(reader?.result)}`)
+        } else {
+          return
+        }
+      }
+      reader.onerror = reject
+      reader.readAsBinaryString(file)
+    })
+  }
+
+  const handleRemove = (index) => {
+    let files = filePreviews.splice(index, 1)
+    setFilePreviews([...filePreviews])
+  }
+
+  const handleLoadComplete = (item, data) => {
+    if (item.type !== undefined) {
+      dispatch(
+        sendMessage({
+          message: messageText,
+          channel_id: selectedChatRoom,
+          channel_type: 'dm',
+          receiver_id: chatRoomInfo.id,
+          attachments: data.filter((item) => item.success).map((item) => item.attachment.id),
+        })
+      )
+      dispatch(removeMessage(item.id))
+    }
   }
 
   return (
@@ -190,15 +233,23 @@ function Chat(props) {
                         i + 1 === messages.length && 'pb-72'
                       )}
                     >
-                      <div className='bubble flex relative items-center justify-center p-4 max-w-full'>
-                        <div className='leading-tight whitespace-pre-wrap'>{item.message}</div>
-                        <Typography
-                          variant='caption'
-                          className='time absolute hidden w-full mt-8 -mb-24 ltr:left-0 rtl:right-0 -bottom-12 whitespace-nowrap'
-                          color='text.secondary'
-                        >
-                          {formatDistanceToNow(new Date(item.created_at), {addSuffix: true})}
-                        </Typography>
+                      {item.message !== '' && item.message !== null && (
+                        <div className='bubble flex relative items-center justify-center p-4 max-w-full'>
+                          <div className='leading-tight whitespace-pre-wrap'>{item.message}</div>
+                          <Typography
+                            variant='caption'
+                            className='time absolute hidden w-full mt-8 -mb-24 ltr:left-0 rtl:right-0 -bottom-12 whitespace-nowrap'
+                            color='text.secondary'
+                          >
+                            {formatDistanceToNow(new Date(item.created_at), {addSuffix: true})}
+                          </Typography>
+                        </div>
+                      )}
+                      <div className='attachment'>
+                        <Attach
+                          files={item.attachments !== undefined ? item.attachments : []}
+                          onLoadComplete={(data) => handleLoadComplete(item, data)}
+                        ></Attach>
                       </div>
                     </StyledMessageRow>
                   )
@@ -224,19 +275,34 @@ function Chat(props) {
       {useMemo(() => {
         const onMessageSubmit = (ev) => {
           ev.preventDefault()
-          if (messageText === '') {
+          if (messageText === '' && filePreviews.length === 0) {
             return
           }
-          dispatch(
-            sendMessage({
-              message: messageText,
-              channel_id: selectedChatRoom,
-              channel_type: 'dm',
-              receiver_id: chatRoomInfo.id,
-            })
-          ).then(() => {
-            setMessageText('')
-          })
+          if (filePreviews.length === 0) {
+            dispatch(
+              sendMessage({
+                message: messageText,
+                channel_id: selectedChatRoom,
+                channel_type: 'dm',
+                receiver_id: chatRoomInfo.id,
+              })
+            )
+          } else {
+            dispatch(
+              addMessage({
+                id: new Date().getTime(),
+                type: 'temp',
+                message: messageText,
+                channel_id: selectedChatRoom,
+                user_id: user.id,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+                attachments: filePreviews,
+              })
+            )
+          }
+          setMessageText('')
+          setFilePreviews([])
         }
 
         return (
@@ -263,31 +329,108 @@ function Chat(props) {
               ) : null}
 
               {/* {typingArrayReady()} */}
-              <Paper className='flex items-center relative shadow' sx={{borderRadius: '2.4rem'}}>
-                <InputBase
-                  autoFocus
-                  ref={inputRef}
-                  id='message-input'
-                  className='flex flex-1 grow shrink-0 mx-16 ltr:mr-48 rtl:ml-48 my-6'
-                  placeholder='Type your message'
-                  onChange={(e) => onInputChange(e, selectedChatRoom)}
-                  value={messageText}
-                />
-                <IconButton
-                  className='absolute ltr:right-0 rtl:left-0 top-0'
-                  type='submit'
-                  size='large'
+              <Paper className='relative shadow' sx={{borderRadius: '2.4rem'}}>
+                <Grid
+                  container
+                  direction={'row'}
+                  gap={1}
+                  sx={{paddingTop: filePreviews.length > 0 ? '12px' : '0px'}}
                 >
-                  <FuseSvgIcon className='rotate-90' color='action'>
-                    heroicons-outline:paper-airplane
-                  </FuseSvgIcon>
-                </IconButton>
+                  {filePreviews?.map((item, index) => (
+                    <div
+                      onClick={() => handleRemove(index)}
+                      role='button'
+                      tabIndex={0}
+                      className='w-120 h-120 rounded-8 mx-2 mb-2 pt-1 px-2 pb-3 overflow-hidden cursor-pointer outline-none shadow hover:shadow-lg'
+                      key={index}
+                    >
+                      <div className='flex justify-content-end'>
+                        <FuseSvgIcon>heroicons-outline:x-circle</FuseSvgIcon>
+                      </div>
+                      <FuseSvgIcon size={30}>heroicons-outline:document-text</FuseSvgIcon>
+                      <Typography
+                        variant='h6'
+                        color='text.secondary'
+                        sx={{
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                          paddingTop: '15px',
+                          paddingBottom: '20px',
+                        }}
+                      >
+                        {typeof item === 'string' ? item : item.file.name}
+                      </Typography>
+                      <Typography
+                        variant='caption'
+                        color='text.secondary'
+                        sx={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}
+                      >
+                        {typeof item === 'string' ? item : formatBytes(item.file.size)}
+                      </Typography>
+                    </div>
+                  ))}
+                </Grid>
+                <Grid container direction='row' alignItems={'center'}>
+                  <InputBase
+                    autoFocus
+                    ref={inputRef}
+                    id='message-input'
+                    className='flex flex-1 grow shrink-0 mx-16 ltr:mr-48 rtl:ml-48 my-6'
+                    placeholder='Type your message'
+                    onChange={(e) => onInputChange(e, selectedChatRoom)}
+                    value={messageText}
+                  />
+                  <IconButton
+                    className='absolute ltr:right-0 rtl:left-0 top-0'
+                    type='submit'
+                    size='large'
+                  >
+                    <FuseSvgIcon className='rotate-90' color='action'>
+                      heroicons-outline:paper-airplane
+                    </FuseSvgIcon>
+                  </IconButton>
+                  <IconButton
+                    className='absolute ltr:right-0 rtl:left-0 top-0'
+                    size='large'
+                    component='label'
+                  >
+                    <input
+                      id='chat-attachment'
+                      hidden
+                      accept='.doc, .docx, .pdf, .exe'
+                      type='file'
+                      onChange={async (e) => {
+                        const files = Array.from(e.target.files)
+                        if (files.length > 5) {
+                          dispatch(
+                            showMessage({
+                              message:
+                                'Only allow sizes up to 10 MB and only allow up to 5 attachments per chat.',
+                              variant: 'error',
+                            })
+                          )
+                        } else {
+                          const filePreviewsPromises = files.map(async (file) => {
+                            const fileDataUrl = await readFileAsync(file)
+                            return {file, fileDataUrl}
+                          })
+
+                          const newFilePreviews = await Promise.all(filePreviewsPromises)
+                          setFilePreviews([...filePreviews, ...newFilePreviews])
+                        }
+                      }}
+                      multiple
+                    />
+                    <FuseSvgIcon color='action'>heroicons-outline:paper-clip</FuseSvgIcon>
+                  </IconButton>
+                </Grid>
               </Paper>
             </form>
             {/* )} */}
           </>
         )
-      }, [dispatch, messageText, selectedChatRoom, typeEvent])}
+      }, [dispatch, messageText, selectedChatRoom, typeEvent, filePreviews])}
     </Paper>
   )
 }

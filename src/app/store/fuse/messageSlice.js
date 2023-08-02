@@ -7,7 +7,7 @@ const initialState = {
       vertical: 'top',
       horizontal: 'right',
     },
-    autoHideDuration: 2000,
+    autoHideDuration: 7000,
     message: 'Hi',
     variant: null,
     node:null
