@@ -172,10 +172,10 @@ function Chat(props) {
     if (item.type !== undefined) {
       dispatch(
         sendMessage({
-          message: messageText,
-          channel_id: selectedChatRoom,
+          message: item.message,
+          channel_id: item.channel_id,
           channel_type: 'dm',
-          receiver_id: chatRoomInfo.id,
+          receiver_id: item.user_id,
           attachments: data.filter((item) => item.success).map((item) => item.attachment.id),
         })
       )
