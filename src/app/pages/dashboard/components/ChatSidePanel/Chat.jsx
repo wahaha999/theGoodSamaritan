@@ -409,8 +409,7 @@ function Chat(props) {
                         if (files.length > 5) {
                           dispatch(
                             showMessage({
-                              message:
-                                'Only allow sizes up to 10 MB and only allow up to 5 attachments per chat.',
+                              message: 'Only allow up to 5 attachments per chat.',
                               variant: 'error',
                             })
                           )
@@ -421,7 +420,23 @@ function Chat(props) {
                           })
 
                           const newFilePreviews = await Promise.all(filePreviewsPromises)
-                          setFilePreviews([...filePreviews, ...newFilePreviews])
+                          let canUpload = true
+                          newFilePreviews.forEach((item) => {
+                            if (item.file.size > 10485760) {
+                              canUpload = false
+                              return
+                            }
+                          })
+                          if (canUpload) {
+                            setFilePreviews([...filePreviews, ...newFilePreviews])
+                          } else {
+                            dispatch(
+                              showMessage({
+                                message: 'Only allow sizes up to 10 MB.',
+                                variant: 'error',
+                              })
+                            )
+                          }
                         }
                       }}
                       multiple
