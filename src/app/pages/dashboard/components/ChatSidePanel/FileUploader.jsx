@@ -29,7 +29,8 @@ function FileUploader({key, file, onUploadComplete}) {
           dispatch(showMessage({message: 'This file is not founded', variant: 'error'}))
         })
     } else {
-      // TODO: handle upload cancel
+      setUploadPercentage(0)
+      onUploadComplete({success: false, message: 'File upload cancelled.'})
     }
   }, [])
 
@@ -51,7 +52,10 @@ function FileUploader({key, file, onUploadComplete}) {
             setUploadPercentage(0)
             onUploadComplete(response.data) // Passing the response to the parent component
           })
-          .catch(() => setUploadPercentage(0))
+          .catch(() => {
+            setUploadPercentage(0)
+            onUploadComplete({success: false, message: 'File upload failed.'})
+          })
       }
 
       handleFileUpload()
