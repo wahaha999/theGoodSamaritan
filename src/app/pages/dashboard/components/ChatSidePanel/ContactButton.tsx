@@ -33,18 +33,20 @@ const Root = styled(Tooltip)<any>(({theme, active}) => ({
   width: 250,
   minWidth: 70,
   flex: '0 0 auto',
+  '&: hover': {background: theme.palette.secondary.light},
   ...(active && {
-    '&:after': {
-      position: 'absolute',
-      top: 8,
-      right: 0,
-      bottom: 8,
-      content: "''",
-      width: 4,
-      borderTopLeftRadius: 4,
-      borderBottomLeftRadius: 4,
-      backgroundColor: theme.palette.primary.main,
-    },
+    backgroundColor: theme.palette.secondary.light,
+    // '&:after': {
+    //   position: 'absolute',
+    //   top: 8,
+    //   right: 0,
+    //   bottom: 8,
+    //   content: "''",
+    //   width: 4,
+    //   borderTopLeftRadius: 4,
+    //   borderBottomLeftRadius: 4,
+    //   backgroundColor: theme.palette.primary.main,
+    // },
   }),
 }))
 

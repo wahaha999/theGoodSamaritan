@@ -19,7 +19,7 @@ function FileUploader({key, file, onUploadComplete}) {
           responseType: 'blob',
         })
         .then((res) => {
-          let url = window.URL.createObjectURL(res.data)
+          let url = window.URL.createObjectURL(new Blob([res.data]))
           let a = document.createElement('a')
           a.href = url
           a.download = file.file_name
