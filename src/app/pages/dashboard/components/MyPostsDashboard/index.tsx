@@ -111,12 +111,23 @@ function MyPostsDashboard(props: Props) {
     [filter]
   )
   const prevData = usePrevious(filter ? _.merge({}, filter) : null)
+  const scrollToTop = () => {
+    const anchor = document.querySelector('#back-to-top-anchor')
+
+    if (anchor) {
+      anchor.scrollIntoView({
+        block: 'center',
+        behavior: 'smooth',
+      })
+    }
+  }
   React.useEffect(() => {
     if (filter.states && filter.states.length > 0) {
       if (_.isEqual(prevData, filter)) {
         return
       }
       getPostsByFilter(filter)
+      scrollToTop()
     }
   }, [getPostsByFilter, filter])
 
