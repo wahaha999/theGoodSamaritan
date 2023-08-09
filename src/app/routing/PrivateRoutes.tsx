@@ -11,6 +11,7 @@ import Billing from '../pages/dashboard/Billing'
 import AppLayout from 'src/_metronic/layout/AppLayout'
 import YoutubePage from '../pages/youtube'
 import Subscription from '../pages/dashboard/Subscription'
+import SubscriptionMiddleware from '../pages/dashboard/SubscriptionMiddleware'
 
 const PrivateRoutes = () => {
   const user = useAppSelector(({user}) => {
@@ -25,7 +26,10 @@ const PrivateRoutes = () => {
             <>
               <Route path='auth/*' element={<Navigate to='/dashboard' />} />
               {/* Pages */}
-              <Route path='dashboard' element={<DashboardWrapper />} />
+              <Route
+                path='dashboard'
+                element={<SubscriptionMiddleware element={<DashboardWrapper />} />}
+              />
               <Route path='youtube' element={<YoutubePage />} />
               <Route
                 path='account/*'

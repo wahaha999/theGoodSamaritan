@@ -17,6 +17,7 @@ import {getBillingInfo} from '../store/billingSlice'
 import moment from 'moment'
 import BillingManage from './BillingManage'
 import UsaMap from './UsaMap'
+import {red} from '@mui/material/colors'
 
 type Props = {}
 
@@ -124,6 +125,29 @@ const Billing = (props: Props) => {
                   )}
                 </TableCell>
               </TableRow>
+              {subscription && subscription.data[0].cancel_at_period_end && (
+                <TableRow>
+                  <TableCell>
+                    <Typography>Cancel Date</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <div className='flex flex-row d-flex space-x-2 align-items-center'>
+                      <Typography>
+                        {
+                          new Date(subscription.data[0].canceled_at * 1000)
+                            .toISOString()
+                            .split('T')[0]
+                        }
+                      </Typography>
+                      <Typography variant='caption' color={red[600]} height={14}>
+                        {'(Plan will stay active until ' +
+                          moment.unix(subscription.data[0].current_period_end).format('MM/DD/YY') +
+                          ')'}
+                      </Typography>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
               <TableRow>
                 <TableCell>
                   <Typography>Price</Typography>
