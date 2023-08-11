@@ -37,15 +37,19 @@ const YoutubePage = () => {
             height: 'calc(100vh - 10px)', // Adjust the value as needed
           }}
         >
+           <div style={{ textAlign: 'center', marginBottom: '0px' }}>
+            <h1>Training - Select the hamburger icon on the right to view all training videos</h1>
+          </div>
           <iframe
             title='YouTube video player'
             style={{
-              paddingTop: '80px',
+              paddingTop: '10px',
               position: 'relative',
               top: '0',
-              left: '0',
-              width: '100%',
-              height: '100%',
+              left: '10%',
+              right: '10%',
+              width: '80%',
+              height: '80%',
             }}
             src='https://www.youtube.com/embed/videoseries?list=PLchZmuz9l4wJAf3puJ_hXIwEIHiABGqGM'
             frameBorder='0'

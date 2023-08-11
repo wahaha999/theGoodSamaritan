@@ -44,7 +44,7 @@ const navigationConfig = [
   },
   {
     id: 'youtube',
-    title: 'Our Youtube Channel',
+    title: 'Training',
     subtitle: 'Custom made page designs',
     type: 'item',
     icon: 'heroicons-outline:chart-pie',
