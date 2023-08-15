@@ -35,7 +35,10 @@ const AccountHeader: React.FC = () => {
         <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
           <div className='me-7 mb-4'>
             <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
-              <img src={toServerUrl('/media/user/avatar/' + user?.avatar)} alt='User AvatarMetronic' />
+              <img
+                src={toServerUrl('/media/user/avatar/' + user?.avatar)}
+                alt='User AvatarMetronic'
+              />
               <div className='position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px'></div>
             </div>
           </div>
@@ -114,11 +117,24 @@ const AccountHeader: React.FC = () => {
                 <div className='d-flex flex-wrap'>
                   <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
                     <div className='d-flex align-items-center'>
-                      <KTIcon iconName='arrow-up' className='fs-3 text-success me-2' />
-                      <div className='fs-2 fw-bolder'>450</div>
+                      <div className='fs-2 fw-bolder'>{`#${user?.connections ?? 0}`}</div>
                     </div>
 
                     <div className='fw-bold fs-6 text-gray-400'>Connections</div>
+                  </div>
+                  <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
+                    <div className='d-flex align-items-center'>
+                      <div className='fs-2 fw-bolder'>{`#${user?.saved_posts ?? 0}`}</div>
+                    </div>
+
+                    <div className='fw-bold fs-6 text-gray-400'>Saved Posts</div>
+                  </div>
+                  <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
+                    <div className='d-flex align-items-center'>
+                      <div className='fs-2 fw-bolder'>{`#${user?.likes ?? 0}`}</div>
+                    </div>
+
+                    <div className='fw-bold fs-6 text-gray-400'>Likes</div>
                   </div>
                   {/* 
                   <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
