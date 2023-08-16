@@ -2,7 +2,7 @@ import * as React from 'react'
 import {styled, useTheme} from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Drawer from '@mui/material/Drawer'
-import { Tooltip } from '@mui/material';
+import {Tooltip} from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline'
 import MuiAppBar, {AppBarProps as MuiAppBarProps} from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
@@ -19,7 +19,7 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import InboxIcon from '@mui/icons-material/MoveToInbox'
 import MailIcon from '@mui/icons-material/Mail'
-import {Link, Outlet, useLocation} from 'react-router-dom'
+import {Link, Outlet, useLocation, useNavigate} from 'react-router-dom'
 import SidebarMenuMain from './components/sidebar/sidebar-menu/SidebarMenuMain'
 import {toAbsoluteUrl, toServerUrl} from '../helpers'
 import {Avatar, Badge, Fab, Hidden, Menu, MenuItem, useMediaQuery} from '@mui/material'
@@ -33,7 +33,7 @@ import GlobalStyles from '@mui/material/GlobalStyles'
 import {alpha} from '@mui/material/styles'
 import {deselectChatRoom} from 'src/app/pages/dashboard/components/ChatSidePanel/store/chatRoomSlice'
 import {removeMessages} from 'src/app/pages/dashboard/components/ChatSidePanel/store/messageSlice'
-import { blueGrey } from '@mui/material/colors';
+import {blueGrey} from '@mui/material/colors'
 
 interface Props {
   /**
@@ -176,6 +176,7 @@ const DrawerHeader = styled('div')(({theme}) => ({
 export default function AppLayout(props: Props) {
   const {selectedChatRoom, total_unread_count} = useAppSelector(({chat}) => chat.chatRoom)
   const theme = useTheme()
+  const navigate = useNavigate()
   const [open, setOpen] = React.useState(true)
   const dispatch = useAppDispatch()
   const user = useAppSelector(({user}) => user.user)
@@ -199,9 +200,9 @@ export default function AppLayout(props: Props) {
     setAnchorElUser(event.currentTarget)
   }
 
-  const externalLink = 'https://www.example.com'; // Replace this with your external link
+  const externalLink = 'https://www.example.com' // Replace this with your external link
 
-   const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = () => {
     setAnchorElUser(null)
   }
   const {pathname} = useLocation()
@@ -264,47 +265,57 @@ export default function AppLayout(props: Props) {
               <MenuInner type='header' />
               {/* </Hidden> */}
             </Box>
-            <Tooltip title="Help us improve this platform. We need your Feedback." arrow>
-            <a href={"https://docs.google.com/forms/d/e/1FAIpQLSc83BeNQnjY9HaTLZvrJJxbuEmzw4DmWBQr_gZKjIG7g32H4w/viewform?pli=1"} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', background: 'transparent' }}>
-            <IconButton
-              className='mx-0'
-              
-            >
-                <FuseSvgIcon size={24}
-                color={'primary'}
-                >heroicons-solid:star</FuseSvgIcon>
-            </IconButton>
-            </a>
+
+            <Tooltip title='Help us improve this platform. We need your Feedback.' arrow>
+              {/* <a
+                href={
+                  'https://docs.google.com/forms/d/e/1FAIpQLSc83BeNQnjY9HaTLZvrJJxbuEmzw4DmWBQr_gZKjIG7g32H4w/viewform?pli=1'
+                }
+                target='_blank'
+                rel='noopener noreferrer'
+                style={{textDecoration: 'none', background: 'transparent'}}
+              > */}
+              <IconButton className='mx-0' onClick={() => navigate('support')}>
+                <FuseSvgIcon size={24} color={'primary'}>
+                  heroicons-solid:star
+                </FuseSvgIcon>
+              </IconButton>
+              {/* </a> */}
             </Tooltip>
-            <Tooltip title="Need Help?" arrow>
-            <a href={"https://docs.google.com/forms/d/e/1FAIpQLSc83BeNQnjY9HaTLZvrJJxbuEmzw4DmWBQr_gZKjIG7g32H4w/viewform?pli=1"} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', background: 'transparent'}}>
-             <IconButton
-              className='mx-0'
-            >
-                <FuseSvgIcon size={24}
-                color={'primary'}
-                >heroicons-solid:question-mark-circle</FuseSvgIcon>
-            </IconButton>
-            </a>
+            <Tooltip title='Need Help?' arrow>
+              <a
+                href={
+                  'https://docs.google.com/forms/d/e/1FAIpQLSc83BeNQnjY9HaTLZvrJJxbuEmzw4DmWBQr_gZKjIG7g32H4w/viewform?pli=1'
+                }
+                target='_blank'
+                rel='noopener noreferrer'
+                style={{textDecoration: 'none', background: 'transparent'}}
+              >
+                <IconButton className='mx-0'>
+                  <FuseSvgIcon size={24} color={'primary'}>
+                    heroicons-solid:question-mark-circle
+                  </FuseSvgIcon>
+                </IconButton>
+              </a>
             </Tooltip>
-            <Tooltip title="Click to open chat" arrow>
-            <IconButton
-              className='mx-8'
-              onClick={() => {
-                setChatOpen(true)
-              }}
-            >
-              <Badge badgeContent={total_unread_count} color='error'>
-                <FuseSvgIcon size={24}>heroicons-outline:chat-alt-2</FuseSvgIcon>
-              </Badge>
-            </IconButton>
+            <Tooltip title='Click to open chat' arrow>
+              <IconButton
+                className='mx-8'
+                onClick={() => {
+                  setChatOpen(true)
+                }}
+              >
+                <Badge badgeContent={total_unread_count} color='error'>
+                  <FuseSvgIcon size={24}>heroicons-outline:chat-alt-2</FuseSvgIcon>
+                </Badge>
+              </IconButton>
             </Tooltip>
-            <Tooltip title="Click to open Profile" arrow>
-               <Avatar
-              sx={{cursor: 'pointer'}}
-              src={toServerUrl('/media/user/avatar/' + user?.avatar)}
-              onClick={handleOpenUserMenu}
-            />
+            <Tooltip title='Click to open Profile' arrow>
+              <Avatar
+                sx={{cursor: 'pointer'}}
+                src={toServerUrl('/media/user/avatar/' + user?.avatar)}
+                onClick={handleOpenUserMenu}
+              />
             </Tooltip>
             <Menu
               sx={{mt: '45px'}}

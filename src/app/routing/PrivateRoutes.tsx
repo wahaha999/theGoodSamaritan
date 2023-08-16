@@ -12,6 +12,7 @@ import AppLayout from 'src/_metronic/layout/AppLayout'
 import YoutubePage from '../pages/youtube'
 import Subscription from '../pages/dashboard/Subscription'
 import SubscriptionMiddleware from '../pages/dashboard/SubscriptionMiddleware'
+import Support from '../pages/dashboard/Support'
 
 const PrivateRoutes = () => {
   const user = useAppSelector(({user}) => {
@@ -62,6 +63,14 @@ const PrivateRoutes = () => {
                 element={
                   // <SuspensedView>
                   <AccountPage />
+                  // </SuspensedView>
+                }
+              />
+              <Route
+                path='support'
+                element={
+                  // <SuspensedView>
+                  <Support />
                   // </SuspensedView>
                 }
               />
