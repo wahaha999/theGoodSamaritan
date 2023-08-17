@@ -1,11 +1,15 @@
+import LoadingButton from '@mui/lab/LoadingButton/LoadingButton'
 import {Button, Grid, IconButton, TextField, Typography} from '@mui/material'
 import {orange} from '@mui/material/colors'
+import axios from 'axios'
 import React, {useState} from 'react'
 import {Controller, useFormContext} from 'react-hook-form'
 import {formatBytes} from 'src/app/helpers/fileHelper'
+import {API_URL} from 'src/app/modules/auth/core/_requests'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 import {showMessage} from 'src/app/store/fuse/messageSlice'
 import {useAppDispatch} from 'src/app/store/hook'
+import SendIcon from '@mui/icons-material/Send'
 
 type Props = {}
 const readFileAsync = (file: any) => {
@@ -27,8 +31,8 @@ const SupportContent = (props: Props) => {
   const methods = useFormContext()
   const {control, formState, watch, handleSubmit, setValue} = methods
   const attachment = watch('attachment')
+  const [loading, setLoading] = useState<boolean>(false)
   const {errors} = formState
-
   const dispatch = useAppDispatch()
   const [filePreviews, setFilePreviews] = useState<any>([])
   const handleRemove = (index: number) => {
@@ -39,8 +43,25 @@ const SupportContent = (props: Props) => {
     setValue('attachment', attachment)
   }
 
-  const submit = (data: any) => {
-    console.log('data===', data)
+  const submit = async (data: any) => {
+    setLoading(true)
+    const formData = new FormData()
+    Object.keys(data).forEach((item) => {
+      if (item === 'attachment') {
+        data[item]?.map((i: any, index: number) => {
+          formData.append(`attachment[${index}]`, i)
+        })
+      } else {
+        formData.append(item, data[item])
+      }
+    })
+
+    const res: any = await axios.post(`${API_URL}/support`, formData)
+
+    dispatch(
+      showMessage({message: res.data.message, variant: res.status === 200 ? 'success' : 'error'})
+    )
+    setLoading(false)
   }
   return (
     <div>
@@ -181,14 +202,24 @@ const SupportContent = (props: Props) => {
         })}
       </Grid>
       <Grid container direction='row-reverse'>
-        <Button
+        <LoadingButton
+          onClick={handleSubmit(submit)}
+          endIcon={<SendIcon />}
+          loading={loading}
+          loadingPosition='end'
+          size='medium'
+          variant='contained'
+        >
+          <span>Send</span>
+        </LoadingButton>
+        {/* <Button
           sx={{mt: 3, mr: 3}}
           variant='contained'
           color='primary'
           onClick={handleSubmit(submit)}
         >
           Send
-        </Button>
+        </Button> */}
       </Grid>
     </div>
   )
