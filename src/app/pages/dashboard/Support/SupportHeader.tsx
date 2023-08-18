@@ -7,7 +7,8 @@ type Props = {}
 
 const SupportHeader = (props: Props) => {
   const methods = useFormContext()
-  const {control, watch} = methods
+  const {control, watch, formState} = methods
+  const {errors} = formState
   const {first_name, last_name, email} = useAppSelector(({user}) => user.user)
   const {non_profit_name} = useAppSelector(({user}) => user.user.account)
 
@@ -57,7 +58,15 @@ const SupportHeader = (props: Props) => {
             name='add_email'
             defaultValue=''
             control={control}
-            render={({field}) => <TextField label='Additional Email' fullWidth {...field} />}
+            render={({field}) => (
+              <TextField
+                label='Additional Email'
+                fullWidth
+                {...field}
+                error={!!errors.add_email}
+                helperText={errors?.add_email?.message as string}
+              />
+            )}
           />
         </Grid>
       </Grid>

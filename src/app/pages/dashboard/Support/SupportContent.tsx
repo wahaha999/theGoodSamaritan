@@ -59,7 +59,13 @@ const SupportContent = (props: Props) => {
     const res: any = await axios.post(`${API_URL}/support`, formData)
 
     dispatch(
-      showMessage({message: res.data.message, variant: res.status === 200 ? 'success' : 'error'})
+      showMessage({
+        message:
+          res.status === 200
+            ? 'Thank you. Your inquiry has been sent and we will review it as soon as possible.'
+            : res.data.message,
+        variant: res.status === 200 ? 'success' : 'error',
+      })
     )
     setLoading(false)
   }
