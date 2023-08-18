@@ -11,6 +11,8 @@ import {
   SwitchProps,
   Switch,
   FormControlLabel,
+  useMediaQuery,
+  Hidden,
 } from '@mui/material'
 import React, {useEffect, useMemo, useRef, useState} from 'react'
 import {toServerUrl} from 'src/_metronic/helpers'
@@ -25,11 +27,13 @@ import {handleSearch, handleSearchMode} from './store/messageSlice'
 
 type Props = {
   opened: boolean
+  isMobile: boolean
   onClose: () => void
 }
 
-const Root = styled('div')<{opened: boolean}>(({theme, opened}) => ({
+const Root = styled('div')<{opened: boolean; isMobile: boolean}>(({theme, opened, isMobile}) => ({
   height: '100vh',
+  width: isMobile ? '100vw' : 'none',
 
   '& > .panel': {
     height: '100%',
@@ -110,11 +114,13 @@ const ChatSidePanel = (props: Props) => {
     dispatch(handleSearchMode(Number(e.target.checked)))
   }
 
+  const matches = useMediaQuery(theme.breakpoints.down('sm'))
+
   return (
-    <Root opened={opened}>
+    <Root opened={opened} isMobile={matches}>
       <div className='panel flex flex-col max-w-ful' ref={ref}>
         <AppBar position='static' className='shadow-md'>
-          <Toolbar className='px-4'>
+          <Toolbar className='px-4 sm:px-2'>
             <div className='flex flex-1 items-center space-x-12'>
               {selectedChatRoom ? (
                 <Avatar src={toServerUrl('/media/user/avatar/' + chatRoomInfo?.avatar)} />
@@ -128,20 +134,22 @@ const ChatSidePanel = (props: Props) => {
                   <FuseSvgIcon size={24}>heroicons-outline:chat-alt-2</FuseSvgIcon>
                 </IconButton>
               )}
-              {selectedChatRoom ? (
-                <Typography className='text-16 ml-4' color='inherit'>
-                  {chatRoomInfo?.first_name} {chatRoomInfo?.last_name}
-                </Typography>
-              ) : (
-                <Typography className='text-16' color='inherit'>
-                  Team Chat
-                </Typography>
-              )}
+              <Hidden smDown>
+                {selectedChatRoom ? (
+                  <Typography className='text-16' color='inherit' noWrap>
+                    {chatRoomInfo?.first_name} {chatRoomInfo?.last_name}
+                  </Typography>
+                ) : (
+                  <Typography className='text-16' color='inherit'>
+                    Chat
+                  </Typography>
+                )}
+              </Hidden>
             </div>
             {useMemo(
               () => (
                 <Paper
-                  className='flex p-4 items-center px-4 py-2 h-30 rounded-4 shadow-none'
+                  className='flex p-4 mx-2 items-center px-4 py-2 h-30 rounded-4 shadow-none'
                   sx={{background: theme.palette.primary.light}}
                 >
                   <FuseSvgIcon color='secondary' size={20}>
@@ -165,9 +173,9 @@ const ChatSidePanel = (props: Props) => {
               ),
               [searchText, searchMode]
             )}
-            <div className='flex px-4'>
-              <IconButton color='inherit' size='large' onClick={onClose}>
-                <FuseSvgIcon>heroicons-outline:x</FuseSvgIcon>
+            <div className='flex px-4 sm:px-2'>
+              <IconButton color='inherit' size={matches ? 'small' : 'large'} onClick={onClose}>
+                <FuseSvgIcon size={matches ? 16 : 24}>heroicons-outline:x</FuseSvgIcon>
               </IconButton>
             </div>
           </Toolbar>

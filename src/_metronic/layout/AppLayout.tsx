@@ -300,7 +300,7 @@ export default function AppLayout(props: Props) {
             </Tooltip>
             <Tooltip title='Click to open chat' arrow>
               <IconButton
-                className='mx-8'
+                className='mx-4 sm:mx-2'
                 onClick={() => {
                   setChatOpen(true)
                 }}
