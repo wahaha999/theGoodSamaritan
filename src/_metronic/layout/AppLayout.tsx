@@ -267,22 +267,6 @@ export default function AppLayout(props: Props) {
             </Box>
 
             <Tooltip title='Help us improve this platform. We need your Feedback.' arrow>
-              {/* <a
-                href={
-                  'https://docs.google.com/forms/d/e/1FAIpQLSc83BeNQnjY9HaTLZvrJJxbuEmzw4DmWBQr_gZKjIG7g32H4w/viewform?pli=1'
-                }
-                target='_blank'
-                rel='noopener noreferrer'
-                style={{textDecoration: 'none', background: 'transparent'}}
-              > */}
-              <IconButton className='mx-0' onClick={() => navigate('support')}>
-                <FuseSvgIcon size={24} color={'primary'}>
-                  heroicons-solid:star
-                </FuseSvgIcon>
-              </IconButton>
-              {/* </a> */}
-            </Tooltip>
-            <Tooltip title='Need Help?' arrow>
               <a
                 href={
                   'https://docs.google.com/forms/d/e/1FAIpQLSc83BeNQnjY9HaTLZvrJJxbuEmzw4DmWBQr_gZKjIG7g32H4w/viewform?pli=1'
@@ -293,10 +277,26 @@ export default function AppLayout(props: Props) {
               >
                 <IconButton className='mx-0'>
                   <FuseSvgIcon size={24} color={'primary'}>
-                    heroicons-solid:question-mark-circle
+                    heroicons-solid:star
                   </FuseSvgIcon>
                 </IconButton>
               </a>
+            </Tooltip>
+            <Tooltip title='Need Help?' arrow>
+              {/* <a
+                href={
+                  'https://docs.google.com/forms/d/e/1FAIpQLSc83BeNQnjY9HaTLZvrJJxbuEmzw4DmWBQr_gZKjIG7g32H4w/viewform?pli=1'
+                }
+                target='_blank'
+                rel='noopener noreferrer'
+                style={{textDecoration: 'none', background: 'transparent'}}
+              > */}
+              <IconButton className='mx-0' onClick={() => navigate('support')}>
+                <FuseSvgIcon size={24} color={'primary'}>
+                  heroicons-solid:question-mark-circle
+                </FuseSvgIcon>
+              </IconButton>
+              {/* </a> */}
             </Tooltip>
             <Tooltip title='Click to open chat' arrow>
               <IconButton

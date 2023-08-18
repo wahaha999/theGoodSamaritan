@@ -12,7 +12,12 @@ const Support = (props: Props) => {
   const methods = useForm({
     mode: 'onChange',
     resolver: yupResolver(
-      yup.object().shape({messages: yup.string().required('You must enter message')})
+      yup
+        .object()
+        .shape({
+          messages: yup.string().required('You must enter message'),
+          add_email: yup.string().email('Invalid email'),
+        })
     ),
   })
   return (
