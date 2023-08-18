@@ -6,7 +6,8 @@ import ContactButton from './ContactButton'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {getChatRooms, getFilteredChannels} from './store/chatRoomSlice'
 import _ from 'src/app/modules/@lodash/@lodash'
-import {FormControlLabel, Radio, RadioGroup, Tooltip} from '@mui/material'
+import {FormControlLabel, Grid, Hidden, Radio, RadioGroup, Tooltip} from '@mui/material'
+
 const Root = styled(FuseScrollbars)(({theme}) => ({
   background: theme.palette.background.paper,
 }))
@@ -70,7 +71,6 @@ const ContactList = (props) => {
   // }, [contactList, sort])
 
   const handleRadio = (e) => {
-    console.log('e===', e.target.value)
     setSort(e.target.value)
   }
 
@@ -80,14 +80,18 @@ const ContactList = (props) => {
       ref={contactListScroll}
       option={{suppressScrollX: true, wheelPropagation: false}}
     >
-      <RadioGroup value={sort} row onChange={handleRadio}>
-        <Tooltip title='Click here to sort by un-read messages first...' placement='right'>
-          <FormControlLabel value='unread' control={<Radio />} label='Unread' />
-        </Tooltip>
-        <Tooltip title='Click here to sort by latest Messages.' placement='right'>
-          <FormControlLabel value='last' control={<Radio />} label='Last message' />
-        </Tooltip>
-      </RadioGroup>
+      <Hidden smDown>
+        <Grid container justifyContent='center'>
+          <RadioGroup value={sort} row onChange={handleRadio}>
+            <Tooltip title='Click here to sort by un-read messages first...' placement='right'>
+              <FormControlLabel value='unread' control={<Radio />} label='Unread' />
+            </Tooltip>
+            <Tooltip title='Click here to sort by latest Messages.' placement='right'>
+              <FormControlLabel value='last' control={<Radio />} label='Last message' />
+            </Tooltip>
+          </RadioGroup>
+        </Grid>
+      </Hidden>
       {useMemo(() => {
         const container = {
           show: {

@@ -12,16 +12,14 @@ const Support = (props: Props) => {
   const methods = useForm({
     mode: 'onChange',
     resolver: yupResolver(
-      yup
-        .object()
-        .shape({
-          messages: yup.string().required('You must enter message'),
-          add_email: yup.string().email('Invalid email'),
-        })
+      yup.object().shape({
+        messages: yup.string().required('You must enter message'),
+        add_email: yup.string().email('Invalid email'),
+      })
     ),
   })
   return (
-    <Paper sx={{m: 4, p: 4}}>
+    <Paper className='m-4 p-4 sm:m-1 sm:p-1'>
       <FormProvider {...methods}>
         <SupportHeader />
         <SupportContent />

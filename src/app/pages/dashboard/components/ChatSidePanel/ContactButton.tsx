@@ -1,5 +1,14 @@
 import styled from '@emotion/styled'
-import {Avatar, Button, Grid, Tooltip, Typography} from '@mui/material'
+import {
+  Avatar,
+  Button,
+  Grid,
+  Hidden,
+  Tooltip,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material'
 import {Theme} from '@mui/material'
 import clsx from 'clsx'
 import React from 'react'
@@ -29,8 +38,8 @@ interface StyledProps {
   value: string
 }
 
-const Root = styled(Tooltip)<any>(({theme, active}) => ({
-  width: 250,
+const Root = styled(Tooltip)<any>(({theme, active, isMobile}) => ({
+  width: isMobile ? 70 : 250,
   minWidth: 70,
   flex: '0 0 auto',
   '&: hover': {background: theme.palette.secondary.light},
@@ -65,8 +74,8 @@ const StyledUreadBadge = styled('div', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: theme.palette.secondary.main,
-  color: theme.palette.secondary.contrastText,
+  backgroundColor: theme.palette.error.main,
+  color: theme.palette.error.contrastText,
   boxShadow: '0 2px 2px 0 rgba(0, 0, 0, 0.35)',
   zIndex: 10,
 }))
@@ -104,11 +113,18 @@ const ContactButton = (props: Props) => {
   const {selectedChatRoom, onlineUsers} = useAppSelector(({chat}) => chat.chatRoom)
   const {info, channel_id, data} = props
   const dispatch = useAppDispatch()
+  const theme = useTheme()
+  const matches = useMediaQuery(theme.breakpoints.down('sm'))
   return (
-    <Root title={info.name} placement='left' active={channel_id === selectedChatRoom ? 1 : 0}>
+    <Root
+      title={info.name}
+      placement='left'
+      active={channel_id === selectedChatRoom ? 1 : 0}
+      isMobile={matches}
+    >
       <Button
         className={clsx(
-          'contactButton rounded-0 py-4 h-auto min-h-auto max-h-none max-w-none',
+          'contactButton rounded-3 py-4 h-auto min-h-auto max-h-none max-w-none',
           channel_id === selectedChatRoom && 'active'
         )}
         onClick={() => dispatch(dmSelect({channel_id, info}))}
@@ -122,34 +138,38 @@ const ContactButton = (props: Props) => {
               sx={{width: 50, height: 50}}
             />{' '}
           </Grid>
-          <Grid item sm zeroMinWidth container>
-            <Grid
-              item
-              container
-              direction='column'
-              justifyContent='space-between'
-              alignItems='flex-start'
-            >
-              <Grid item>
-                <Typography noWrap>
-                  {info.first_name} {info?.last_name}
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography noWrap variant='caption' className='whitespace-nowrap'>
-                  {data.last_message ?? 'Noting yet'}
-                </Typography>
+          <Hidden smDown>
+            <Grid item sm zeroMinWidth container>
+              <Grid
+                item
+                container
+                direction='column'
+                justifyContent='space-between'
+                alignItems='flex-start'
+              >
+                <Grid item>
+                  <Typography noWrap>
+                    {info.first_name} {info?.last_name}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography noWrap variant='caption' className='whitespace-nowrap'>
+                    {data.last_message ?? 'Noting yet'}
+                  </Typography>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          </Hidden>
         </Grid>
-        <Typography
-          variant='caption'
-          color='CaptionText'
-          sx={{position: 'absolute', right: 0, top: 0}}
-        >
-          {formatDistanceToNow(new Date(data.updated_at))}
-        </Typography>
+        <Hidden smDown>
+          <Typography
+            variant='caption'
+            color='CaptionText'
+            sx={{position: 'absolute', right: 0, top: 0}}
+          >
+            {formatDistanceToNow(new Date(data.updated_at))}
+          </Typography>
+        </Hidden>
       </Button>
     </Root>
   )
