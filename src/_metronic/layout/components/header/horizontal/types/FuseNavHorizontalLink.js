@@ -10,6 +10,7 @@ import { memo, useMemo } from 'react';
 import TGSNavItem from '../../TGSNavItem';
 import withRouter from 'src/app/modules/core/withRouter/withRouter';
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon';
+import { useAppSelector } from 'src/app/store/hook';
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
   color: theme.palette.text.primary,
@@ -34,7 +35,8 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
 
 function FuseNavHorizontalLink(props) {
   const { item } = props;
-
+  const { user } = useAppSelector(({ user }) => user)
+  // console.log('user===',user)
   return useMemo(
     () => (
       <StyledListItem
@@ -45,7 +47,7 @@ function FuseNavHorizontalLink(props) {
         className={clsx('fuse-list-item')}
         role="button"
         sx={item.sx}
-        disabled={item.disabled}
+        disabled={item.role === 'user' && user.role === 'admin'}
       >
         {item.icon && (
           <FuseSvgIcon
@@ -65,7 +67,7 @@ function FuseNavHorizontalLink(props) {
         {/* {item.badge && <FuseNavBadge className="ltr:ml-8 rtl:mr-8" badge={item.badge} />} */}
       </StyledListItem>
     ),
-    [item.badge, item.icon, item.iconClass, item.target, item.title, item.url]
+    [item.badge, item.icon, item.iconClass, item.target, item.title, item.url,user.role]
   );
 }
 

@@ -39,6 +39,7 @@ const navigationConfig = [
         icon: 'heroicons-outline:cash',
         url: '/account/billing',
         translate: 'BILLING',
+        role: 'user',
       },
     ],
   },
