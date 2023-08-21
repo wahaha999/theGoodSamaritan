@@ -4,7 +4,6 @@ import ListItemText from '@mui/material/ListItemText';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { memo, useMemo } from 'react';
-import TGSNavItem from '../../TGSNavItem';
 import withRouter from 'src/app/modules/core/withRouter/withRouter';
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon';
 import NavLinkAdapter from 'src/app/modules/core/NavLinkAdapter/NavLinkAdapter';
