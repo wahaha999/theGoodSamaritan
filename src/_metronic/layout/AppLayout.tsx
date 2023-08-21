@@ -343,6 +343,7 @@ export default function AppLayout(props: Props) {
                     <a href='#' className='fw-bold text-muted text-hover-primary fs-7'>
                       {user?.email}
                     </a>
+                    <Typography>{user.role}</Typography>
                   </div>
                 </div>
               </div>
