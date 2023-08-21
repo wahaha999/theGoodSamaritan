@@ -9,6 +9,7 @@ import withRouter from 'src/app/modules/core/withRouter/withRouter';
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon';
 import NavLinkAdapter from 'src/app/modules/core/NavLinkAdapter/NavLinkAdapter';
 import { Hidden } from '@mui/material';
+import { useAppSelector } from 'src/app/store/hook';
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
   color: theme.palette.text.primary,
@@ -34,7 +35,7 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
 
 function FuseNavHorizontalItem(props) {
   const { item } = props;
-
+ const { user } = useAppSelector(({ user }) => user)
   return useMemo(
     () => (
       <StyledListItem
@@ -46,7 +47,7 @@ function FuseNavHorizontalItem(props) {
         end={item.end}
         role="button"
         sx={item.sx}
-        disabled={item.disabled}
+        disabled={item.role === 'user' && user.role === 'admin'}
       >
         {item.icon && (
           <FuseSvgIcon
