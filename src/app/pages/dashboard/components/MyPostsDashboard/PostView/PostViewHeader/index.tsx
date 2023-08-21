@@ -62,7 +62,7 @@ const PostViewHeader = (props: Props) => {
                 {disabled ? `connection ${disabled}` : 'Make A Connection'}
               </Button>
             )}
-            {post?.user?.account_dbkey === user.account_dbkey && (
+            {(post?.user?.account_dbkey === user.account_dbkey || user.role === 'admin') && (
               <>
                 <IconButton aria-label='settings' onClick={(e) => handleClick(e, post)}>
                   <MoreVertIcon />
