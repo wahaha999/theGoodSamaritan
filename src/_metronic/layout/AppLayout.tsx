@@ -2,27 +2,18 @@ import * as React from 'react'
 import {styled, useTheme} from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Drawer from '@mui/material/Drawer'
-import {Tooltip} from '@mui/material'
-import CssBaseline from '@mui/material/CssBaseline'
+import {Button, Tooltip} from '@mui/material'
 import MuiAppBar, {AppBarProps as MuiAppBarProps} from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
-import List from '@mui/material/List'
-import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
-import ListItem from '@mui/material/ListItem'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-import InboxIcon from '@mui/icons-material/MoveToInbox'
-import MailIcon from '@mui/icons-material/Mail'
 import {Link, Outlet, useLocation, useNavigate} from 'react-router-dom'
 import SidebarMenuMain from './components/sidebar/sidebar-menu/SidebarMenuMain'
 import {toAbsoluteUrl, toServerUrl} from '../helpers'
-import {Avatar, Badge, Fab, Hidden, Menu, MenuItem, useMediaQuery} from '@mui/material'
+import {Avatar, Badge, Hidden, Menu, useMediaQuery} from '@mui/material'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {logoutUser} from 'src/app/store/userSlice'
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined'
@@ -33,7 +24,6 @@ import GlobalStyles from '@mui/material/GlobalStyles'
 import {alpha} from '@mui/material/styles'
 import {deselectChatRoom} from 'src/app/pages/dashboard/components/ChatSidePanel/store/chatRoomSlice'
 import {removeMessages} from 'src/app/pages/dashboard/components/ChatSidePanel/store/messageSlice'
-import {blueGrey} from '@mui/material/colors'
 
 interface Props {
   /**
@@ -200,15 +190,13 @@ export default function AppLayout(props: Props) {
     setAnchorElUser(event.currentTarget)
   }
 
-  const externalLink = 'https://www.example.com' // Replace this with your external link
-
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
   }
   const {pathname} = useLocation()
 
   React.useEffect(() => {
-    if (pathname == '/youtube') {
+    if (pathname === '/youtube') {
       setOpen(false)
     } else {
       setOpen(true)
@@ -237,6 +225,7 @@ export default function AppLayout(props: Props) {
         >
           <Toolbar>
             <img
+              alt='logo'
               className='h-35px app-sidebar-logo-default'
               src={toAbsoluteUrl('/media/logos/logo.png')}
               style={{marginRight: '20px', ...(open && {display: 'none'})}}
@@ -340,10 +329,13 @@ export default function AppLayout(props: Props) {
                   </div>
 
                   <div className='d-flex flex-column'>
-                    <a href='#' className='fw-bold text-muted text-hover-primary fs-7'>
+                    <a
+                      href={`mailto:${user?.email}`}
+                      className='fw-bold text-muted text-hover-primary fs-7'
+                    >
                       {user?.email}
                     </a>
-                    <Typography>{user.role}</Typography>
+                    <p className='text-12 text-gray-A700'>{user.role}</p>
                   </div>
                 </div>
               </div>
@@ -364,14 +356,16 @@ export default function AppLayout(props: Props) {
               </div>
 
               <div className='menu-item px-5'>
-                <a onClick={() => dispatch(logoutUser())} className='menu-link px-5'>
+                <Button
+                  color='secondary'
+                  onClick={() => dispatch(logoutUser())}
+                  className='menu-link px-5'
+                  sx={{fontSize: 13}}
+                >
                   Sign Out
-                </a>
+                </Button>
               </div>
             </Menu>
-            {/* <Typography variant='h6' noWrap component='div'>
-            Persistent drawer
-          </Typography> */}
           </Toolbar>
         </AppBar>
         <Hidden mdUp>

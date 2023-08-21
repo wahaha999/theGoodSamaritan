@@ -10,11 +10,10 @@ import {
   useTheme,
   SwitchProps,
   Switch,
-  FormControlLabel,
   useMediaQuery,
   Hidden,
 } from '@mui/material'
-import React, {useEffect, useMemo, useRef, useState} from 'react'
+import {useEffect, useMemo, useRef} from 'react'
 import {toServerUrl} from 'src/_metronic/helpers'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
@@ -92,27 +91,15 @@ const ChatSidePanel = (props: Props) => {
   const {opened} = props
   const dispatch = useAppDispatch()
   const theme = useTheme()
-  const user = useAppSelector(({user}) => user.user)
   const {access_token} = useAppSelector(({user}) => user)
   const {selectedChatRoom, chatRoomInfo} = useAppSelector(({chat}) => chat.chatRoom)
   const {searchText, searchMode} = useAppSelector(({chat}) => chat.messages)
   const {onClose} = props
-  // const [searchText, setSearchText] = useState('')
-  // const [type, setType] = useState(true)
   const ref = useRef(null)
   useEffect(() => {
     console.log('hello')
     dispatch(echoInit(access_token))
-  }, [dispatch])
-  function handleSearchText(event: any) {
-    // setSearchText(event.target.value)
-    dispatch(handleSearch(event.target.value))
-  }
-  const handleSwitch = (e: any) => {
-    // setType(e.target.checked)
-    // console.log('e==', e.target.checked)
-    dispatch(handleSearchMode(Number(e.target.checked)))
-  }
+  }, [dispatch, access_token])
 
   const matches = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -146,8 +133,18 @@ const ChatSidePanel = (props: Props) => {
                 )}
               </Hidden>
             </div>
-            {useMemo(
-              () => (
+            {useMemo(() => {
+              function handleSearchText(event: any) {
+                // setSearchText(event.target.value)
+                dispatch(handleSearch(event.target.value))
+              }
+              const handleSwitch = (e: any) => {
+                // setType(e.target.checked)
+                // console.log('e==', e.target.checked)
+                dispatch(handleSearchMode(Number(e.target.checked)))
+              }
+
+              return (
                 <Paper
                   className='flex p-4 mx-2 items-center px-4 py-2 h-30 rounded-4 shadow-none'
                   sx={{background: theme.palette.primary.light}}
@@ -170,9 +167,8 @@ const ChatSidePanel = (props: Props) => {
                   />
                   <IOSSwitch checked={searchMode === 1} onChange={handleSwitch} />
                 </Paper>
-              ),
-              [searchText, searchMode]
-            )}
+              )
+            }, [searchText, searchMode, dispatch, theme.palette.primary.light])}
             <div className='flex px-4 sm:px-2'>
               <IconButton color='inherit' size={matches ? 'small' : 'large'} onClick={onClose}>
                 <FuseSvgIcon size={matches ? 16 : 24}>heroicons-outline:x</FuseSvgIcon>

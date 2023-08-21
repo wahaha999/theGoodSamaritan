@@ -134,20 +134,6 @@ function Chat(props) {
     })
   }
 
-  const onInputChange = (ev, selectedChatRoom) => {
-    setMessageText(ev.target.value)
-    let channel = window.Echo.join(`chat.dm.${selectedChatRoom}`)
-    setTimeout(() => {
-      // console.log('win0==',window.Echo)
-      channel.whisper('typing', {
-        name: user.last_name,
-        avatar: user.avatar,
-      })
-
-      // console.log('win1==',window.Echo)
-    }, 300)
-  }
-
   const readFileAsync = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
@@ -161,26 +147,6 @@ function Chat(props) {
       reader.onerror = reject
       reader.readAsBinaryString(file)
     })
-  }
-
-  const handleRemove = (index) => {
-    let files = filePreviews.splice(index, 1)
-    setFilePreviews([...filePreviews])
-  }
-
-  const handleLoadComplete = (item, data) => {
-    if (item.type !== undefined) {
-      dispatch(
-        sendMessage({
-          message: item.message,
-          channel_id: item.channel_id,
-          channel_type: 'dm',
-          receiver_id: item.user_id,
-          attachments: data.filter((item) => item.success).map((item) => item.attachment.id),
-        })
-      )
-      dispatch(removeMessage(item.id))
-    }
   }
 
   return (
@@ -223,6 +189,22 @@ function Chat(props) {
                 (messages[i + 1] && messages[i + 1].user_id !== item.user_id)
               )
             }
+            const handleLoadComplete = (item, data) => {
+              if (item.type !== undefined) {
+                dispatch(
+                  sendMessage({
+                    message: item.message,
+                    channel_id: item.channel_id,
+                    channel_type: 'dm',
+                    receiver_id: item.user_id,
+                    attachments: data
+                      .filter((item) => item.success)
+                      .map((item) => item.attachment.id),
+                  })
+                )
+                dispatch(removeMessage(item.id))
+              }
+            }
 
             return messages?.length > 0
               ? messages.map((item, i) => {
@@ -259,7 +241,7 @@ function Chat(props) {
                   )
                 })
               : null
-          }, [messages, user?.id])}
+          }, [messages, dispatch, user?.id])}
         </div>
 
         {messages?.length === 0 && (
@@ -269,9 +251,15 @@ function Chat(props) {
                 heroicons-outline:chat
               </FuseSvgIcon>
             </div>
-            <Typography className='px-16 pb-24 text-center' color='text.secondary'>
-              Start a conversation by typing your message below.
-            </Typography>
+            {selectedChatRoom ? (
+              <Typography className='px-16 pb-24 text-center' color='text.secondary'>
+                Start a conversation by typing your message below.
+              </Typography>
+            ) : (
+              <Typography className='px-16 pb-24 text-center' color='text.secondary'>
+                Please select chatroom to start chat
+              </Typography>
+            )}
           </div>
         )}
       </FuseScrollbars>
@@ -307,6 +295,24 @@ function Chat(props) {
           }
           setMessageText('')
           setFilePreviews([])
+        }
+
+        const onInputChange = (ev, selectedChatRoom) => {
+          setMessageText(ev.target.value)
+          let channel = window.Echo.join(`chat.dm.${selectedChatRoom}`)
+          setTimeout(() => {
+            // console.log('win0==',window.Echo)
+            channel.whisper('typing', {
+              name: user.last_name,
+              avatar: user.avatar,
+            })
+
+            // console.log('win1==',window.Echo)
+          }, 300)
+        }
+
+        const handleRemove = (index) => {
+          setFilePreviews([...filePreviews])
         }
 
         return (
@@ -379,6 +385,7 @@ function Chat(props) {
                   <InputBase
                     autoFocus
                     ref={inputRef}
+                    disabled={selectedChatRoom === null}
                     id='message-input'
                     className='flex flex-1 grow shrink-0 mx-16 ltr:mr-48 rtl:ml-48 my-6'
                     placeholder='Type your message'
@@ -389,6 +396,7 @@ function Chat(props) {
                     className='absolute ltr:right-0 rtl:left-0 top-0'
                     type='submit'
                     size='large'
+                    disabled={selectedChatRoom === null}
                   >
                     <FuseSvgIcon className='rotate-90' color='action'>
                       heroicons-outline:paper-airplane
@@ -398,6 +406,7 @@ function Chat(props) {
                     className='absolute ltr:right-0 rtl:left-0 top-0'
                     size='large'
                     component='label'
+                    disabled={selectedChatRoom === null}
                   >
                     <input
                       id='chat-attachment'
@@ -449,7 +458,17 @@ function Chat(props) {
             {/* )} */}
           </>
         )
-      }, [dispatch, messageText, selectedChatRoom, typeEvent, filePreviews])}
+      }, [
+        dispatch,
+        messageText,
+        selectedChatRoom,
+        typeEvent,
+        filePreviews,
+        chatRoomInfo.id,
+        user.id,
+        user.avatar,
+        user.last_name,
+      ])}
     </Paper>
   )
 }
