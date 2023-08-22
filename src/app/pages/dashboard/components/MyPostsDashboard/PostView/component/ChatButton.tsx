@@ -6,6 +6,7 @@ import _ from 'src/app/modules/@lodash/@lodash'
 import {dmSelect} from '../../../ChatSidePanel/store/messageSlice'
 import {openConnDialog} from 'src/app/pages/dashboard/store/connectDialogSlice'
 import {createChatRoom} from '../../../ChatSidePanel/store/chatRoomSlice'
+import {setLoading} from 'src/app/pages/dashboard/store/filterSlice'
 
 type Props = {
   info: any
@@ -28,11 +29,13 @@ const ChatButton = (props: Props) => {
         })
       )
     } else {
+      dispatch(setLoading(true))
       // dispatch(openConnDialog({open: true, info: info}))
       const res = await dispatch(createChatRoom({receiver: info.id}))
       // if (res.payload.id) {
       // await sendChat()
       // }
+      dispatch(setLoading(false))
       const {id} = res.payload
 
       dispatch(
