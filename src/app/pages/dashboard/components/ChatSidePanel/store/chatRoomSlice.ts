@@ -55,7 +55,6 @@ export const getFilteredChannels = createAsyncThunk(
 export const selectChatRoom = createAsyncThunk(
   'dashboard/chat/selectChatRoom',
   async (data: any, {getState, dispatch}) => {
-    console.log('selectChatRoom==', data)
     return data
     // return res.data
   }
@@ -89,7 +88,6 @@ const chatRoomSlice = createSlice({
       state.total_unread_count += 1
       // console.log('state==', state, id, message)
       const foundChannel = _.find(state.chatRooms, {id: channel_id})
-      console.log('f===', foundChannel)
 
       if (foundChannel) {
         foundChannel.updated_at = action.payload.updated_at
