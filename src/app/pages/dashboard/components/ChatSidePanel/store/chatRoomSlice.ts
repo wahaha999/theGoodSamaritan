@@ -5,7 +5,7 @@ import {API_URL} from 'src/app/modules/auth/core/_requests'
 import {showMessage} from 'src/app/store/fuse/messageSlice'
 
 export interface IMessage {
-  message: string
+  message?: string
   receiver: number
 }
 const initialState: any = {
@@ -55,7 +55,6 @@ export const getFilteredChannels = createAsyncThunk(
 export const selectChatRoom = createAsyncThunk(
   'dashboard/chat/selectChatRoom',
   async (data: any, {getState, dispatch}) => {
-    // console.log('res==', res.data)
     return data
     // return res.data
   }
@@ -89,7 +88,6 @@ const chatRoomSlice = createSlice({
       state.total_unread_count += 1
       // console.log('state==', state, id, message)
       const foundChannel = _.find(state.chatRooms, {id: channel_id})
-      console.log('f===', foundChannel)
 
       if (foundChannel) {
         foundChannel.updated_at = action.payload.updated_at
