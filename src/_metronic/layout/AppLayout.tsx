@@ -164,7 +164,9 @@ const DrawerHeader = styled('div')(({theme}) => ({
 }))
 
 export default function AppLayout(props: Props) {
-  const {selectedChatRoom, total_unread_count} = useAppSelector(({chat}) => chat.chatRoom)
+  const {selectedChatRoom, total_unread_count, chatRooms} = useAppSelector(
+    ({chat}) => chat.chatRoom
+  )
   const theme = useTheme()
   const navigate = useNavigate()
   const [open, setOpen] = React.useState(true)
@@ -280,25 +282,27 @@ export default function AppLayout(props: Props) {
                 rel='noopener noreferrer'
                 style={{textDecoration: 'none', background: 'transparent'}}
               > */}
-              <IconButton className='mx-0' onClick={() => navigate('support')}>
+              <IconButton className='mx-2' onClick={() => navigate('support')}>
                 <FuseSvgIcon size={24} color={'primary'}>
                   heroicons-solid:question-mark-circle
                 </FuseSvgIcon>
               </IconButton>
               {/* </a> */}
             </Tooltip>
-            <Tooltip title='Click to open chat' arrow>
-              <IconButton
-                className='mx-4 sm:mx-2'
-                onClick={() => {
-                  setChatOpen(true)
-                }}
-              >
-                <Badge badgeContent={total_unread_count} color='error'>
-                  <FuseSvgIcon size={24}>heroicons-outline:chat-alt-2</FuseSvgIcon>
-                </Badge>
-              </IconButton>
-            </Tooltip>
+            {chatRooms.length > 0 && (
+              <Tooltip title='Click to open chat' arrow>
+                <IconButton
+                  className='mx-4 sm:mx-2'
+                  onClick={() => {
+                    setChatOpen(true)
+                  }}
+                >
+                  <Badge badgeContent={total_unread_count} color='error'>
+                    <FuseSvgIcon size={24}>heroicons-outline:chat-alt-2</FuseSvgIcon>
+                  </Badge>
+                </IconButton>
+              </Tooltip>
+            )}
             <Tooltip title='Click to open Profile' arrow>
               <Avatar
                 sx={{cursor: 'pointer'}}

@@ -5,6 +5,7 @@ import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import _ from 'src/app/modules/@lodash/@lodash'
 import {dmSelect} from '../../../ChatSidePanel/store/messageSlice'
 import {openConnDialog} from 'src/app/pages/dashboard/store/connectDialogSlice'
+import {createChatRoom} from '../../../ChatSidePanel/store/chatRoomSlice'
 
 type Props = {
   info: any
@@ -18,11 +19,30 @@ const ChatButton = (props: Props) => {
     return _.find(chatRooms, (e: any) => e.sender_id === info.id || e.receiver_id === info.id)
   }, [chatRooms, info])
 
-  const sendChat = () => {
+  const sendChat = async () => {
     if (channel) {
-      dispatch(dmSelect({channel_id: channel.id, info: channel}))
+      dispatch(
+        dmSelect({
+          channel_id: channel.id,
+          info: info.id === channel.receiver_id ? channel.receiver : channel.sender,
+        })
+      )
     } else {
-      dispatch(openConnDialog({open: true, info: info}))
+      // dispatch(openConnDialog({open: true, info: info}))
+      const res = await dispatch(createChatRoom({receiver: info.id}))
+      // if (res.payload.id) {
+      // await sendChat()
+      // }
+      const {id} = res.payload
+
+      dispatch(
+        dmSelect({
+          channel_id: id,
+          info: info.id === res.payload.receiver_id ? res.payload.receiver : res.payload.sender,
+        })
+      )
+      // console.log('res==', res.)
+      // })
     }
   }
 

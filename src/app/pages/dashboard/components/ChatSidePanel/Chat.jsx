@@ -118,7 +118,7 @@ function Chat(props) {
     if (inputRef.current) {
       inputRef.current.focus()
     }
-  }, [])
+  }, [messages])
 
   useEffect(() => {
     scrollToBottom()
@@ -382,12 +382,14 @@ function Chat(props) {
                   ))}
                 </Grid>
                 <Grid container direction='row' alignItems={'center'}>
-                  <InputBase
-                    autoFocus
+                  <input
+                    // autoFocus
+                    type='text'
                     ref={inputRef}
                     disabled={selectedChatRoom === null}
                     id='message-input'
-                    className='flex flex-1 grow shrink-0 mx-16 ltr:mr-48 rtl:ml-48 my-6'
+                    className='mx-6 focus:outline-none my-6'
+                    // className='flex flex-1 grow shrink-0 mx-16 ltr:mr-48 rtl:ml-48 my-6 border-x-0'
                     placeholder='Type your message'
                     onChange={(e) => onInputChange(e, selectedChatRoom)}
                     value={messageText}

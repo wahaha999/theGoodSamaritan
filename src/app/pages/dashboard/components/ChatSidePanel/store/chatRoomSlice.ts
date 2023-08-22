@@ -5,7 +5,7 @@ import {API_URL} from 'src/app/modules/auth/core/_requests'
 import {showMessage} from 'src/app/store/fuse/messageSlice'
 
 export interface IMessage {
-  message: string
+  message?: string
   receiver: number
 }
 const initialState: any = {
@@ -55,7 +55,7 @@ export const getFilteredChannels = createAsyncThunk(
 export const selectChatRoom = createAsyncThunk(
   'dashboard/chat/selectChatRoom',
   async (data: any, {getState, dispatch}) => {
-    // console.log('res==', res.data)
+    console.log('selectChatRoom==', data)
     return data
     // return res.data
   }
