@@ -128,6 +128,7 @@ const ContactButton = (props: Props) => {
           channel_id === selectedChatRoom && 'active'
         )}
         onClick={() => dispatch(dmSelect({channel_id, info}))}
+        sx={{textTransform: 'none'}}
       >
         <Grid container alignItems='center' columnGap={1}>
           <Grid item>
@@ -148,12 +149,23 @@ const ContactButton = (props: Props) => {
                 alignItems='flex-start'
               >
                 <Grid item>
-                  <Typography noWrap>
+                  <Typography>
                     {info.first_name} {info?.last_name}
                   </Typography>
                 </Grid>
                 <Grid item>
-                  <Typography noWrap variant='caption' className='whitespace-nowrap'>
+                  <Typography
+                    variant='caption'
+                    color='GrayText'
+                    sx={{
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      textAlign: 'start',
+                    }}
+                  >
                     {data.last_message ?? 'Noting yet'}
                   </Typography>
                 </Grid>
