@@ -11,6 +11,7 @@ import {
   MenuItem,
   InputLabel,
   FormHelperText,
+  Button,
 } from '@mui/material'
 import {Controller, useFormContext} from 'react-hook-form'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
@@ -18,6 +19,7 @@ import {IState} from '../../store/planSlice'
 import {useAppSelector} from 'src/app/store/hook'
 import {ITimezone, timezone} from 'src/app/constants/timezone'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
+import BillingManage from '../../Billing/BillingManage'
 
 type Props = {}
 
@@ -28,19 +30,22 @@ const Location = (props: Props) => {
 
   const methods = useFormContext()
   const {control, formState, watch} = methods
+  const {product_name, state, customer_id} = useAppSelector(({user}) => user.user.account)
+  const {states: plan_state} = useAppSelector(({user}) => user)
+  console.log('product_name==', product_name, plan_state, state)
 
   const {errors} = formState
-  const {state} = useAppSelector(({post}) => post.plan)
+  const {state: states} = useAppSelector(({post}) => post.plan)
 
   const tempState: any[] = useMemo(() => {
-    if (state) {
+    if (states) {
       let temp: any = []
-      Object.keys(state).map((item, index) => {
-        temp.push(`${state[item].State} - ${state[item].Description}`)
+      Object.keys(states).map((item, index) => {
+        temp.push(`${states[item].State} - ${states[item].Description}`)
       })
       return temp
     }
-  }, [state])
+  }, [states])
 
   return (
     <>
@@ -198,7 +203,7 @@ const Location = (props: Props) => {
             />
           </Grid>
           <Grid item md={6} sm={12} xs={12}>
-            {state && (
+            {states && (
               <Controller
                 control={control}
                 name='state'
@@ -215,7 +220,7 @@ const Location = (props: Props) => {
                       //   setOpen(true)
                       // }}
                       onChange={(event: any, newValue: any) => {
-                        onChange(newValue.split('-')[0].trim())
+                        onChange(newValue === null ? '' : newValue.split('-')[0].trim())
                       }}
                       onInputChange={(event, newInputValue) => {
                         onChange(newInputValue ?? '')
@@ -225,6 +230,19 @@ const Location = (props: Props) => {
                       // }}
                       isOptionEqualToValue={(option, value) => option == value}
                       getOptionLabel={(option) => option}
+                      getOptionDisabled={(option) => {
+                        let disableOption = true // Default value
+                        if (state) {
+                          Object.keys(plan_state).forEach((item) => {
+                            if (item == option.split('-')[0].trim()) {
+                              disableOption = false
+                            }
+                          })
+                          return disableOption
+                        } else {
+                          return false
+                        }
+                      }}
                       options={tempState}
                       loading={loading}
                       renderInput={(params) => {
@@ -273,6 +291,44 @@ const Location = (props: Props) => {
           </Grid>
         </Grid>
       </Box>
+      <Typography my={2}>
+        {product_name === 'Local' && (
+          <span>
+            You are currently registered for the local plan. This plan only allows you to change
+            your state 1 time. If you want to view and interact with organizations from different
+            states please consider upgrading to either our regional or national plan. Click
+            {
+              <span>
+                <BillingManage
+                  title='here'
+                  variant='text'
+                  color='primary'
+                  customer_id={customer_id}
+                  sx={{textTransform: 'lowercase', fontSize: 14, p: 0, textDecoration: 'underline'}}
+                />
+              </span>
+            }{' '}
+            to upgrade your plan.
+          </span>
+        )}
+        {product_name === 'Regional' && (
+          <span>
+            You are currently registered for the regional plan. If you want to view and interact
+            with organizations from different regions you will need to upgrade to the National plan.
+            Click
+            <span>
+              <BillingManage
+                title='here'
+                variant='text'
+                color='primary'
+                customer_id={customer_id}
+                sx={{textTransform: 'lowercase', fontSize: 14, p: 0, textDecoration: 'underline'}}
+              />
+            </span>
+            to upgrade your plan.
+          </span>
+        )}
+      </Typography>
     </>
   )
 }
