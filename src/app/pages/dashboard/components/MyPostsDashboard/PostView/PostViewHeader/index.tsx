@@ -156,8 +156,10 @@ const PostViewHeader = (props: Props) => {
                 status={disabled}
               />{' '}
               <Typography>
-                {`${post?.user?.account?.non_profit_name}`} posted on{' '}
-                {moment(post?.created_at).format('MM/DD/YY')} at{' '}
+                {`${post?.user?.account?.non_profit_name}(${
+                  post?.user.role === 'admin' ? post?.user.role : ''
+                })`}{' '}
+                posted on {moment(post?.created_at).format('MM/DD/YY')} at{' '}
                 {moment(post?.created_at).format('h:mm A')}
               </Typography>
               {type === 'post' && (
