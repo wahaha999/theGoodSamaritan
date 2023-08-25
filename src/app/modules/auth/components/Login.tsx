@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import clsx from 'clsx'
 import {useFormik} from 'formik'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useDispatch} from 'react-redux'
 import {Link, useNavigate, useParams} from 'react-router-dom'
 import {showMessage} from 'src/app/store/fuse/messageSlice'
@@ -30,6 +30,7 @@ https://medium.com/@maurice.de.beijer/yup-validation-and-typescript-and-formik-6
 
 export function Login() {
   const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState<string>('')
   const dispatch = useDispatch<any>()
   const {state} = useParams()
   const navigate = useNavigate()
@@ -38,6 +39,14 @@ export function Login() {
     email: state ?? '',
     password: '',
   }
+
+  useEffect(() => {
+    if (localStorage.getItem('email')) {
+      setSuccess(
+        'Congratulations, you have successfully signed up. Please log in below and complete your registration'
+      )
+    }
+  }, [])
 
   const formik = useFormik({
     initialValues,
@@ -49,6 +58,7 @@ export function Login() {
 
         if (auth.access_token) {
           sessionStorage.setItem('access_token', auth.access_token)
+          localStorage.setItem('email', '')
         }
         const temp = {...auth.user}
         dispatch(
@@ -59,6 +69,8 @@ export function Login() {
         )
         dispatch(showMessage({message: 'Successful login', variant: 'success'}))
       } catch (error: any) {
+        localStorage.setItem('email', '')
+
         setStatus(
           typeof error.response.data.message == 'string'
             ? error.response.data.message
@@ -85,6 +97,12 @@ export function Login() {
       {formik.status && (
         <div className='mb-lg-15 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
+        </div>
+      )}
+
+      {success && (
+        <div className='mb-lg-15 alert alert-success'>
+          <div className='alert-text font-weight-bold'>{success}</div>
         </div>
       )}
 
