@@ -68,7 +68,10 @@ export const getPosts = createAsyncThunk(
       const {data} = await axios.get(`${API_URL}/post/get`, {params: {...searchFilter}})
       dispatch(setLoading(false))
       return data
-    } catch (error) {}
+    } catch (error: any) {
+      dispatch(showMessage({message: JSON.stringify(error.message), variant: 'error'}))
+      dispatch(setLoading(false))
+    }
   }
 )
 export const deletePost = createAsyncThunk(
