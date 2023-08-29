@@ -1,5 +1,6 @@
 import SearchIcon from '@mui/icons-material/Search'
 import {
+  Badge,
   Button,
   FormControl,
   Grid,
@@ -18,7 +19,7 @@ import {
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
 import {useParams} from 'react-router-dom'
 import {Controller, FormProvider, useForm} from 'react-hook-form'
-import {useEffect, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {addFilterForHeader} from 'src/app/pages/dashboard/store/filterSlice'
 import {useDebounce, usePrevious} from 'src/app/modules/hooks'
@@ -26,7 +27,7 @@ import _ from 'src/app/modules/@lodash/@lodash'
 import Navigation from '../Navigation'
 import FuseScrollbars from 'src/app/modules/core/FuseScrollbars/FuseScrollbars'
 import Connections from 'src/app/pages/dashboard/components/Connections'
-
+import './shake.css'
 const Search = styled('div')(({theme}) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -78,7 +79,8 @@ export function MenuInner(props) {
   const {control, watch, reset, setValue} = methods
 
   const {selectedUser} = useAppSelector(({post}) => post.filter.filter)
-
+  const {post: posts} = useAppSelector(({post}) => post)
+  const [shakeIcon, setShakeIcon] = useState(false)
   useEffect(() => {
     const initialState = {
       search: '',
@@ -115,6 +117,8 @@ export function MenuInner(props) {
     setSearchText(e.target.value)
     debounced(e.target.value)
   }
+
+  // console.log('shake==', shakeIcon)
 
   if (type === 'header') {
     return (
@@ -242,17 +246,20 @@ export function MenuInner(props) {
                     defaultValue={false}
                     render={({field}) => (
                       <Grid item>
-                        <Button
-                          onClick={() => field.onChange(!field.value)}
-                          startIcon={
-                            <NotificationsActiveIcon
-                              color={saved_posts ? 'primary' : 'secondary'}
-                            />
-                          }
-                          sx={{ml: 2}}
-                        >
-                          Saved Posts
-                        </Button>
+                        <Badge badgeContent={posts[0]?.unread} color='error'>
+                          <Button
+                            onClick={() => field.onChange(!field.value)}
+                            startIcon={
+                              <NotificationsActiveIcon
+                                color={saved_posts ? 'primary' : 'secondary'}
+                                className={posts[0]?.unread > 0 ? 'shake' : ''}
+                              />
+                            }
+                            sx={{ml: 2}}
+                          >
+                            Saved Posts
+                          </Button>
+                        </Badge>
                       </Grid>
                     )}
                   />

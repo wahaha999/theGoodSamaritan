@@ -1,0 +1,46 @@
+@keyframes shake {
+
+0% {
+        transform: rotate(0);
+    }
+
+    15% {
+        transform: rotate(30deg);
+    }
+
+    30% {
+        transform: rotate(-30deg);
+    }
+
+    45% {
+        transform: rotate(24deg);
+    }
+
+    60% {
+        transform: rotate(-24deg);
+    }
+
+    75% {
+        transform: rotate(12deg);
+    }
+
+    85% {
+        transform: rotate(-12deg);
+    }
+
+    92% {
+        transform: rotate(6deg);
+    }
+
+    100% {
+        transform: rotate(0);
+    }
+}
+
+.shake {
+    /* width: 100px;
+    height: 100px;
+    background-color: #3498db;
+    margin: 50px auto; */
+    animation: shake .8s cubic-bezier(.36, .07, .19, .97) infinite;
+}

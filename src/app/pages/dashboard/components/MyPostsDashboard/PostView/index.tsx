@@ -18,6 +18,7 @@ type Props = {
   replies_count?: number
   index?: number
   length?: number
+  forunread?: any
 }
 
 const itemVariants: Variants = {
@@ -54,7 +55,7 @@ const PostView = (props: Props) => {
   //     }
   //   }
   // }, [])
-  const {post, type, comment, comments_count, replies_count, index, length} = props
+  const {post, type, comment, comments_count, replies_count, index, length, forunread} = props
   const [popup, setPopup] = React.useState(false)
 
   const user = useAppSelector(({user}) => user.user)
@@ -110,6 +111,7 @@ const PostView = (props: Props) => {
         replies_count={replies_count}
         setExpand={setExpand}
         expand={expanded}
+        forunread={forunread}
         post={post}
         type={type}
       />
@@ -129,6 +131,7 @@ const PostView = (props: Props) => {
               index={index}
               comments_count={post.comments_count ? post.comments_count : 0}
               post={comment}
+              forunread={post}
               comment={comment}
               key={index}
             />

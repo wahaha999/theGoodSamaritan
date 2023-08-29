@@ -10,6 +10,7 @@ import {
   Chip,
   Avatar,
   Tooltip,
+  Badge,
 } from '@mui/material'
 import React, {useMemo, useState} from 'react'
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
@@ -37,12 +38,13 @@ type Props = {
   comments_count?: number
   replies_count?: number
   expand: boolean
+  forunread: any
 }
 
 const PostViewActions = (props: Props) => {
   const {id} = useAppSelector(({user}) => user.user)
 
-  const {setExpand, post, type, expand} = props
+  const {setExpand, post, type, expand, forunread} = props
   const dispatch = useAppDispatch()
   const [open, setOpen] = useState(false)
   const [data, setData] = useState([])
@@ -65,6 +67,28 @@ const PostViewActions = (props: Props) => {
       return false
     }
   }, [post.post_saves, id])
+
+  const unread_replies = useMemo(() => {
+    let unread = 0
+    if (forunread?.post_saves?.length > 0) {
+      JSON.parse(forunread.post_saves[0].unread_reply).map((item: any, index: number) => {
+        if (type === 'comment' && Number(item) === post.id) {
+          unread = unread + 1
+        }
+      })
+    }
+    return unread
+  }, [post, type, forunread])
+
+  console.log(
+    'type==',
+    saved_post && type === 'post'
+      ? post?.post_saves[0]?.unread_comment + JSON.parse(post?.post_saves[0].unread_reply).length
+      : type === 'comment'
+      ? unread_replies
+      : 0,
+    unread_replies
+  )
 
   return (
     <>
@@ -134,38 +158,54 @@ const PostViewActions = (props: Props) => {
                   </Button>
                 </Tooltip>
               )}
-              <Button
-                onClick={() => {
-                  if (
-                    type === 'post' &&
-                    post.comments_count &&
-                    post.comments_count > 0 &&
-                    !expand
-                  ) {
-                    dispatch(getLatestCommentByPostId(post.id))
-                  }
-                  if (
-                    type === 'comment' &&
-                    post.replies_count &&
-                    post.replies_count > 0 &&
-                    !expand
-                  ) {
-                    dispatch(getLatestRepliesByCommentId(post.id))
-                  }
-                  // if (type === 'comment') {
-                  // } else {
-                  setExpand(!expand)
-                  // }
+              <Badge
+                badgeContent={
+                  saved_post && type === 'post'
+                    ? post?.post_saves[0]?.unread_comment +
+                      JSON.parse(post?.post_saves[0].unread_reply).length
+                    : type === 'comment'
+                    ? unread_replies
+                    : 0
+                }
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
                 }}
-                startIcon={<ChatBubbleOutlineIcon />}
-                sx={{mr: 2}}
+                color='error'
               >
-                {type === 'comment' || type === 'reply'
-                  ? post.replies_count
-                    ? post.replies_count + ' Replies'
-                    : 'Reply'
-                  : post.comments_count + ' Comments'}
-              </Button>
+                <Button
+                  onClick={() => {
+                    if (
+                      type === 'post' &&
+                      post.comments_count &&
+                      post.comments_count > 0 &&
+                      !expand
+                    ) {
+                      dispatch(getLatestCommentByPostId(post.id))
+                    }
+                    if (
+                      type === 'comment' &&
+                      post.replies_count &&
+                      post.replies_count > 0 &&
+                      !expand
+                    ) {
+                      dispatch(getLatestRepliesByCommentId(post.id))
+                    }
+                    // if (type === 'comment') {
+                    // } else {
+                    setExpand(!expand)
+                    // }
+                  }}
+                  startIcon={<ChatBubbleOutlineIcon />}
+                  sx={{mr: 2}}
+                >
+                  {type === 'comment' || type === 'reply'
+                    ? post.replies_count
+                      ? post.replies_count + ' Replies'
+                      : 'Reply'
+                    : post.comments_count + ' Comments'}
+                </Button>
+              </Badge>
               <LikeHover post={post} type={type} />
             </Grid>
           </Grid>
