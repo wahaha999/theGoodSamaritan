@@ -90,26 +90,28 @@ const ColorlibStepIconRoot = styled('div')(({theme, ownerState}) => ({
 }))
 
 function validateEIN(ein) {
-  if (ein[2] !== '-') {
-    return false
-  }
-  // Remove any dashes from the EIN number
-  ein = ein.replace(/-/g, '')
-  // Validate that the EIN number is exactly nine digits long
-  if (!/^\d{9}$/.test(ein)) {
-    return false
-  }
+  if (ein) {
+    if (ein[2] !== '-') {
+      return false
+    }
+    // Remove any dashes from the EIN number
+    ein = ein.replace(/-/g, '')
+    // Validate that the EIN number is exactly nine digits long
+    if (!/^\d{9}$/.test(ein)) {
+      return false
+    }
 
-  // Validate that the first two digits are between 01 and 99
-  const firstTwoDigits = parseInt(ein.substring(0, 2), 10)
-  if (firstTwoDigits < 1 || firstTwoDigits > 99) {
-    return false
-  }
+    // Validate that the first two digits are between 01 and 99
+    const firstTwoDigits = parseInt(ein.substring(0, 2), 10)
+    if (firstTwoDigits < 1 || firstTwoDigits > 99) {
+      return false
+    }
 
-  // Validate that the third digit is between 1 and 6
-  const thirdDigit = parseInt(ein.substring(2, 3), 10)
-  if (thirdDigit < 1 || thirdDigit > 6) {
-    return false
+    // Validate that the third digit is between 1 and 6
+    const thirdDigit = parseInt(ein.substring(2, 3), 10)
+    if (thirdDigit < 1 || thirdDigit > 6) {
+      return false
+    }
   }
 
   // Calculate the check digit and validate that it matches the ninth digit
@@ -144,6 +146,7 @@ const schema = yup.object().shape({
     .required('organize is required'),
   EIN: yup
     .string()
+    .validateEIN('Please enter the correct format to enter your EIN ##-#######')
     .test(
       'EINRequired',
       'EIN is required when Non Profit Document is not loaded.',

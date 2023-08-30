@@ -32,7 +32,6 @@ const Location = (props: Props) => {
   const {control, formState, watch} = methods
   const {product_name, state, customer_id} = useAppSelector(({user}) => user.user.account)
   const {states: plan_state} = useAppSelector(({user}) => user)
-  console.log('product_name==', product_name, plan_state, state)
 
   const {errors} = formState
   const {state: states} = useAppSelector(({post}) => post.plan)
