@@ -206,6 +206,7 @@ function ColorlibStepIcon(props) {
 export default function Account() {
   const [activeStep, setActiveStep] = React.useState(0)
   const [completed, setCompleted] = React.useState({})
+  const [filled, setFilled] = React.useState(false)
   const dispatch = useAppDispatch()
   const theme = useTheme()
   const navigate = useNavigate()
@@ -245,8 +246,10 @@ export default function Account() {
 
   const handleNext = () => {
     if (isLastStep() && isValid) {
+      console.log('hello')
       dispatch(updateProfile(getValues()))
         .then(() => {
+          setFilled(true)
           // dispatch(showMessage({ message: 'Successfully updated', variant: 'success' }));
           setActiveStep(4)
         })
@@ -287,8 +290,11 @@ export default function Account() {
       newCompleted[activeStep] = true
       setCompleted(newCompleted)
       if (isLastStep() && isValid) {
+        console.log('hello1')
         dispatch(updateProfile(getValues()))
           .then(() => {
+            setActiveStep(4)
+
             // dispatch(showMessage({message:'Successfully updated',variant:'success'}))
           })
           .catch((err) => {
@@ -326,7 +332,7 @@ export default function Account() {
           ))}
         </Stepper>
         <div>
-          {allStepsCompleted() ? (
+          {filled ? (
             <React.Fragment>
               <Grid
                 container
