@@ -7,7 +7,6 @@ import { memo, useMemo } from 'react';
 // import withRouter from '@fuse/core/withRouter';
 // import FuseNavBadge from '../../FuseNavBadge';
 // import FuseSvgIcon from '../../../FuseSvgIcon';
-import TGSNavItem from '../../TGSNavItem';
 import withRouter from 'src/app/modules/core/withRouter/withRouter';
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon';
 import { useAppSelector } from 'src/app/store/hook';
@@ -67,7 +66,7 @@ function FuseNavHorizontalLink(props) {
         {/* {item.badge && <FuseNavBadge className="ltr:ml-8 rtl:mr-8" badge={item.badge} />} */}
       </StyledListItem>
     ),
-    [item.badge, item.icon, item.iconClass, item.target, item.title, item.url,user.role]
+    [ item.icon, item.iconClass, item.target, item.title, item.url,user.role,item.role,item.sx]
   );
 }
 

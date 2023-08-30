@@ -29,14 +29,14 @@ const readFileAsync = (file: any) => {
 
 const SupportContent = (props: Props) => {
   const methods = useFormContext()
-  const {control, formState, watch, handleSubmit, setValue} = methods
+  const {formState, watch, handleSubmit, setValue} = methods
   const attachment = watch('attachment')
   const [loading, setLoading] = useState<boolean>(false)
   const {errors} = formState
   const dispatch = useAppDispatch()
   const [filePreviews, setFilePreviews] = useState<any>([])
   const handleRemove = (index: number) => {
-    let files = filePreviews.splice(index, 1)
+    filePreviews.splice(index, 1)
     attachment.splice(index, 1)
 
     setFilePreviews([...filePreviews])

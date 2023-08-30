@@ -24,7 +24,7 @@ export const createPost = createAsyncThunk(
     const formData = new FormData()
     try {
       Object.keys(post).map((item, index) => {
-        if (item == 'images' && post['images']) {
+        if (item === 'images' && post['images']) {
           ;(post['images'] as Array<any>).forEach((item: any, index: number) => {
             if (typeof item !== 'string') {
               formData.append(`files[${index}]`, item)
@@ -33,14 +33,14 @@ export const createPost = createAsyncThunk(
             }
           })
         } else {
-          if (item == 'location') {
+          if (item === 'location') {
             formData.append('lat', post['location'].lat)
             formData.append('lng', post['location'].lng)
           } else {
-            if (item == 'category') {
+            if (item === 'category') {
               formData.append('category', JSON.stringify(post['category']))
             } else {
-              if (item == 'keyword') {
+              if (item === 'keyword') {
                 formData.append('keyword', JSON.stringify(post['keyword']))
               } else {
                 formData.append(item, post[item])
@@ -49,7 +49,7 @@ export const createPost = createAsyncThunk(
           }
         }
       })
-      const {data} = await axios.post(`${API_URL}/post/create`, formData)
+      await axios.post(`${API_URL}/post/create`, formData)
       const state = getState() as any
       dispatch(getPosts(state?.post?.filter?.filter))
       dispatch(showMessage({message: 'Successful posted', variant: 'success'}))
@@ -78,7 +78,7 @@ export const deletePost = createAsyncThunk(
   'dashboard/post/delete',
   async (id: number, {getState, dispatch}) => {
     try {
-      const {data} = await axios.delete(`${API_URL}/post/delete/${id}`)
+      await axios.delete(`${API_URL}/post/delete/${id}`)
       const {post} = getState() as any
 
       dispatch(getPosts(post?.filter?.filter))
@@ -96,7 +96,7 @@ export const createComment = createAsyncThunk(
     const formData = new FormData()
     try {
       Object.keys(comment).map((item, index) => {
-        if (item == 'images' && comment['images']) {
+        if (item === 'images' && comment['images']) {
           ;(comment['images'] as Array<any>).forEach((item: any, index: number) => {
             if (typeof item !== 'string') {
               formData.append(`files[${index}]`, item)
@@ -149,7 +149,7 @@ export const createReply = createAsyncThunk(
     const formData = new FormData()
     try {
       Object.keys(reply).map((item, index) => {
-        if (item == 'images' && reply['images']) {
+        if (item === 'images' && reply['images']) {
           ;(reply['images'] as Array<any>).forEach((item: any, index: number) => {
             if (typeof item !== 'string') {
               formData.append(`files[${index}]`, item)
@@ -227,7 +227,7 @@ export const deleteComment = createAsyncThunk(
   'dashboard/comments/delete',
   async (id: number, {getState, dispatch}) => {
     try {
-      const {data} = await axios.delete(`${API_URL}/comments/delete/${id}`)
+      await axios.delete(`${API_URL}/comments/delete/${id}`)
       const {post} = getState() as any
 
       dispatch(getPosts(post?.filter?.filter))
@@ -243,7 +243,7 @@ export const deleteReply = createAsyncThunk(
   'dashboard/replies/delete',
   async (id: number, {getState, dispatch}) => {
     try {
-      const {data} = await axios.delete(`${API_URL}/replies/delete/${id}`)
+      await axios.delete(`${API_URL}/replies/delete/${id}`)
       const {post} = getState() as any
 
       dispatch(getPosts(post?.filter?.filter))

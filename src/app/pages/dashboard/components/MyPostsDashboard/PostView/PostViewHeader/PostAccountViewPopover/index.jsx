@@ -1,19 +1,14 @@
-import {Button, Typography, Paper, Avatar, Grid, Tooltip, TextField} from '@mui/material'
-import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined'
-import React, {useMemo, useState} from 'react'
+import {Button, Typography, Avatar, Grid, Tooltip} from '@mui/material'
+import {useMemo, useState} from 'react'
 import {Manager, Popper, Reference} from 'react-popper'
 import {useDebounce} from 'src/app/modules/hooks'
 import * as ReactDOM from 'react-dom'
 import {red} from '@mui/material/colors'
 import {motion, AnimatePresence} from 'framer-motion'
-import SendOutlinedIcon from '@mui/icons-material/SendOutlined'
 import ConnectWithoutContactOutlinedIcon from '@mui/icons-material/ConnectWithoutContactOutlined'
 import {toServerUrl} from 'src/_metronic/helpers'
-import {maxWidth} from '@mui/system'
 import {Link} from '@react-email/link'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
-import {useAppDispatch} from 'src/app/store/hook'
-import {openConnDialog} from 'src/app/pages/dashboard/store/connectDialogSlice'
 import ChatButton from '../../component/ChatButton'
 
 const params = ['0~50', '51~100', '101~200', '201~500', '501~1000', '1000~']
@@ -22,12 +17,11 @@ const PostAccountView = (props) => {
   const {avatar, data, width, height, status} = props
   const {user} = data
   const {account} = user
-  const dispatch = useAppDispatch()
   const [open, setOpened] = useState(false)
+
   const handleToggle = useDebounce((open) => {
     setOpened(open)
   }, 150)
-
   return useMemo(() => {
     return (
       <Manager>
@@ -100,7 +94,7 @@ const PostAccountView = (props) => {
                                 src={toServerUrl('/media/account/avatar/' + account?.avatar)}
                               />
                             </Grid>
-                            <Grid item direction='column'>
+                            <Grid item>
                               <Typography>{user?.account.non_profit_name}</Typography>
                               <Typography variant='subtitle1'>
                                 Phone: {account.phone_number !== 'null' ? account.phone_number : ''}
@@ -116,9 +110,7 @@ const PostAccountView = (props) => {
                       <Grid container spacing={1} my={1}>
                         <Grid item md={12}></Grid>
                       </Grid>
-                      <Typography variant='subtitle1'>
-                        <h2>Our Mission:</h2>
-                      </Typography>
+                      <Typography variant='h5'>Our Mission:</Typography>
                       <div
                         dangerouslySetInnerHTML={{__html: account.mission}}
                         style={{
@@ -142,7 +134,7 @@ const PostAccountView = (props) => {
                               src={toServerUrl('/media/user/avatar/' + user?.avatar)}
                             />
                           </Grid>
-                          <Grid item direction='column'>
+                          <Grid item>
                             <Typography>
                               Posted By: {user.first_name} {user.last_name}
                             </Typography>
@@ -234,7 +226,7 @@ const PostAccountView = (props) => {
         )}
       </Manager>
     )
-  }, [open, user, account])
+  }, [open, user, account, handleToggle, avatar, width, height, status])
 }
 
 export default PostAccountView

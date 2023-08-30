@@ -13,7 +13,7 @@ import {
   DialogActions,
   Checkbox,
 } from '@mui/material'
-import {toAbsoluteUrl, toServerUrl} from '../../../../../_metronic/helpers'
+import {toServerUrl} from '../../../../../_metronic/helpers'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'

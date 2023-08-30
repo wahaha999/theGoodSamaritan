@@ -1,24 +1,23 @@
 import React from 'react'
 import {Grid, Paper} from '@mui/material'
-import {autoBatchEnhancer} from '@reduxjs/toolkit'
 //import MyPostsDashboard from 'src/app/pages/dashboard/components/MyPostsDashboard';
 
-interface YouTubePlayerProps {
-  channelID: string
-}
+// interface YouTubePlayerProps {
+//   channelID: string
+// }
 
-const YouTubePlayer: React.FC<YouTubePlayerProps> = ({channelID}) => {
-  const embedUrl = `https://www.youtube.com/embed/?listType=user_uploads&list=${channelID}`
-  return (
-    <div>
-      <iframe id='ytplayer' width='640' height='360' src={embedUrl}></iframe>
-    </div>
-  )
-}
+// const YouTubePlayer: React.FC<YouTubePlayerProps> = ({channelID}) => {
+//   const embedUrl = `https://www.youtube.com/embed/?listType=user_uploads&list=${channelID}`
+//   return (
+//     <div>
+//       <iframe id='ytplayer' width='640' height='360' src={embedUrl}></iframe>
+//     </div>
+//   )
+// }
 
 const YoutubePage = () => {
-  const channelID = 'UUm9C6bqd05CQOVdOSC6fV2g'
-  const apiKey = 'AIzaSyD7vmPCkx_HO78o4126S2l1N_MeUPESanE'
+  // const channelID = 'UUm9C6bqd05CQOVdOSC6fV2g'
+  // const apiKey = 'AIzaSyD7vmPCkx_HO78o4126S2l1N_MeUPESanE'
 
   return (
     <Grid
@@ -37,7 +36,7 @@ const YoutubePage = () => {
             height: 'calc(100vh - 10px)', // Adjust the value as needed
           }}
         >
-           <div style={{ textAlign: 'center', marginBottom: '0px' }}>
+          <div style={{textAlign: 'center', marginBottom: '0px'}}>
             <h1>Training - Select the hamburger icon on the right to view all training videos</h1>
           </div>
           <iframe

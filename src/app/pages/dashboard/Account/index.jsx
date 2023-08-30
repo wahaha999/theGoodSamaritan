@@ -5,12 +5,10 @@ import Step from '@mui/material/Step'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import {
-  AppBar,
   Grid,
   Paper,
   StepConnector,
   StepLabel,
-  Toolbar,
   stepConnectorClasses,
   styled,
   useTheme,
@@ -90,26 +88,28 @@ const ColorlibStepIconRoot = styled('div')(({theme, ownerState}) => ({
 }))
 
 function validateEIN(ein) {
-  if (ein[2] !== '-') {
-    return false
-  }
-  // Remove any dashes from the EIN number
-  ein = ein.replace(/-/g, '')
-  // Validate that the EIN number is exactly nine digits long
-  if (!/^\d{9}$/.test(ein)) {
-    return false
-  }
+  if (ein) {
+    if (ein[2] !== '-') {
+      return false
+    }
+    // Remove any dashes from the EIN number
+    ein = ein.replace(/-/g, '')
+    // Validate that the EIN number is exactly nine digits long
+    if (!/^\d{9}$/.test(ein)) {
+      return false
+    }
 
-  // Validate that the first two digits are between 01 and 99
-  const firstTwoDigits = parseInt(ein.substring(0, 2), 10)
-  if (firstTwoDigits < 1 || firstTwoDigits > 99) {
-    return false
-  }
+    // Validate that the first two digits are between 01 and 99
+    const firstTwoDigits = parseInt(ein.substring(0, 2), 10)
+    if (firstTwoDigits < 1 || firstTwoDigits > 99) {
+      return false
+    }
 
-  // Validate that the third digit is between 1 and 6
-  const thirdDigit = parseInt(ein.substring(2, 3), 10)
-  if (thirdDigit < 1 || thirdDigit > 6) {
-    return false
+    // Validate that the third digit is between 1 and 6
+    const thirdDigit = parseInt(ein.substring(2, 3), 10)
+    if (thirdDigit < 1 || thirdDigit > 6) {
+      return false
+    }
   }
 
   // Calculate the check digit and validate that it matches the ninth digit
@@ -144,6 +144,7 @@ const schema = yup.object().shape({
     .required('organize is required'),
   EIN: yup
     .string()
+    .validateEIN('Please enter the correct format to enter your EIN ##-#######')
     .test(
       'EINRequired',
       'EIN is required when Non Profit Document is not loaded.',
@@ -205,6 +206,7 @@ function ColorlibStepIcon(props) {
 export default function Account() {
   const [activeStep, setActiveStep] = React.useState(0)
   const [completed, setCompleted] = React.useState({})
+  const [filled, setFilled] = React.useState(false)
   const dispatch = useAppDispatch()
   const theme = useTheme()
   const navigate = useNavigate()
@@ -218,9 +220,9 @@ export default function Account() {
 
     resolver: yupResolver(schema),
   })
-  const {reset, watch, control, formState, trigger, getValues, handleSubmit} = methods
+  const {reset, watch, formState, trigger, getValues, handleSubmit} = methods
   const form = watch()
-  const {errors, isValid} = formState
+  const {isValid} = formState
 
   React.useEffect(() => {
     reset({...user.account})
@@ -239,13 +241,15 @@ export default function Account() {
   }
 
   const allStepsCompleted = () => {
-    return activeStep == 4
+    return activeStep === 4
   }
 
   const handleNext = () => {
     if (isLastStep() && isValid) {
+      console.log('hello')
       dispatch(updateProfile(getValues()))
         .then(() => {
+          setFilled(true)
           // dispatch(showMessage({ message: 'Successfully updated', variant: 'success' }));
           setActiveStep(4)
         })
@@ -274,20 +278,23 @@ export default function Account() {
   }
 
   const handleComplete = (data) => {
-    const {non_profit_name, EIN, address, organize} = data
+    const {non_profit_name, EIN, organize} = data
     if (
-      (!non_profit_name && activeStep == 0) ||
-      (activeStep == 1 && !organize) ||
-      (!EIN && activeStep == 2) ||
-      (isValid && activeStep == 3)
+      (!non_profit_name && activeStep === 0) ||
+      (activeStep === 1 && !organize) ||
+      (!EIN && activeStep === 2) ||
+      (isValid && activeStep === 3)
     ) {
       // handleSubmit()
       const newCompleted = completed
       newCompleted[activeStep] = true
       setCompleted(newCompleted)
       if (isLastStep() && isValid) {
+        console.log('hello1')
         dispatch(updateProfile(getValues()))
           .then(() => {
+            setActiveStep(4)
+
             // dispatch(showMessage({message:'Successfully updated',variant:'success'}))
           })
           .catch((err) => {
@@ -325,7 +332,7 @@ export default function Account() {
           ))}
         </Stepper>
         <div>
-          {allStepsCompleted() ? (
+          {filled ? (
             <React.Fragment>
               <Grid
                 container
@@ -361,10 +368,10 @@ export default function Account() {
           ) : (
             <React.Fragment>
               <Grid container justifyContent='center' alignItems='center'>
-                <Box sx={{}}>{activeStep == 0 && <AccountInfo />}</Box>
-                <Box sx={{}}>{activeStep == 1 && <AboutNonProfit />}</Box>
-                <Box sx={{}}>{activeStep == 2 && <Verification trigger={trigger} />}</Box>
-                <Box sx={{}}>{activeStep == 3 && <Location />}</Box>
+                <Box sx={{}}>{activeStep === 0 && <AccountInfo />}</Box>
+                <Box sx={{}}>{activeStep === 1 && <AboutNonProfit />}</Box>
+                <Box sx={{}}>{activeStep === 2 && <Verification trigger={trigger} />}</Box>
+                <Box sx={{}}>{activeStep === 3 && <Location />}</Box>
               </Grid>
               <Grid container justifyContent='space-around' sx={{my: 4}}>
                 {/* <AppBar

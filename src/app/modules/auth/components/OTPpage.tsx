@@ -1,5 +1,5 @@
-import {Button, Grid, Typography} from '@mui/material'
-import React, {useEffect, useState} from 'react'
+import {Grid, Typography} from '@mui/material'
+import {useState} from 'react'
 import OTPInput from 'react-otp-input'
 import {useLocation, useNavigate} from 'react-router-dom'
 import {sendOTP, verifyEmail} from '../core/_requests'

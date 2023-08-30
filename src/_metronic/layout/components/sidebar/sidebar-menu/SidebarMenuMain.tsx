@@ -10,13 +10,13 @@ import Label from '@mui/icons-material/Label'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowRightIcon from '@mui/icons-material/ArrowRight'
 import {SvgIconProps} from '@mui/material/SvgIcon'
-import {Button, Checkbox} from '@mui/material'
+import {Checkbox} from '@mui/material'
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import withReducer from 'src/app/store/withReducer'
 import reducer from '../store'
-import {Controller, FormProvider, set, useForm, useFormContext} from 'react-hook-form'
+import {Controller, FormProvider, useForm, useFormContext} from 'react-hook-form'
 import {showMessage} from 'src/app/store/fuse/messageSlice'
 import {getStates} from 'src/app/pages/dashboard/store/planSlice'
 import BillingManage from 'src/app/pages/dashboard/Billing/BillingManage'
@@ -84,8 +84,8 @@ function StyledTreeItem(props: StyledTreeItemProps) {
     ...other
   } = props
   const methods = useFormContext()
-  const {control, watch} = methods
-  const value = watch(`${name}`)
+  const {control} = methods
+  // const value = watch(`${name}`)
   const {account} = useAppSelector(({user}) => user.user)
   const dispatch = useAppDispatch()
   return (
@@ -154,7 +154,6 @@ function StyledTreeItem(props: StyledTreeItemProps) {
     />
   )
 }
-let prevData: any
 
 function SidebarMenuMain() {
   const category = useAppSelector(({sidebar}) => sidebar.category)
@@ -164,12 +163,12 @@ function SidebarMenuMain() {
   React.useEffect(() => {
     dispatch(getCategories())
     dispatch(getStates())
-  }, [])
+  }, [dispatch])
 
   const methods = useForm({
     mode: 'onChange',
   })
-  const {getValues, watch, reset, setValue} = methods
+  const {watch, reset, setValue} = methods
   const allSelect = watch('all_select')
   const all_states = watch('all_states')
 
@@ -240,7 +239,7 @@ function SidebarMenuMain() {
     }
   }, [setValue, all_states, state_with_plan])
 
-  const watch_state = watch('state')
+  // const watch_state = watch('state')
 
   const data = watch()
 
@@ -263,7 +262,7 @@ function SidebarMenuMain() {
     if (prevData) {
       dispatch(addFilter(watch()))
     }
-  }, [prevData, data])
+  }, [prevData, data, dispatch])
 
   // prevData = usePrevious(data)
   return (

@@ -1,9 +1,7 @@
 import {Collapse, Divider} from '@mui/material'
-import Card from '@mui/material/Card'
-import CardMedia from '@mui/material/CardMedia'
 import {Variants, motion} from 'framer-motion'
 import {useAppSelector} from 'src/app/store/hook'
-import React, {memo, useEffect, useRef, useState} from 'react'
+import React, {memo, useRef} from 'react'
 import PostViewHeader from './PostViewHeader'
 import PostViewMedia from './PostViewMedia'
 import PostViewContent from './PostViewContent'
@@ -56,12 +54,10 @@ const PostView = (props: Props) => {
   //   }
   // }, [])
   const {post, type, comment, comments_count, replies_count, index, length, forunread} = props
-  const [popup, setPopup] = React.useState(false)
 
   const user = useAppSelector(({user}) => user.user)
-  const [postData, setPostData] = React.useState<any>({})
-  const [confirm, setConfirm] = React.useState(false)
-  const [edit, setEdit] = React.useState(false)
+  const [, setPostData] = React.useState<any>({})
+  const [, setEdit] = React.useState(false)
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const [expanded, setExpand] = React.useState(false)
 

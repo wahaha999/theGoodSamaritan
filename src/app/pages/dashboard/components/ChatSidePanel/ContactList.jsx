@@ -24,11 +24,11 @@ const ContactList = (props) => {
 
   useEffect(() => {
     dispatch(getChatRooms(id))
-  }, [dispatch])
+  }, [dispatch, id])
 
   useEffect(() => {
     if (searchMode === 0) dispatch(getFilteredChannels(searchText))
-  }, [searchText, searchMode])
+  }, [searchText, searchMode, dispatch])
 
   const contactList = useMemo(() => {
     let list = _.filter(chatRooms, (e) => {
@@ -60,7 +60,7 @@ const ContactList = (props) => {
     } else if (sort === 'last') {
       return list.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
     }
-  }, [searchText, chatRooms, filteredChannels, id, sort])
+  }, [searchText, chatRooms, filteredChannels, id, sort, searchMode])
   // console.log('contact===', contactList)
   // const sortContactList = useMemo(() => {
   //   if (sort === 'unread') {
@@ -124,7 +124,7 @@ const ContactList = (props) => {
             </motion.div>
           </>
         )
-      }, [contactList])}
+      }, [contactList, id])}
     </Root>
   )
 }

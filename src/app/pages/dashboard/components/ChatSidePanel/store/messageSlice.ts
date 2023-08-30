@@ -13,7 +13,7 @@ const initialState: any = {messages: [], typeEvent: null, searchText: '', search
 export const sendMessage = createAsyncThunk(
   'dashboard/chat/sendMessage',
   async (data: any, {getState, dispatch}) => {
-    const res = await axios.post(`${API_URL}/messages`, data)
+    await axios.post(`${API_URL}/messages`, data)
   }
 )
 
@@ -36,25 +36,25 @@ export const dmSelect = createAsyncThunk(
       .here((users: any) => {})
       .joining((user: any) => {})
       .leaving((user: any) => {
-        const message = {
-          user: user,
-          message: 'Left',
-          status: true,
-        }
+        // const message = {
+        //   user: user,
+        //   message: 'Left',
+        //   status: true,
+        // }
         // if (selectedChannelInState.type === "channel") {
         //     dispatch({ type: ADD_MESSAGE, payload: message });
         // }
       })
       .listen('MessageSent', (event: any) => {
-        const typingEvent = {
-          user: event.user,
-          type: 'typing',
-        }
+        // const typingEvent = {
+        //   user: event.user,
+        //   type: 'typing',
+        // }
         // dispatch({type: REMOVE_TYPING_EVENT, payload: typingEvent})
-        const message = {
-          user: event.user,
-          message: event.message.message,
-        }
+        // const message = {
+        //   user: event.user,
+        //   message: event.message.message,
+        // }
         dispatch(addMessage(event.message))
         dispatch(addLastMessage(event.message))
       })

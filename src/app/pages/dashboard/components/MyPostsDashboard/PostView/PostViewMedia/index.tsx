@@ -5,7 +5,7 @@ import ImageSlider from '../../../ImageSlider/ImageSlider'
 type Props = {post: any; type: 'comment' | 'post' | 'reply'}
 
 const PostViewMedia = (props: Props) => {
-  const {post, type} = props
+  const {post} = props
 
   const slides = useMemo(() => {
     return JSON.parse(post.images).map((item: any, index: number) => ({

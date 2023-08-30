@@ -4,7 +4,6 @@ import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import _ from 'src/app/modules/@lodash/@lodash'
 import {dmSelect} from '../../../ChatSidePanel/store/messageSlice'
-import {openConnDialog} from 'src/app/pages/dashboard/store/connectDialogSlice'
 import {createChatRoom} from '../../../ChatSidePanel/store/chatRoomSlice'
 import {setLoading} from 'src/app/pages/dashboard/store/filterSlice'
 

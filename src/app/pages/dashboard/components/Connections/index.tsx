@@ -6,17 +6,15 @@ import {Box} from '@mui/material'
 import {getConnections} from '../../store/connectionSlice'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import _ from 'src/app/modules/@lodash/@lodash'
-import SupportIcon from '../SupportFeedback/SupportIcon'
-import FeedbackIcon from '../SupportFeedback/FeedbackIcon'
 import {addFilterForHeader} from '../../store/filterSlice'
 
-const container = {
-  show: {
-    transition: {
-      staggerChildren: 2,
-    },
-  },
-}
+// const container = {
+//   show: {
+//     transition: {
+//       staggerChildren: 2,
+//     },
+//   },
+// }
 
 const item = {
   hidden: {opacity: 0, y: 100},

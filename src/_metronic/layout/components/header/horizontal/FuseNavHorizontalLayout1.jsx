@@ -32,7 +32,7 @@ const StyledList = styled(List)(({theme}) => ({
 }))
 
 function FuseNavHorizontalLayout1(props) {
-  const {navigation, layout, active, dense, className} = props
+  const {navigation, active, dense, className} = props
 
   return (
     <StyledList
