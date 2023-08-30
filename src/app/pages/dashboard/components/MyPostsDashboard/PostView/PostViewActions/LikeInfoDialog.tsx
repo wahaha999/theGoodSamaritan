@@ -25,7 +25,7 @@ const LikeInfoDialog = (props: Props) => {
         <Grid container alignItems='center' spacing={2}>
           {Object.keys(title).map((item: any, index: number) => (
             <Grid item key={index}>
-              <img src={emoji[item - 1].url} className='w-24 h-24 inline' />
+              <img src={emoji[item - 1].url} className='w-24 h-24 inline' alt='like' />
 
               <Typography sx={{display: 'inline'}}> - {title[item]}</Typography>
             </Grid>

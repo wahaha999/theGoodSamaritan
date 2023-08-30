@@ -4,9 +4,8 @@ import {useState, useEffect} from 'react'
 import {useFormik} from 'formik'
 import * as Yup from 'yup'
 import clsx from 'clsx'
-import {getUserByToken, register} from '../core/_requests'
+import {register} from '../core/_requests'
 import {Link, useNavigate} from 'react-router-dom'
-import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {PasswordMeterComponent} from '../../../../_metronic/assets/ts/components'
 import {useDispatch} from 'react-redux'
 import {showMessage} from '../../../store/fuse/messageSlice'
@@ -292,7 +291,7 @@ export function Registration() {
               target='_blank'
               className='ms-1 link-primary'
             >
-              Terms & Services, 
+              Terms & Services,
             </a>
             <a
               href='/media/policy/Privacy_Policy.pdf'

@@ -37,10 +37,10 @@ const StyledTextFiled = (props: IProps) => {
   const methods = useFormContext()
   const {
     control,
-    watch,
+    // watch,
     formState: {errors},
   } = methods
-  const value = watch(`${name}`)
+  // const value = watch(`${name}`)
   return (
     <Controller
       name={name}

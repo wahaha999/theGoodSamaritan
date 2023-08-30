@@ -5,12 +5,10 @@ import Step from '@mui/material/Step'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import {
-  AppBar,
   Grid,
   Paper,
   StepConnector,
   StepLabel,
-  Toolbar,
   stepConnectorClasses,
   styled,
   useTheme,
@@ -221,9 +219,9 @@ export default function Account() {
 
     resolver: yupResolver(schema),
   })
-  const {reset, watch, control, formState, trigger, getValues, handleSubmit} = methods
+  const {reset, watch, formState, trigger, getValues, handleSubmit} = methods
   const form = watch()
-  const {errors, isValid} = formState
+  const {isValid} = formState
 
   React.useEffect(() => {
     reset({...user.account})
@@ -242,7 +240,7 @@ export default function Account() {
   }
 
   const allStepsCompleted = () => {
-    return activeStep == 4
+    return activeStep === 4
   }
 
   const handleNext = () => {
@@ -277,12 +275,12 @@ export default function Account() {
   }
 
   const handleComplete = (data) => {
-    const {non_profit_name, EIN, address, organize} = data
+    const {non_profit_name, EIN, organize} = data
     if (
-      (!non_profit_name && activeStep == 0) ||
-      (activeStep == 1 && !organize) ||
-      (!EIN && activeStep == 2) ||
-      (isValid && activeStep == 3)
+      (!non_profit_name && activeStep === 0) ||
+      (activeStep === 1 && !organize) ||
+      (!EIN && activeStep === 2) ||
+      (isValid && activeStep === 3)
     ) {
       // handleSubmit()
       const newCompleted = completed
@@ -364,10 +362,10 @@ export default function Account() {
           ) : (
             <React.Fragment>
               <Grid container justifyContent='center' alignItems='center'>
-                <Box sx={{}}>{activeStep == 0 && <AccountInfo />}</Box>
-                <Box sx={{}}>{activeStep == 1 && <AboutNonProfit />}</Box>
-                <Box sx={{}}>{activeStep == 2 && <Verification trigger={trigger} />}</Box>
-                <Box sx={{}}>{activeStep == 3 && <Location />}</Box>
+                <Box sx={{}}>{activeStep === 0 && <AccountInfo />}</Box>
+                <Box sx={{}}>{activeStep === 1 && <AboutNonProfit />}</Box>
+                <Box sx={{}}>{activeStep === 2 && <Verification trigger={trigger} />}</Box>
+                <Box sx={{}}>{activeStep === 3 && <Location />}</Box>
               </Grid>
               <Grid container justifyContent='space-around' sx={{my: 4}}>
                 {/* <AppBar

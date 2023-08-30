@@ -1,6 +1,4 @@
-import React, {useState} from 'react'
 import {Typography, Grid, ButtonBase, styled, Box, ButtonBaseProps} from '@mui/material'
-import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import {Controller, useFormContext} from 'react-hook-form'
 import {CKEditor} from '@ckeditor/ckeditor5-react'
@@ -61,7 +59,7 @@ const AboutNonProfit = (props: Props) => {
               <>
                 {params.map((param, index) => (
                   <BorderButton
-                    clicked={value == index + 1}
+                    clicked={value === index + 1}
                     key={index}
                     onClick={() => {
                       onChange(index + 1)

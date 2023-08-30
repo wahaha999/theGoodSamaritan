@@ -59,7 +59,7 @@ const AccountInfo = (props) => {
     return user.user
   })
   const methods = useFormContext()
-  const {control, formState, watch} = methods
+  const {control, formState} = methods
 
   const {errors} = formState
   const [preview, setPreview] = useState()

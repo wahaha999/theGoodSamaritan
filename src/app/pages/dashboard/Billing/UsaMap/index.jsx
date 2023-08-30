@@ -15,10 +15,11 @@ const UsaMap = (props) => {
       let object = {}
       Object.keys(states).map((item) => {
         object[item] = {fill: theme.palette.primary.main}
+        return true
       })
       return object
     }
-  }, [states])
+  }, [states, theme.palette.primary.main])
 
   return (
     <div>

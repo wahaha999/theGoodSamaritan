@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
-import {KTIcon, toAbsoluteUrl, toServerUrl} from '../../../_metronic/helpers'
+import {KTIcon, toServerUrl} from '../../../_metronic/helpers'
 import {Link} from 'react-router-dom'
 import {useLocation} from 'react-router-dom'
 import {useAppSelector} from 'src/app/store/hook'

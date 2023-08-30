@@ -1,7 +1,5 @@
 /* eslint import/no-extraneous-dependencies: off */
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from './rootReducer';
-import history from '../modules/@history';
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 
 // import { setInitialSettings } from 'app/store/fuse/settingsSlice';
 // import { showMessage } from 'app/store/fuse/messageSlice';
@@ -14,29 +12,28 @@ export interface UserState {
   last_name: string
   avatar: string
   non_profit_name?: string
-  id: number,
+  id: number
   account_dbkey?: number
   subscription?: string | null
   customer_id?: string
   city?: string
   fax_number?: string
   phone_number?: string
-  mission?:string
-  organize?:number
+  mission?: string
+  organize?: number
   state?: string
   status?: string
   address?: string
-  doc?:string
-  
+  doc?: string
 }
 export interface IAuthState {
-  user: UserState,
-  access_token?: string | null,
-  states:object
+  user: UserState
+  access_token?: string | null
+  states: object
 }
 
 const initialState: IAuthState = {
-  user:{
+  user: {
     email: '',
     first_name: '',
     last_name: '',
@@ -45,31 +42,28 @@ const initialState: IAuthState = {
     id: 0,
   },
   access_token: sessionStorage.getItem('access_token'),
-  states:{}
-};
+  states: {},
+}
 
-export const setUser = createAsyncThunk('user/setUser', async (user: IAuthState, { dispatch, getState }) => {
-  return user;
-});
+export const setUser = createAsyncThunk(
+  'user/setUser',
+  async (user: IAuthState, {dispatch, getState}) => {
+    return user
+  }
+)
 
-
-
-export const logoutUser = createAsyncThunk('user/logout', async (_, { dispatch, getState }) => {
-  
+export const logoutUser = createAsyncThunk('user/logout', async (_, {dispatch, getState}) => {
   // if (!user.role || user.role.length === 0) {
   //   // is guest
   //   return null;
   // }
-  sessionStorage.removeItem('access_token');
+  sessionStorage.removeItem('access_token')
 
-  
   // dispatch(setInitialSettings());
-  
- dispatch(userLoggedOut());
+
+  dispatch(userLoggedOut())
   window.location.reload()
 })
-
-
 
 const userSlice = createSlice({
   name: 'user',
@@ -79,12 +73,11 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(setUser.fulfilled, (state, action) => {
-      return {...state, ...action.payload,access_token: sessionStorage.getItem('access_token')};
-    });
+      return {...state, ...action.payload, access_token: sessionStorage.getItem('access_token')}
+    })
   },
-});
+})
 
-export const { userLoggedOut } = userSlice.actions;
+export const {userLoggedOut} = userSlice.actions
 
-
-export default userSlice.reducer;
+export default userSlice.reducer

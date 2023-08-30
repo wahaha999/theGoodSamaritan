@@ -1,20 +1,15 @@
-import {Button, Typography, Paper, Avatar, Grid} from '@mui/material'
-import React, {useMemo, useState} from 'react'
+import {Button} from '@mui/material'
+import {useMemo, useState} from 'react'
 import {Manager, Popper, Reference} from 'react-popper'
 import {useDebounce} from 'src/app/modules/hooks'
 import * as ReactDOM from 'react-dom'
-import {red} from '@mui/material/colors'
 import {motion, AnimatePresence} from 'framer-motion'
-import SendOutlinedIcon from '@mui/icons-material/SendOutlined'
-import ConnectWithoutContactOutlinedIcon from '@mui/icons-material/ConnectWithoutContactOutlined'
-import {toServerUrl} from 'src/_metronic/helpers'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {createLike} from 'src/app/pages/dashboard/store/postSlice'
 import {emoji} from 'src/app/constants/emoji'
 import _ from 'src/app/modules/@lodash/@lodash'
 import FavoriteIcon from '@mui/icons-material/Favorite'
-const params = ['0~50', '51~100', '101~200', '201~500', '501~1000', '1000~']
 
 const LikeHover = (props) => {
   const {id} = useAppSelector(({user}) => user.user)
@@ -106,7 +101,7 @@ const LikeHover = (props) => {
         )}
       </Manager>
     )
-  }, [open])
+  }, [open, dispatch, handleToggle, id, post.id, post?.likes, type])
 }
 
 export default LikeHover

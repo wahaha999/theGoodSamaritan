@@ -31,9 +31,9 @@ const LightTooltip = styled(({className, ...props}) => (
 }))
 
 const Verification = (props) => {
-  const [loading, setLoading] = useState(false)
+  const [, setLoading] = useState(false)
   const methods = useFormContext()
-  const {control, formState, watch, resetField, reset} = methods
+  const {control, formState, watch} = methods
   const dispatch = useDispatch()
   const {errors} = formState
   const [filePreviews, setFilePreviews] = useState([])
@@ -44,7 +44,7 @@ const Verification = (props) => {
     } else {
       setFilePreviews([...JSON.parse(doc ? doc : '[]')])
     }
-  }, [])
+  }, [doc])
 
   const readFileAsync = (file) => {
     return new Promise((resolve, reject) => {
@@ -62,7 +62,7 @@ const Verification = (props) => {
   }
 
   const handleRemove = (index, onChange) => {
-    let files = filePreviews.splice(index, 1)
+    filePreviews.splice(index, 1)
     setFilePreviews([...filePreviews])
     onChange([...filePreviews])
     // reset('doc',[...filePreviews])
@@ -70,30 +70,33 @@ const Verification = (props) => {
     props.trigger('EIN')
   }
 
-  const handleDownLoad = useCallback((event, name) => {
-    event.stopPropagation()
-    setLoading(true)
-    axios
-      .post(
-        `${API_URL}/account/download-doc`,
-        {name},
-        {
-          responseType: 'blob',
-        }
-      )
-      .then((res) => {
-        let url = window.URL.createObjectURL(res.data)
-        let a = document.createElement('a')
-        a.href = url
-        a.download = name
-        a.click()
-        setLoading(false)
-      })
-      .catch((error) => {
-        dispatch(showMessage({message: 'This file is not founded', variant: 'error'}))
-        setLoading(false)
-      })
-  }, [])
+  const handleDownLoad = useCallback(
+    (event, name) => {
+      event.stopPropagation()
+      setLoading(true)
+      axios
+        .post(
+          `${API_URL}/account/download-doc`,
+          {name},
+          {
+            responseType: 'blob',
+          }
+        )
+        .then((res) => {
+          let url = window.URL.createObjectURL(res.data)
+          let a = document.createElement('a')
+          a.href = url
+          a.download = name
+          a.click()
+          setLoading(false)
+        })
+        .catch((error) => {
+          dispatch(showMessage({message: 'This file is not founded', variant: 'error'}))
+          setLoading(false)
+        })
+    },
+    [dispatch]
+  )
 
   return (
     <>

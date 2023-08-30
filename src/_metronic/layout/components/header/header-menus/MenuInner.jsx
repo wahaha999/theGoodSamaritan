@@ -19,7 +19,7 @@ import {
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
 import {useParams} from 'react-router-dom'
 import {Controller, FormProvider, useForm} from 'react-hook-form'
-import {useEffect, useMemo, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {addFilterForHeader} from 'src/app/pages/dashboard/store/filterSlice'
 import {useDebounce, usePrevious} from 'src/app/modules/hooks'
@@ -80,7 +80,6 @@ export function MenuInner(props) {
 
   const {selectedUser} = useAppSelector(({post}) => post.filter.filter)
   const {post: posts} = useAppSelector(({post}) => post)
-  const [shakeIcon, setShakeIcon] = useState(false)
   useEffect(() => {
     const initialState = {
       search: '',
@@ -94,7 +93,7 @@ export function MenuInner(props) {
     if (selectedUser?.length > 0) {
       setValue('connections', true)
     }
-  }, [selectedUser])
+  }, [selectedUser, setValue])
   const data = watch()
   const saved_posts = watch('saved_posts')
   const connections = watch('connections')
@@ -105,7 +104,7 @@ export function MenuInner(props) {
       return
     }
     dispatch(addFilterForHeader(watch()))
-  }, [data, prevData])
+  }, [data, prevData, dispatch, watch])
 
   const watchSearch = (value) => {
     // console.log('value==', value)
@@ -130,7 +129,7 @@ export function MenuInner(props) {
           </FuseScrollbars>
 
           {/* </Grid> */}
-          {params['*'] == 'dashboard' && (
+          {params['*'] === 'dashboard' && (
             <FormProvider {...methods}>
               <Grid container alignItems='center'>
                 <Hidden mdDown>
@@ -139,7 +138,7 @@ export function MenuInner(props) {
                       name='search'
                       defaultValue=''
                       control={control}
-                      render={({}) => {
+                      render={() => {
                         // console.log('field==', field)
                         return (
                           <Search>

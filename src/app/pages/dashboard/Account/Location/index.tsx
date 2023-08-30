@@ -11,7 +11,6 @@ import {
   MenuItem,
   InputLabel,
   FormHelperText,
-  Button,
 } from '@mui/material'
 import {Controller, useFormContext} from 'react-hook-form'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
@@ -29,7 +28,7 @@ const Location = (props: Props) => {
   const loading = open && options.length === 0
 
   const methods = useFormContext()
-  const {control, formState, watch} = methods
+  const {control, formState} = methods
   const {product_name, state, customer_id} = useAppSelector(({user}) => user.user.account)
   const {states: plan_state} = useAppSelector(({user}) => user)
 

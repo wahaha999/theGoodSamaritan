@@ -15,7 +15,7 @@ const LikeInfoItem = (props: Props) => {
         <Badge
           overlap='circular'
           anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
-          badgeContent={<img src={emoji[info.like_type - 1].url} />}
+          badgeContent={<img src={emoji[info.like_type - 1].url} alt='like' />}
         >
           <Avatar
             sx={{width: 70, height: 70}}

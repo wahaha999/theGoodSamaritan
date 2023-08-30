@@ -1,10 +1,8 @@
 import {
   CardActions,
   Grid,
-  IconButton,
   Button,
   Typography,
-  Box,
   Dialog,
   ButtonBase,
   Chip,
@@ -14,8 +12,6 @@ import {
 } from '@mui/material'
 import React, {useMemo, useState} from 'react'
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
-import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined'
-import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {
   getLatestCommentByPostId,
@@ -28,7 +24,6 @@ import LikeInfoDialog from './LikeInfoDialog'
 import {setLoading} from 'src/app/pages/dashboard/store/filterSlice'
 import {emoji} from 'src/app/constants/emoji'
 import _ from 'src/app/modules/@lodash/@lodash'
-import {openConnDialog} from 'src/app/pages/dashboard/store/connectDialogSlice'
 import ChatButton from '../component/ChatButton'
 
 type Props = {
@@ -79,16 +74,6 @@ const PostViewActions = (props: Props) => {
     }
     return unread
   }, [post, type, forunread])
-
-  console.log(
-    'type==',
-    saved_post && type === 'post'
-      ? post?.post_saves[0]?.unread_comment + JSON.parse(post?.post_saves[0].unread_reply).length
-      : type === 'comment'
-      ? unread_replies
-      : 0,
-    unread_replies
-  )
 
   return (
     <>

@@ -12,7 +12,6 @@ import {
   selectFuseMessageState,
 } from '../../../store/fuse/messageSlice';
 import FuseSvgIcon from '../FuseSvgIcon/FuseSvgIcon';
-import { Button } from '@mui/material';
 
 const StyledSnackbar = styled(Snackbar)(({ theme, variant }) => ({
   '& .FuseMessage-content': {

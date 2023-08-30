@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from 'react'
 import {LayoutSplashScreen} from '../../../../_metronic/layout/core'
 import {useAppDispatch, useAppSelector} from '../../../store/hook'
-import {IAuthState, logoutUser, setUser} from '../../../store/userSlice'
+import {logoutUser, setUser} from '../../../store/userSlice'
 import {getUserByToken} from './_requests'
 
 // type AuthContextProps = {

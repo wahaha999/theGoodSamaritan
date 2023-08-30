@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import {useFormik} from 'formik'
 import {useEffect, useState} from 'react'
 import {useDispatch} from 'react-redux'
-import {Link, useNavigate, useParams} from 'react-router-dom'
+import {Link, useParams} from 'react-router-dom'
 import {showMessage} from 'src/app/store/fuse/messageSlice'
 import * as Yup from 'yup'
 import {setUser} from '../../../store/userSlice'
@@ -33,7 +33,6 @@ export function Login() {
   const [success, setSuccess] = useState<string>('')
   const dispatch = useDispatch<any>()
   const {state} = useParams()
-  const navigate = useNavigate()
   // const {saveAuth, setCurrentUser} = useAuth()
   const initialValues = {
     email: state ?? '',

@@ -1,9 +1,9 @@
 import clsx from 'clsx'
 import {memo, useMemo} from 'react'
-import {useDispatch, useSelector} from 'react-redux'
+// import {useDispatch} from 'react-redux'
 // import {selectNavigation} from 'app/store/fuse/navigationSlice'
 import TGSNavigation from './TGSNavigation'
-import {useThemeMediaQuery} from 'src/app/modules/hooks'
+// import {useThemeMediaQuery} from 'src/app/modules/hooks'
 
 const navigationConfig = [
   {
@@ -441,9 +441,9 @@ const navigationConfig = [
 
 function Navigation(props) {
   // const navigation = useSelector(selectNavigation)
-  const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'))
+  // const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'))
 
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
 
   return useMemo(() => {
     function handleItemClick(item) {
@@ -462,7 +462,7 @@ function Navigation(props) {
         onItemClick={handleItemClick}
       />
     )
-  }, [dispatch, isMobile, props.active, props.className, props.dense, props.layout])
+  }, [props.active, props.className, props.dense, props.layout])
 }
 
 Navigation.defaultProps = {

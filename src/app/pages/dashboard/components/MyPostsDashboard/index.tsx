@@ -1,36 +1,7 @@
-import {
-  AppBar,
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogProps,
-  DialogTitle,
-  Grid,
-  Paper,
-  Toolbar,
-  Card,
-  useScrollTrigger,
-  Fade,
-  Fab,
-  CssBaseline,
-  Hidden,
-} from '@mui/material'
-import Avatar from '@mui/material/Avatar'
-import IconButton from '@mui/material/IconButton'
-import InputBase, {InputBaseProps} from '@mui/material/InputBase'
-import Typography from '@mui/material/Typography'
-import {styled} from '@mui/material/styles'
+import {Box, Grid, Card, useScrollTrigger, Fade, Fab, CssBaseline} from '@mui/material'
 import * as React from 'react'
-import {toServerUrl} from '../../../../../_metronic/helpers'
-import {AnimatePresence, Variants, motion} from 'framer-motion'
-import Post from '../../Post'
-import {FormProvider, useForm} from 'react-hook-form'
-import * as yup from 'yup'
-import {yupResolver} from '@hookform/resolvers/yup'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
-import {createPost, deletePost, getPosts} from '../../store/postSlice'
+import {getPosts} from '../../store/postSlice'
 import withReducer from 'src/app/store/withReducer'
 import reducer from '../../store'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -43,13 +14,6 @@ import ConnectionDialog from '../ConnectionDialog'
 import {usePrevious} from 'src/app/modules/hooks'
 import _ from 'src/app/modules/@lodash/@lodash'
 
-const DashboardPaper = styled(Paper)(() => ({
-  width: '100%',
-  height: '80vh',
-  overflow: 'auto',
-  padding: 24,
-  position: 'relative',
-}))
 interface Props {
   /**
    * Injected by the documentation to work in an iframe.
@@ -108,7 +72,7 @@ function MyPostsDashboard(props: Props) {
     (filter: any) => {
       dispatch(getPosts(filter))
     },
-    [filter]
+    [dispatch]
   )
   const prevData = usePrevious(filter ? _.merge({}, filter) : null)
   const scrollToTop = () => {
@@ -129,7 +93,7 @@ function MyPostsDashboard(props: Props) {
       getPostsByFilter(filter)
       scrollToTop()
     }
-  }, [getPostsByFilter, filter])
+  }, [getPostsByFilter, filter, prevData])
 
   return (
     <>
