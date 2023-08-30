@@ -76,7 +76,7 @@ const ContactList = (props) => {
 
   return (
     <Root
-      className='flex shrink-0 flex-col overflow-y-auto overscroll-contain h-screen'
+      className='flex shrink-0 flex-col overflow-y-auto overscroll-contain'
       ref={contactListScroll}
       option={{suppressScrollX: true, wheelPropagation: false}}
     >
