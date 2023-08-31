@@ -10,11 +10,13 @@ import {toServerUrl} from 'src/_metronic/helpers'
 import {Link} from '@react-email/link'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import ChatButton from '../../component/ChatButton'
+import {useAppSelector} from 'src/app/store/hook'
 
 const params = ['0~50', '51~100', '101~200', '201~500', '501~1000', '1000~']
 
 const PostAccountView = (props) => {
   const {avatar, data, width, height, status} = props
+  const {user: login_user} = useAppSelector(({user}) => user)
   const {user} = data
   const {account} = user
   const [open, setOpened] = useState(false)
@@ -171,36 +173,37 @@ const PostAccountView = (props) => {
                       <Grid container spacing={1} my={1}>
                         <Grid item md={12}></Grid>
                       </Grid>
-                      <Grid
-                        container
-                        direction='row'
-                        justifyContent='space-around'
-                        alignItems='flex-end'
-                        mt={2}
-                      >
-                        <motion.div
-                          initial={{opacity: 0}}
-                          // transition={{duration: 1}}
-                          animate={{opacity: 1}}
+                      {user.id !== login_user.id && (
+                        <Grid
+                          container
+                          direction='row'
+                          justifyContent='space-around'
+                          alignItems='flex-end'
+                          mt={2}
                         >
-                          <Tooltip title='Connect and follow conversations with this organization'>
-                            <span>
-                              <Button
-                                disabled={status}
-                                variant='contained'
-                                startIcon={<ConnectWithoutContactOutlinedIcon />}
-                              >
-                                {status ? status : 'Connect'}
-                              </Button>
-                            </span>
-                          </Tooltip>
-                        </motion.div>
-                        <motion.div
-                          initial={{opacity: 0}}
-                          // transition={{duration: 1}}
-                          animate={{opacity: 1}}
-                        >
-                          {/* <Tooltip title='Chat with this organization'>
+                          <motion.div
+                            initial={{opacity: 0}}
+                            // transition={{duration: 1}}
+                            animate={{opacity: 1}}
+                          >
+                            <Tooltip title='Connect and follow conversations with this organization'>
+                              <span>
+                                <Button
+                                  disabled={status}
+                                  variant='contained'
+                                  startIcon={<ConnectWithoutContactOutlinedIcon />}
+                                >
+                                  {status ? status : 'Connect'}
+                                </Button>
+                              </span>
+                            </Tooltip>
+                          </motion.div>
+                          <motion.div
+                            initial={{opacity: 0}}
+                            // transition={{duration: 1}}
+                            animate={{opacity: 1}}
+                          >
+                            {/* <Tooltip title='Chat with this organization'>
                             <Button
                               startIcon={<ForumOutlinedIcon />}
                               sx={{mr: 2}}
@@ -212,9 +215,10 @@ const PostAccountView = (props) => {
                               Chat
                             </Button>
                           </Tooltip> */}
-                          <ChatButton info={user} />
-                        </motion.div>
-                      </Grid>
+                            <ChatButton info={user} />
+                          </motion.div>
+                        </Grid>
+                      )}
                       {/* </Paper> */}
                     </motion.div>
                   )}
