@@ -33,21 +33,21 @@ export const labels = [
     id: 1,
     color: 'red',
     title: 'Sharing Message',
-    icon: <SendTimeExtensionOutlinedIcon sx={{ml: 2}} />,
+    icon: <SendTimeExtensionOutlinedIcon htmlColor='red' />,
   },
   {
     id: 2,
     color: 'green',
     title: 'Resources to Share ',
-    icon: <HomeRepairServiceOutlinedIcon sx={{ml: 2}} />,
+    icon: <HomeRepairServiceOutlinedIcon htmlColor='green' />,
   },
   {
     id: 3,
     color: 'yellow',
     title: 'In need of Resources',
-    icon: <AssistWalkerOutlinedIcon sx={{ml: 2}} />,
+    icon: <AssistWalkerOutlinedIcon htmlColor='yellow' />,
   },
-  {id: 4, color: 'grey', title: 'Event', icon: <EmojiEventsOutlinedIcon sx={{ml: 2}} />},
+  {id: 4, color: 'grey', title: 'Event', icon: <EmojiEventsOutlinedIcon htmlColor='blue' />},
 ]
 
 const Post = (props: Props) => {

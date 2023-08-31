@@ -1,4 +1,14 @@
-import {Box, Grid, Card, useScrollTrigger, Fade, Fab, CssBaseline} from '@mui/material'
+import {
+  Box,
+  Grid,
+  Card,
+  useScrollTrigger,
+  Fade,
+  Fab,
+  CssBaseline,
+  Tooltip,
+  IconButton,
+} from '@mui/material'
 import * as React from 'react'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {getPosts} from '../../store/postSlice'
@@ -13,6 +23,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import ConnectionDialog from '../ConnectionDialog'
 import {usePrevious} from 'src/app/modules/hooks'
 import _ from 'src/app/modules/@lodash/@lodash'
+import {labels} from '../../Post'
 
 interface Props {
   /**
@@ -129,8 +140,16 @@ function MyPostsDashboard(props: Props) {
               margin: '16px 0px',
               border: '1px solid #D5DBDB',
               borderRadius: '10px 10px 30px 30px',
+              position: 'relative',
             }}
           >
+            <Box sx={{position: 'absolute', top: 2, right: 10}}>
+              {/* {type === 'post' && ( */}
+              <Tooltip title={labels[Number(post?.purpose) - 1].title} arrow>
+                <IconButton>{post?.purpose && labels[Number(post?.purpose) - 1].icon}</IconButton>
+              </Tooltip>
+              {/* )} */}
+            </Box>
             <PostView post={post} key={index} type='post' />
           </Card>
         ))}

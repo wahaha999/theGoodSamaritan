@@ -24,6 +24,10 @@ import {addFilter} from 'src/app/pages/dashboard/store/filterSlice'
 import {getCategories} from '../store/categorySlice'
 import {usePrevious} from 'src/app/modules/hooks'
 import _ from 'src/app/modules/@lodash/@lodash'
+import SendTimeExtensionOutlinedIcon from '@mui/icons-material/SendTimeExtensionOutlined'
+import HomeRepairServiceOutlinedIcon from '@mui/icons-material/HomeRepairServiceOutlined'
+import AssistWalkerOutlinedIcon from '@mui/icons-material/AssistWalkerOutlined'
+import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined'
 
 declare module 'react' {
   interface CSSProperties {
@@ -35,7 +39,7 @@ declare module 'react' {
 type StyledTreeItemProps = TreeItemProps & {
   bgColor?: string
   color?: string
-  labelIcon: React.ElementType<SvgIconProps>
+  labelIcon?: React.ElementType<SvgIconProps>
   labelInfo?: string
   labelText: string
   name: string
@@ -129,7 +133,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
                 // sx={{'& .MuiSvgIcon-root': {bgcolor: 'white'}}}
                 size='medium'
               />
-              {/* <Box component={LabelIcon} color='inherit' sx={{mr: 1}} /> */}
+              {LabelIcon && <Box component={LabelIcon} color={color} sx={{mr: 1}} />}
 
               <Typography
                 variant='subtitle1'
@@ -280,13 +284,8 @@ function SidebarMenuMain() {
             <span className='menu-section text-muted text-uppercase fs-8 ls-1 ps-4'>View</span>
           </div>
         </div>
-        <StyledTreeItem nodeId='1' labelText='My Posts' name='view.my_posts' labelIcon={MailIcon} />
-        <StyledTreeItem
-          nodeId='2'
-          labelText="Every One Else's Posts"
-          name='view.every_posts'
-          labelIcon={DeleteIcon}
-        />
+        <StyledTreeItem nodeId='1' labelText='My Posts' name='view.my_posts' />
+        <StyledTreeItem nodeId='2' labelText="Every One Else's Posts" name='view.every_posts' />
         <div className='menu-item'>
           <div className='menu-content pt-8 pb-2'>
             <span className='menu-section text-muted text-uppercase fs-8 ls-1 ps-4'>
@@ -298,29 +297,33 @@ function SidebarMenuMain() {
           nodeId='3'
           labelText='Sharing a Message'
           name='purpose.sharing_message'
-          labelIcon={Label}
+          labelIcon={SendTimeExtensionOutlinedIcon}
+          color='red'
           labelInfo=''
         />
         <StyledTreeItem
           nodeId='4'
           labelText='Resources to Share'
           name='purpose.resource_to_share'
-          labelIcon={Label}
+          labelIcon={HomeRepairServiceOutlinedIcon}
           labelInfo=''
+          color='green'
         />
         <StyledTreeItem
           nodeId='5'
           labelText='In need of Resources'
           name='purpose.need_resources'
-          labelIcon={Label}
+          labelIcon={AssistWalkerOutlinedIcon}
           labelInfo=''
+          color='yellow'
         />
         <StyledTreeItem
           nodeId='6'
           labelText='Event'
           name='purpose.have_event'
-          labelIcon={Label}
+          labelIcon={EmojiEventsOutlinedIcon}
           labelInfo=''
+          color='blue'
         />
         <div className='menu-item'>
           <div className='menu-content pt-8 pb-2'>
@@ -329,13 +332,12 @@ function SidebarMenuMain() {
             </span>
           </div>
         </div>
-        <StyledTreeItem nodeId='4' labelText='States' name='all_states' labelIcon={Label}>
+        <StyledTreeItem nodeId='4' labelText='States' name='all_states'>
           {state_with_plan?.map((item: any, index: number) => (
             <StyledTreeItem
               disabled={!item.available}
               nodeId={item.State}
               labelText={item.Description}
-              labelIcon={Label}
               name={`state.${item.State}`}
               key={index}
             />
@@ -352,13 +354,11 @@ function SidebarMenuMain() {
           nodeId='7'
           labelText={allSelect ? 'De-Select All' : 'Select All'}
           name={'all_select'}
-          labelIcon={Label}
         />
         {category.map((item: any, index: number) => (
           <StyledTreeItem
             nodeId={`${item.name}`}
             labelText={item.name}
-            labelIcon={Label}
             key={index}
             name={`category.${item.name.toLowerCase()}`}
           />
