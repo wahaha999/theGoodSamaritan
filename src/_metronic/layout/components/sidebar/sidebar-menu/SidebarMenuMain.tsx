@@ -332,7 +332,7 @@ function SidebarMenuMain() {
             </span>
           </div>
         </div>
-        <StyledTreeItem nodeId='4' labelText='States' name='all_states'>
+        <StyledTreeItem nodeId='7' labelText='States' name='all_states'>
           {state_with_plan?.map((item: any, index: number) => (
             <StyledTreeItem
               disabled={!item.available}
@@ -351,7 +351,7 @@ function SidebarMenuMain() {
           </div>
         </div>
         <StyledTreeItem
-          nodeId='7'
+          nodeId='8'
           labelText={allSelect ? 'De-Select All' : 'Select All'}
           name={'all_select'}
         />
