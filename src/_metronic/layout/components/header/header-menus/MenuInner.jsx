@@ -232,6 +232,8 @@ export function MenuInner(props) {
                             />
                           }
                           sx={{ml: 2}}
+                          variant={connections ? 'contained' : 'outlined'}
+                          color={connections ? 'secondary' : 'primary'}
                         >
                           Your Connections
                         </Button>
@@ -255,6 +257,8 @@ export function MenuInner(props) {
                               />
                             }
                             sx={{ml: 2}}
+                            variant={saved_posts ? 'contained' : 'outlined'}
+                            color={saved_posts ? 'secondary' : 'primary'}
                           >
                             Saved Posts
                           </Button>
@@ -357,12 +361,17 @@ export function MenuInner(props) {
               control={control}
               defaultValue={false}
               render={({field}) => (
-                <ListItemButton onClick={() => field.onChange(!field.value)}>
-                  <ListItemIcon>
-                    <NotificationsActiveIcon color={saved_posts ? 'primary' : 'secondary'} />
-                  </ListItemIcon>
-                  <ListItemText primary='Saved Posts' />
-                </ListItemButton>
+                <Badge badgeContent={posts[0]?.unread} color='error'>
+                  <ListItemButton onClick={() => field.onChange(!field.value)}>
+                    <ListItemIcon>
+                      <NotificationsActiveIcon
+                        color={saved_posts ? 'primary' : 'secondary'}
+                        className={posts[0]?.unread > 0 ? 'shake' : ''}
+                      />
+                    </ListItemIcon>
+                    <ListItemText primary='Saved Posts' />
+                  </ListItemButton>
+                </Badge>
               )}
             />
           </ListItem>
