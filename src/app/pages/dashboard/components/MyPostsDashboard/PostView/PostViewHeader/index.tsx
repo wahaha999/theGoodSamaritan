@@ -22,6 +22,7 @@ import {getCommentsByPostId, getRepliesByCommentId} from 'src/app/pages/dashboar
 import PostAccountView from './PostAccountViewPopover'
 import {createConnection} from 'src/app/pages/dashboard/store/connectionSlice'
 import _ from 'src/app/modules/@lodash/@lodash'
+import ConnectWithoutContactOutlinedIcon from '@mui/icons-material/ConnectWithoutContactOutlined'
 
 type Props = {
   post: any
@@ -57,6 +58,7 @@ const PostViewHeader = (props: Props) => {
                 variant='outlined'
                 sx={{mr: 4}}
                 disabled={disabled}
+                startIcon={<ConnectWithoutContactOutlinedIcon />}
                 onClick={() => dispatch(createConnection(post.user.id))}
               >
                 {disabled ? `connection ${disabled}` : 'Make A Connection'}
@@ -162,11 +164,6 @@ const PostViewHeader = (props: Props) => {
                 posted on {moment(post?.created_at).format('MM/DD/YY')} at{' '}
                 {moment(post?.created_at).format('h:mm A')}
               </Typography>
-              {type === 'post' && (
-                <Tooltip title={labels[Number(post?.purpose) - 1].title} arrow>
-                  {post?.purpose && labels[Number(post?.purpose) - 1].icon}
-                </Tooltip>
-              )}
               {/* <Avatar
               sx={{bgcolor: red[500], mr: 2}}
               aria-label='recipe'
