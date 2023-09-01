@@ -207,6 +207,7 @@ function Chat(props) {
 
             return messages?.length > 0
               ? messages.map((item, i) => {
+                  console.log('message==', item)
                   return (
                     <StyledMessageRow
                       key={i}
@@ -233,7 +234,7 @@ function Chat(props) {
                           className='time absolute hidden w-full mt-8 -mb-24 ltr:left-0 rtl:right-0 -bottom-12 whitespace-nowrap'
                           color='text.secondary'
                         >
-                          {formatDistanceToNow(new Date(item.created_at), {addSuffix: true})}
+                          {formatDistanceToNow(new Date(item?.created_at), {addSuffix: true})}
                         </Typography>
                       </div>
                     </StyledMessageRow>
