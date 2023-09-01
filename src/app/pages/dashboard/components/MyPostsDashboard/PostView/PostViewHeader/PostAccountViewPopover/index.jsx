@@ -32,7 +32,6 @@ const PostAccountView = (props) => {
             <Avatar
               ref={ref}
               sx={{
-                bgcolor: red[500],
                 mr: 2,
                 cursor: 'pointer',
                 width: width ? width : 'none',
