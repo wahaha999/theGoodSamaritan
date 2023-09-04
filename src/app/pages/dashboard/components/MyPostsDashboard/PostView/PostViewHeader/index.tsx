@@ -58,7 +58,7 @@ const PostViewHeader = (props: Props) => {
               <Button
                 variant='outlined'
                 sx={{mr: 4}}
-                disabled={disabled}
+                disabled={disabled ? true : false}
                 startIcon={<ConnectWithoutContactOutlinedIcon />}
                 onClick={() => dispatch(createConnection(post.user.id))}
               >

@@ -69,6 +69,7 @@ const ReportDialog = (props: Props) => {
         variant: res.status === 200 ? 'success' : 'error',
       })
     )
+    handleClose()
   }
   const handleClose = () => {
     reset()
