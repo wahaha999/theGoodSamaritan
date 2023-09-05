@@ -29,7 +29,12 @@ type AnimatedDialogProps = DialogProps & {
   animate?: boolean
 }
 
-const AnimatedDialog: React.FC<AnimatedDialogProps> = ({open, onClose, children, ...props}) => {
+export const AnimatedDialog: React.FC<AnimatedDialogProps> = ({
+  open,
+  onClose,
+  children,
+  ...props
+}) => {
   return (
     <AnimatePresence>
       <Dialog
@@ -162,7 +167,7 @@ const PostDialog = (props: Props) => {
         })
     }
   }
-  const prevData = usePrevious(data ? _.merge({}, data) : null);
+  const prevData = usePrevious(data ? _.merge({}, data) : null)
   const editIsValid = useMemo(() => {
     if (postType.includes('edit')) {
       if (_.isEqual(prevData, data)) {
@@ -171,7 +176,7 @@ const PostDialog = (props: Props) => {
         return true
       }
     }
-  }, [postType, data, prevData]);
+  }, [postType, data, prevData])
 
   //TODO: edit valid feature
   return (
@@ -209,7 +214,9 @@ const PostDialog = (props: Props) => {
                     // color: 'white',
                   },
                 }}
-                disabled={postType.includes('edit') ? (editIsValid ? !isValid: !editIsValid) : !isValid}
+                disabled={
+                  postType.includes('edit') ? (editIsValid ? !isValid : !editIsValid) : !isValid
+                }
                 onClick={() => handleSubmit(onSubmit)()}
               >
                 {postType.includes('post')

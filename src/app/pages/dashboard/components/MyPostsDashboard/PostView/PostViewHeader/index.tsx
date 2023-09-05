@@ -23,6 +23,7 @@ import PostAccountView from './PostAccountViewPopover'
 import {createConnection} from 'src/app/pages/dashboard/store/connectionSlice'
 import _ from 'src/app/modules/@lodash/@lodash'
 import ConnectWithoutContactOutlinedIcon from '@mui/icons-material/ConnectWithoutContactOutlined'
+import {openReportDialog} from 'src/app/pages/dashboard/store/reportDialogSlice'
 
 type Props = {
   post: any
@@ -57,85 +58,95 @@ const PostViewHeader = (props: Props) => {
               <Button
                 variant='outlined'
                 sx={{mr: 4}}
-                disabled={disabled}
+                disabled={disabled ? true : false}
                 startIcon={<ConnectWithoutContactOutlinedIcon />}
                 onClick={() => dispatch(createConnection(post.user.id))}
               >
                 {disabled ? `connection ${disabled}` : 'Make A Connection'}
               </Button>
             )}
-            {(post?.user?.account_dbkey === user.account_dbkey || user.role === 'admin') && (
-              <>
-                <IconButton aria-label='settings' onClick={(e) => handleClick(e, post)}>
-                  <MoreVertIcon />
-                </IconButton>
-                <Menu
-                  elevation={1}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                  }}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  id='basic-menu'
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  MenuListProps={{
-                    'aria-labelledby': 'basic-button',
+
+            <IconButton aria-label='settings' onClick={(e) => handleClick(e, post)}>
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              elevation={1}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              id='basic-menu'
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+            >
+              {(post?.user?.account_dbkey === user.account_dbkey || user.role === 'admin') && (
+                <MenuItem
+                  onClick={() => {
+                    if (type === 'post') {
+                      dispatch(openCheckDialog({open: true, checkType: 'post', dialogId: post.id}))
+                    } else if (type === 'comment') {
+                      dispatch(
+                        openCheckDialog({open: true, checkType: 'comment', dialogId: post.id})
+                      )
+                    } else if (type === 'reply') {
+                      dispatch(openCheckDialog({open: true, checkType: 'reply', dialogId: post.id}))
+                    }
+                    handleClose()
                   }}
                 >
-                  <MenuItem
-                    onClick={() => {
-                      if (type === 'post') {
-                        dispatch(
-                          openCheckDialog({open: true, checkType: 'post', dialogId: post.id})
-                        )
-                      } else if (type === 'comment') {
-                        dispatch(
-                          openCheckDialog({open: true, checkType: 'comment', dialogId: post.id})
-                        )
-                      } else if (type === 'reply') {
-                        dispatch(
-                          openCheckDialog({open: true, checkType: 'reply', dialogId: post.id})
-                        )
-                      }
-                      handleClose()
-                    }}
-                  >
-                    <FuseSvgIcon sx={{mr: 1}} size={16}>
-                      heroicons-outline:trash
-                    </FuseSvgIcon>
-                    Delete
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      handleClose()
-                      if (type === 'post') {
-                        dispatch(
-                          openPostDialog({open: true, postType: 'edit_post', postOption: post})
-                        )
-                      } else if (type === 'comment') {
-                        dispatch(
-                          openPostDialog({open: true, postType: 'edit_comment', postOption: post})
-                        )
-                      } else if (type === 'reply') {
-                        dispatch(
-                          openPostDialog({open: true, postType: 'edit_reply', postOption: post})
-                        )
-                      }
-                    }}
-                  >
-                    <FuseSvgIcon sx={{mr: 1}} size={16}>
-                      heroicons-outline:pencil
-                    </FuseSvgIcon>
-                    Edit
-                  </MenuItem>
-                </Menu>
-              </>
-            )}
+                  <FuseSvgIcon sx={{mr: 1}} size={16}>
+                    heroicons-outline:trash
+                  </FuseSvgIcon>
+                  Delete
+                </MenuItem>
+              )}
+              {(post?.user?.account_dbkey === user.account_dbkey || user.role === 'admin') && (
+                <MenuItem
+                  onClick={() => {
+                    handleClose()
+                    if (type === 'post') {
+                      dispatch(
+                        openPostDialog({open: true, postType: 'edit_post', postOption: post})
+                      )
+                    } else if (type === 'comment') {
+                      dispatch(
+                        openPostDialog({open: true, postType: 'edit_comment', postOption: post})
+                      )
+                    } else if (type === 'reply') {
+                      dispatch(
+                        openPostDialog({open: true, postType: 'edit_reply', postOption: post})
+                      )
+                    }
+                  }}
+                >
+                  <FuseSvgIcon sx={{mr: 1}} size={16}>
+                    heroicons-outline:pencil
+                  </FuseSvgIcon>
+                  Edit
+                </MenuItem>
+              )}
+              {post?.user?.id !== user.id && (
+                <MenuItem
+                  onClick={() => {
+                    handleClose()
+                    dispatch(openReportDialog({open: true, reported_user: post?.user}))
+                  }}
+                >
+                  <FuseSvgIcon sx={{mr: 1}} size={16}>
+                    heroicons-outline:flag
+                  </FuseSvgIcon>
+                  Report
+                </MenuItem>
+              )}
+            </Menu>
           </>
         }
         title={

@@ -24,6 +24,7 @@ import ConnectionDialog from '../ConnectionDialog'
 import {usePrevious} from 'src/app/modules/hooks'
 import _ from 'src/app/modules/@lodash/@lodash'
 import {labels} from '../../Post'
+import ReportDialog from './PostView/component/ReportDialog'
 
 interface Props {
   /**
@@ -169,6 +170,7 @@ function MyPostsDashboard(props: Props) {
       <PostDialog />
       <CheckDialog />
       <ConnectionDialog />
+      <ReportDialog />
     </>
   )
 }
