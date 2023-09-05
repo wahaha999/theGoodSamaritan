@@ -36,11 +36,11 @@ interface StyledProps {
   theme?: Theme
   active: number
   value?: string
-  ismobile: boolean
+  ismobile: string
 }
 
 const Root = styled(Tooltip)<StyledProps>(({theme, active, ismobile}) => ({
-  width: ismobile ? 70 : 250,
+  width: ismobile === 'true' ? 70 : 250,
   minWidth: 70,
   flex: '0 0 auto',
   '&: hover': {background: theme.palette.secondary.light},
@@ -116,12 +116,13 @@ const ContactButton = (props: Props) => {
   const dispatch = useAppDispatch()
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.down('sm')) as boolean
+  console.log('matches==', matches)
   return (
     <Root
       title={info.name}
       placement='left'
       active={channel_id === selectedChatRoom ? 1 : 0}
-      ismobile={matches}
+      ismobile={matches.toString()}
     >
       <Button
         className={clsx(

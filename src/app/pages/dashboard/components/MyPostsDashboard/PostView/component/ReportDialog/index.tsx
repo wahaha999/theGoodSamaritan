@@ -42,7 +42,6 @@ const ReportDialog = (props: Props) => {
   const {handleSubmit} = methods
 
   const onSubmit = async (data: any) => {
-    console.log('data==', data)
     const formData = new FormData()
     Object.keys(data).forEach((item) => {
       if (item === 'attachment') {
@@ -57,9 +56,11 @@ const ReportDialog = (props: Props) => {
         formData.append(item, data[item])
       }
     })
+    formData.append('reported_user_id', reported_user.id)
 
-    const res: any = await axios.post(`${API_URL}/report`, formData)
+    const res: any = await axios.post(`${API_URL}/report/create`, formData)
 
+    handleClose()
     dispatch(
       showMessage({
         message:
@@ -69,7 +70,6 @@ const ReportDialog = (props: Props) => {
         variant: res.status === 200 ? 'success' : 'error',
       })
     )
-    handleClose()
   }
   const handleClose = () => {
     reset()
