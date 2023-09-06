@@ -198,6 +198,17 @@ const AccountHeader: React.FC = () => {
                 Change Password
               </Link>
             </li>
+            <li className='nav-item'>
+              <Link
+                className={
+                  `nav-link text-active-primary me-6 ` +
+                  (location.pathname === '/crafted/account/silence' && 'active')
+                }
+                to='/crafted/account/silence'
+              >
+                Silenced Users
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

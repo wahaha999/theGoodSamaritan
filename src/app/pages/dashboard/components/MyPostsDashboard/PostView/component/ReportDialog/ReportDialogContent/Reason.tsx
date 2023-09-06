@@ -16,7 +16,7 @@ interface IReason {
   id: number
   title: string
 }
-const reasons: IReason[] = [
+export const reasons: IReason[] = [
   {
     id: 1,
     title: 'Spam',
