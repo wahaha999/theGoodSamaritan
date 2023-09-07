@@ -11,7 +11,7 @@ import {
 } from '@mui/material'
 import * as React from 'react'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
-import {getPosts} from '../../store/postSlice'
+import {getPosts, initialPage} from '../../store/postSlice'
 import withReducer from 'src/app/store/withReducer'
 import reducer from '../../store'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -74,18 +74,18 @@ function ScrollTop(props: Props) {
 }
 
 function MyPostsDashboard(props: Props) {
-  const posts = useAppSelector(({post}) => {
+  const {data: posts, current_page} = useAppSelector(({post}) => {
     return post.post
   })
   const post_loading = useAppSelector(({post}) => post.filter.loading)
   const dispatch = useAppDispatch()
   const {filter} = useAppSelector(({post}) => post.filter)
-  const getPostsByFilter = React.useCallback(
-    (filter: any) => {
-      dispatch(getPosts(filter))
-    },
-    [dispatch]
-  )
+  // const getPostsByFilter = React.useCallback(
+  //   (filter: any) => {
+  //     dispatch(getPosts({filter, next: 1}))
+  //   },
+  //   [dispatch]
+  // )
   const prevData = usePrevious(filter ? _.merge({}, filter) : null)
   const scrollToTop = () => {
     const anchor = document.querySelector('#back-to-top-anchor')
@@ -102,10 +102,27 @@ function MyPostsDashboard(props: Props) {
       if (_.isEqual(prevData, filter)) {
         return
       }
-      getPostsByFilter(filter)
+      dispatch(initialPage(1))
+      dispatch(getPosts({filter, next: 1}))
       scrollToTop()
     }
-  }, [getPostsByFilter, filter, prevData])
+  }, [dispatch, filter, prevData])
+
+  React.useEffect(() => {
+    function handleScroll() {
+      if (
+        window.innerHeight + document.documentElement.scrollTop !==
+          document.documentElement.scrollHeight ||
+        post_loading
+      ) {
+        return
+      }
+      dispatch(getPosts({filter, next: current_page + 1}))
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [post_loading, current_page])
 
   return (
     <>

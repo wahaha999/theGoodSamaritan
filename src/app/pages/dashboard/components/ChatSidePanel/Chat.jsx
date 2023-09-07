@@ -207,7 +207,6 @@ function Chat(props) {
 
             return messages?.length > 0
               ? messages.map((item, i) => {
-                  console.log('message==', item)
                   return (
                     <StyledMessageRow
                       key={i}
