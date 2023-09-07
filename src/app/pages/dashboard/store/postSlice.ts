@@ -16,7 +16,10 @@ export interface IPostData {
   end?: string
   timezone?: string
 }
-const initialState: any = []
+const initialState: any = {
+  data: [],
+  current_page: 0,
+}
 
 export const createPost = createAsyncThunk(
   'dashboard/post/create',
@@ -51,7 +54,8 @@ export const createPost = createAsyncThunk(
       })
       await axios.post(`${API_URL}/post/create`, formData)
       const state = getState() as any
-      dispatch(getPosts(state?.post?.filter?.filter))
+      dispatch(initialPage(1))
+      dispatch(getPosts({filter: state?.post?.filter?.filter, next: 1}))
       dispatch(showMessage({message: 'Successful posted', variant: 'success'}))
       // return data;
     } catch (error: any) {
@@ -65,7 +69,11 @@ export const getPosts = createAsyncThunk(
   async (searchFilter: any, {getState, dispatch}) => {
     try {
       dispatch(setLoading(true))
-      const {data} = await axios.get(`${API_URL}/post/get`, {params: {...searchFilter}})
+      const {post} = getState() as any
+      // const next_page = post?.post?.current_page + 1
+      const {data} = await axios.get(`${API_URL}/post/get?page=${searchFilter.next}`, {
+        params: {...searchFilter.filter},
+      })
       dispatch(setLoading(false))
       return data
     } catch (error: any) {
@@ -114,7 +122,7 @@ export const createComment = createAsyncThunk(
       // dispatch(getPosts(state?.post?.filter?.filter));
       dispatch(showMessage({message: 'Successful comment', variant: 'success'}))
 
-      const updatedPosts = _.map(post.post, (p: any) => {
+      const updatedPosts = _.map(post.post.data, (p: any) => {
         if (p.id === comm.post_id) {
           if (p.comments) {
             const updatedComments = _.map(p.comments, (c: any) => {
@@ -136,7 +144,7 @@ export const createComment = createAsyncThunk(
           return p
         }
       })
-      return updatedPosts
+      return {...post.post, data: updatedPosts}
     } catch (error: any) {
       dispatch(showMessage({message: error.response.data.message, variant: 'error'}))
     }
@@ -166,7 +174,7 @@ export const createReply = createAsyncThunk(
       const {post} = getState() as any
 
       dispatch(showMessage({message: 'Successful reply', variant: 'success'}))
-      const updatedPosts = _.map(post.post, (p: any) => {
+      const updatedPosts = _.map(post.post.data, (p: any) => {
         if (p.comments) {
           const updatedComments = _.map(p.comments, (c: any) => {
             if (c.id === rep.comment_id) {
@@ -197,7 +205,7 @@ export const createReply = createAsyncThunk(
         }
         return p
       })
-      //  const updatedPosts = _.map(post.post, (p: any) => {
+      //  const updatedPosts = _.map(post.post.data, (p: any) => {
       //     if (p.comments) {
       //         const updatedComments = _.map(p.comments, (c: any) => {
       //             if (c.id === rep.comment_id) {
@@ -214,7 +222,7 @@ export const createReply = createAsyncThunk(
       //     }
       //     return p;
       // })
-      return updatedPosts
+      return {...post.post, data: updatedPosts}
 
       // dispatch(getPosts(state?.post?.filter?.filter));
     } catch (error: any) {
@@ -229,8 +237,9 @@ export const deleteComment = createAsyncThunk(
     try {
       await axios.delete(`${API_URL}/comments/delete/${id}`)
       const {post} = getState() as any
+      dispatch(initialPage(1))
 
-      dispatch(getPosts(post?.filter?.filter))
+      dispatch(getPosts({filter: post?.filter?.filter, next: 1}))
       dispatch(showMessage({message: 'Successfully deleted', variant: 'success'}))
       // return data;
     } catch (error: any) {
@@ -245,8 +254,9 @@ export const deleteReply = createAsyncThunk(
     try {
       await axios.delete(`${API_URL}/replies/delete/${id}`)
       const {post} = getState() as any
+      dispatch(initialPage(1))
 
-      dispatch(getPosts(post?.filter?.filter))
+      dispatch(getPosts({filter: post?.filter?.filter, next: 1}))
       dispatch(showMessage({message: 'Successfully deleted', variant: 'success'}))
       // return data;
     } catch (error: any) {
@@ -263,11 +273,11 @@ export const getCommentsByPostId = createAsyncThunk(
       const {data} = await axios.get(`${API_URL}/comments/get/${post_id}`)
       const {comments, comments_count} = data
       const {post}: any = getState()
-      const updatedPosts = _.map(post.post, (p: any) =>
+      const updatedPosts = _.map(post.post.data, (p: any) =>
         p.id === post_id ? {...p, comments, comments_count} : p
       )
       dispatch(setLoading(false))
-      return updatedPosts
+      return {...post.post, data: updatedPosts}
     } catch (error: any) {
       dispatch(showMessage({message: error.response.data.message, variant: 'error'}))
     }
@@ -282,11 +292,11 @@ export const getLatestCommentByPostId = createAsyncThunk(
       const {data} = await axios.get(`${API_URL}/comments/getLatest/${post_id}`)
       const {comment, comments_count} = data
       const {post}: any = getState()
-      const updatedPosts = _.map(post.post, (p: any) =>
+      const updatedPosts = _.map(post.post.data, (p: any) =>
         p.id === post_id ? {...p, comments: [comment], comments_count} : p
       )
       dispatch(setLoading(false))
-      return updatedPosts
+      return {...post.post, data: updatedPosts}
     } catch (error: any) {
       dispatch(showMessage({message: error.response.data.message, variant: 'error'}))
     }
@@ -301,7 +311,7 @@ export const getRepliesByCommentId = createAsyncThunk(
       const {data} = await axios.get(`${API_URL}/replies/get/${comment_id}`)
       const {replies, replies_count} = data
       const {post}: any = getState()
-      const updatedPosts = _.map(post.post, (p: any) => {
+      const updatedPosts = _.map(post.post.data, (p: any) => {
         if (p.comments) {
           const updatedComments = _.map(p.comments, (c: any) =>
             c.id === comment_id ? {...c, replies, replies_count} : c
@@ -311,7 +321,7 @@ export const getRepliesByCommentId = createAsyncThunk(
         return p
       })
       dispatch(setLoading(false))
-      return updatedPosts
+      return {...post.post, data: updatedPosts}
     } catch (error: any) {
       dispatch(showMessage({message: error.response.data.message, variant: 'error'}))
     }
@@ -326,7 +336,7 @@ export const getLatestRepliesByCommentId = createAsyncThunk(
       const {reply, replies_count} = data
       const {post}: any = getState()
 
-      const updatedPosts = _.map(post.post, (p: any) => {
+      const updatedPosts = _.map(post.post.data, (p: any) => {
         if (p.comments) {
           const updatedComments = _.map(p.comments, (c: any) =>
             c.id === comment_id ? {...c, replies: [reply], replies_count} : c
@@ -336,7 +346,7 @@ export const getLatestRepliesByCommentId = createAsyncThunk(
         return p
       })
       dispatch(setLoading(false))
-      return updatedPosts
+      return {...post.post, data: updatedPosts}
     } catch (error: any) {
       dispatch(showMessage({message: error.response.data.message, variant: 'error'}))
     }
@@ -353,7 +363,7 @@ export const createLike = createAsyncThunk(
       const {post}: any = getState()
       let updatedPosts = []
       if (like.likeable_type === 'Post') {
-        updatedPosts = _.map(post.post, (p: any) => {
+        updatedPosts = _.map(post.post.data, (p: any) => {
           if (p.id === like.likeable_id) {
             if (message === 'updated') {
               const updatedLikes = _.map(p.likes, (l: any) => {
@@ -378,7 +388,7 @@ export const createLike = createAsyncThunk(
           }
         })
       } else if (like.likeable_type === 'Comment') {
-        updatedPosts = _.map(post.post, (p: any) => {
+        updatedPosts = _.map(post.post.data, (p: any) => {
           if (p.comments) {
             const updatedComments = _.map(p.comments, (c: any) => {
               if (c.id === like.likeable_id) {
@@ -410,7 +420,7 @@ export const createLike = createAsyncThunk(
           }
         })
       } else if (like.likeable_type === 'Reply') {
-        updatedPosts = _.map(post.post, (p: any) => {
+        updatedPosts = _.map(post.post.data, (p: any) => {
           if (p.comments) {
             const updatedComments = _.map(p.comments, (c: any) => {
               if (c.replies) {
@@ -451,7 +461,7 @@ export const createLike = createAsyncThunk(
       }
 
       dispatch(setLoading(false))
-      return updatedPosts
+      return {...post.post, data: updatedPosts}
     } catch (error) {
       console.log('error===', error)
     }
@@ -485,7 +495,7 @@ export const savePost = createAsyncThunk(
       const {post}: any = getState()
       // console.log('🚀 ~ file: postSlice.ts:480 ~ res:', res)
 
-      const updatedPosts = _.map(post.post, (p: any) => {
+      const updatedPosts = _.map(post.post.data, (p: any) => {
         if (p.id === res.data.postSave.post_id) {
           if (res.data.status === 'create') {
             return {...p, post_saves: [...p.post_saves, res.data.postSave]}
@@ -502,7 +512,7 @@ export const savePost = createAsyncThunk(
       dispatch(setLoading(false))
 
       dispatch(showMessage({message: res.data.message, variant: 'success'}))
-      return updatedPosts
+      return {...post.post, data: updatedPosts}
     } catch (error: any) {
       dispatch(showMessage({message: error.response.data.message, variant: 'error'}))
     }
@@ -513,6 +523,7 @@ const postSlice = createSlice({
   name: 'post',
   initialState,
   reducers: {
+    initialPage: (state, action) => initialState,
     // userLoggedOut: (state, action: PayloadAction<void>) => initialState,
   },
   extraReducers: (builder) => {
@@ -520,29 +531,69 @@ const postSlice = createSlice({
     // [updateUserShortcuts.fulfilled]: (state, action) => action.payload,
     builder
       .addCase(getPosts.fulfilled, (state: any, action) => {
-        return action.payload
+        let data
+        if (state.current_page < 1) {
+          data = action.payload.data
+        } else {
+          data = [...state.data, ...action.payload.data]
+        }
+        state.data = _.unionBy(data, 'id')
+
+        state.current_page = action.payload.current_page
+        // return action.payload
       })
-      .addCase(createPost.fulfilled, (state: any, action) => {
-        return action.payload
-      })
+
       .addCase(getCommentsByPostId.fulfilled, (state: any, action) => {
-        return action.payload
+        let data = action.payload.data
+        state.data = _.unionBy(data, 'id')
+
+        state.current_page = action.payload.current_page
       })
       .addCase(getRepliesByCommentId.fulfilled, (state: any, action) => {
-        return action.payload
+        let data = action.payload.data
+        state.data = _.unionBy(data, 'id')
+
+        state.current_page = action.payload.current_page
       })
-      .addCase(createReply.fulfilled, (state: any, action) => action.payload)
+      .addCase(createReply.fulfilled, (state: any, action) => {
+        let data = action.payload.data
+        state.data = _.unionBy(data, 'id')
+
+        state.current_page = action.payload.current_page
+      })
       .addCase(getLatestCommentByPostId.fulfilled, (state: any, action) => {
-        return action.payload
+        let data = action.payload.data
+        state.data = _.unionBy(data, 'id')
+
+        state.current_page = action.payload.current_page
       })
       .addCase(getLatestRepliesByCommentId.fulfilled, (state: any, action) => {
-        return action.payload
+        let data = action.payload.data
+        state.data = _.unionBy(data, 'id')
+
+        state.current_page = action.payload.current_page
       })
-      .addCase(createComment.fulfilled, (state: any, action) => action.payload)
-      .addCase(createLike.fulfilled, (state: any, action) => action.payload)
-      .addCase(savePost.fulfilled, (state: any, action) => action.payload)
+      .addCase(createComment.fulfilled, (state: any, action) => {
+        let data = action.payload.data
+        state.data = _.unionBy(data, 'id')
+
+        state.current_page = action.payload.current_page
+      })
+      .addCase(createLike.fulfilled, (state: any, action) => {
+        let data = action.payload.data
+        state.data = _.unionBy(data, 'id')
+
+        state.current_page = action.payload.current_page
+      })
+      .addCase(savePost.fulfilled, (state: any, action) => {
+        let data = action.payload.data
+        state.data = _.unionBy(data, 'id')
+
+        state.current_page = action.payload.current_page
+      })
   },
 })
+export const {initialPage} = postSlice.actions
 
 // export const { userLoggedOut } = userSlice.actions;
 
