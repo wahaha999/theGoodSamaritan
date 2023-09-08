@@ -79,7 +79,7 @@ export function MenuInner(props) {
   const {control, watch, reset, setValue} = methods
 
   const {selectedUser} = useAppSelector(({post}) => post.filter.filter)
-  const {post: posts} = useAppSelector(({post}) => post)
+  const {unread} = useAppSelector(({post}) => post.post)
   useEffect(() => {
     const initialState = {
       search: '',
@@ -247,13 +247,13 @@ export function MenuInner(props) {
                     defaultValue={false}
                     render={({field}) => (
                       <Grid item>
-                        <Badge badgeContent={posts[0]?.unread} color='error'>
+                        <Badge badgeContent={unread} color='error'>
                           <Button
                             onClick={() => field.onChange(!field.value)}
                             startIcon={
                               <NotificationsActiveIcon
                                 color={saved_posts ? 'primary' : 'secondary'}
-                                className={posts[0]?.unread > 0 ? 'shake' : ''}
+                                className={unread > 0 ? 'shake' : ''}
                               />
                             }
                             sx={{ml: 2}}
@@ -361,12 +361,12 @@ export function MenuInner(props) {
               control={control}
               defaultValue={false}
               render={({field}) => (
-                <Badge badgeContent={posts[0]?.unread} color='error'>
+                <Badge badgeContent={unread} color='error'>
                   <ListItemButton onClick={() => field.onChange(!field.value)}>
                     <ListItemIcon>
                       <NotificationsActiveIcon
                         color={saved_posts ? 'primary' : 'secondary'}
-                        className={posts[0]?.unread > 0 ? 'shake' : ''}
+                        className={unread > 0 ? 'shake' : ''}
                       />
                     </ListItemIcon>
                     <ListItemText primary='Saved Posts' />
