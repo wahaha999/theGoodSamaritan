@@ -8,12 +8,32 @@ export interface IMessage {
   receiver: number
 }
 
-const initialState: any = {messages: [], typeEvent: null, searchText: '', searchMode: 1}
+const initialState: any = {
+  messages: [],
+  typeEvent: null,
+  searchText: '',
+  searchMode: 1,
+  current_page: 1,
+  loading_messages: false,
+}
 
 export const sendMessage = createAsyncThunk(
   'dashboard/chat/sendMessage',
   async (data: any, {getState, dispatch}) => {
     await axios.post(`${API_URL}/messages`, data)
+  }
+)
+
+export const getPageMessages = createAsyncThunk(
+  'dashboard/chat/getMessages',
+  async (channel_id: any, {getState, dispatch}) => {
+    dispatch(setLoading(true))
+    const {chat} = getState() as any
+    const {current_page} = chat.messages
+    const res = await axios.get(`${API_URL}/getMessages/${channel_id}?page=${current_page + 1}`)
+    dispatch(setLoading(false))
+
+    dispatch(getMessages(res.data))
   }
 )
 
@@ -29,7 +49,12 @@ export const dmSelect = createAsyncThunk(
       window.Echo.leave(`chat.dm.${channel_id}`)
     }
     dispatch(selectChatRoom(data))
+    dispatch(setLoading(true))
+
     const res = await axios.get(`${API_URL}/getMessages/${channel_id}`)
+    dispatch(setLoading(false))
+
+    dispatch(emptyMessage(1))
     dispatch(getMessages(res.data))
     dispatch(readMarkMessage({channel_id}))
     window.Echo.join(`chat.dm.${channel_id}`)
@@ -79,12 +104,30 @@ const messageSlice = createSlice({
   name: 'messages',
   initialState,
   reducers: {
-    getMessages: (state, action) => {
+    emptyMessage: (state, action) => {
       return {
         ...state,
-        messages: action.payload,
+        messages: [],
+        current_page: 1,
       }
     },
+    getMessages: (state, action) => {
+      const allMessages = [...action.payload.data, ...state.messages]
+
+      // Sort the messages by the 'created_at' timestamp in descending order
+      const sortedMessages: any = allMessages.sort((a: any, b: any) => {
+        const dateA = new Date(a.created_at) as any
+        const dateB = new Date(b.created_at) as any
+        return dateA - dateB // Descending order (most recent first)
+      })
+
+      return {
+        ...state,
+        messages: sortedMessages,
+        current_page: action.payload.current_page,
+      }
+    },
+
     addMessage: (state, action) => {
       state.messages.push(action.payload)
     },
@@ -107,6 +150,9 @@ const messageSlice = createSlice({
     handleSearchMode: (state, action) => {
       state.searchMode = action.payload
     },
+    setLoading: (state, action) => {
+      state.loading_messages = action.payload
+    },
   },
   // extraReducers(builder) {
   //   builder.addCase(dmSelect.fulfilled, (state, action) => {
@@ -124,6 +170,8 @@ export const {
   removeMessage,
   handleSearch,
   handleSearchMode,
+  emptyMessage,
+  setLoading,
 } = messageSlice.actions
 
 export default messageSlice.reducer
