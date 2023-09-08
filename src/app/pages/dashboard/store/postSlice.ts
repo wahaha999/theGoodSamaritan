@@ -19,6 +19,7 @@ export interface IPostData {
 const initialState: any = {
   data: [],
   current_page: 0,
+  unread: 0,
 }
 
 export const createPost = createAsyncThunk(
@@ -533,13 +534,14 @@ const postSlice = createSlice({
       .addCase(getPosts.fulfilled, (state: any, action) => {
         let data
         if (state.current_page < 1) {
-          data = action.payload.data
+          data = action.payload.posts.data
         } else {
-          data = [...state.data, ...action.payload.data]
+          data = [...state.data, ...action.payload.posts.data]
         }
         state.data = _.unionBy(data, 'id')
 
-        state.current_page = action.payload.current_page
+        state.current_page = action.payload.posts.current_page
+        state.unread = action.payload.unread
         // return action.payload
       })
 

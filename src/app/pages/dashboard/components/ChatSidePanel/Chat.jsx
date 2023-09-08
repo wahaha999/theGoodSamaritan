@@ -6,8 +6,8 @@ import {useEffect, useMemo, useRef, useState} from 'react'
 import {useDispatch} from 'react-redux'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 import FuseScrollbars from 'src/app/modules/core/FuseScrollbars/FuseScrollbars'
-import {Avatar, Box, CircularProgress, Grid, Typography} from '@mui/material'
-import {sendMessage} from './store/messageSlice'
+import {Avatar, Box, CircularProgress, Fab, Fade, Grid, Typography} from '@mui/material'
+import {getPageMessages, sendMessage} from './store/messageSlice'
 import {useAppSelector} from 'src/app/store/hook'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 import './chat.css'
@@ -16,6 +16,7 @@ import {showMessage} from 'src/app/store/fuse/messageSlice'
 import {formatBytes} from 'src/app/helpers/fileHelper'
 import {addMessage, removeMessage} from './store/messageSlice'
 import Attach from './Attach'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 
 const StyledMessageRow = styled('div')(({theme}) => ({
   '&.contact': {
@@ -98,10 +99,13 @@ const StyledMessageRow = styled('div')(({theme}) => ({
   },
 }))
 
+var store_page_num = 1
 function Chat(props) {
   const dispatch = useDispatch()
   const selectedChatRoom = useAppSelector(({chat}) => chat.chatRoom.selectedChatRoom)
-  const {messages, typeEvent, loading_messages} = useAppSelector(({chat}) => chat.messages)
+  const {messages, typeEvent, loading_messages, current_page} = useAppSelector(
+    ({chat}) => chat.messages
+  )
   const {chatRoomInfo} = useAppSelector(({chat}) => chat.chatRoom)
   const {user} = useAppSelector(({user}) => user)
   //   const selectedContactId = useSelector(selectSelectedContactId)
@@ -112,6 +116,7 @@ function Chat(props) {
   const [messageText, setMessageText] = useState('')
   const inputRef = useRef(null)
   const [filePreviews, setFilePreviews] = useState([])
+  const [scroll, setScroll] = useState(false)
 
   useEffect(() => {
     if (inputRef.current) {
@@ -120,8 +125,12 @@ function Chat(props) {
   }, [messages])
 
   useEffect(() => {
-    scrollToBottom()
-  }, [messages])
+    if (store_page_num === current_page) {
+      scrollToBottom()
+    }
+    store_page_num = current_page
+    // }
+  }, [messages, current_page])
 
   function scrollToBottom() {
     if (!chatScroll.current) {
@@ -131,7 +140,23 @@ function Chat(props) {
       top: chatScroll.current.scrollHeight,
       behavior: 'smooth',
     })
+    setScroll(false)
   }
+
+  useEffect(() => {
+    const targetDiv = document.getElementById('chat_scroll')
+
+    function handleScroll() {
+      if (targetDiv.scrollTop === 0) {
+        setScroll(true)
+        dispatch(getPageMessages(selectedChatRoom))
+      }
+    }
+
+    targetDiv.addEventListener('scroll', handleScroll)
+
+    return () => targetDiv.removeEventListener('scroll', handleScroll)
+  }, [selectedChatRoom])
 
   const readFileAsync = (file) => {
     return new Promise((resolve, reject) => {
@@ -153,6 +178,16 @@ function Chat(props) {
       className={clsx('flex flex-col relative pb-64 shadow', props.className)}
       sx={{background: (theme) => theme.palette.background.default}}
     >
+      <Fade in={scroll}>
+        <Fab
+          size='small'
+          color='secondary'
+          onClick={() => scrollToBottom()}
+          sx={{position: 'absolute', right: 8, top: 10}}
+        >
+          <KeyboardArrowDownIcon />
+        </Fab>
+      </Fade>
       <Grid container justifyContent='center'>
         {loading_messages && (
           <Box
@@ -172,6 +207,7 @@ function Chat(props) {
         )}
       </Grid>
       <FuseScrollbars
+        id='chat_scroll'
         ref={chatScroll}
         className='flex flex-1 flex-col overflow-y-auto overscroll-contain'
         option={{suppressScrollX: true, wheelPropagation: false}}

@@ -116,7 +116,6 @@ const ContactButton = (props: Props) => {
   const dispatch = useAppDispatch()
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.down('sm')) as boolean
-  console.log('matches==', matches)
   return (
     <Root
       title={info.name}
