@@ -1,4 +1,6 @@
+import {grey} from '@mui/material/colors'
 import {createTheme, responsiveFontSizes} from '@mui/material/styles'
+import shadows from '@mui/material/styles/shadows'
 
 let theme1 = createTheme({
   palette: {
@@ -33,6 +35,19 @@ let theme1 = createTheme({
           borderRadius: '8px',
           textTransform: 'capitalize',
           fontWeight: 600,
+        },
+      },
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: 'white',
+          color: grey[800],
+          fontSize: '12px',
+          boxShadow: shadows[2],
+        },
+        arrow: {
+          color: 'white',
         },
       },
     },
