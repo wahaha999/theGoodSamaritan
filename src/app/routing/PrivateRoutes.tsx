@@ -29,7 +29,13 @@ const PrivateRoutes = () => {
               {/* Pages */}
               <Route
                 path='dashboard'
-                element={<SubscriptionMiddleware element={<DashboardWrapper />} />}
+                element={
+                  user.role === 'admin' ? (
+                    <DashboardWrapper />
+                  ) : (
+                    <SubscriptionMiddleware element={<DashboardWrapper />} />
+                  )
+                }
               />
               <Route path='youtube' element={<YoutubePage />} />
               <Route

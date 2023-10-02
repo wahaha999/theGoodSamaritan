@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { API_URL } from "src/app/modules/auth/core/_requests";
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
+import axios from 'axios'
+import {API_URL} from 'src/app/modules/auth/core/_requests'
 
 export interface IState {
   id: number
@@ -8,13 +8,12 @@ export interface IState {
   Description: string
   id_plan_region: number
 }
-const initialState = {};
+const initialState = {}
 
 export const getStates = createAsyncThunk('dashboard/account/getState', async () => {
-    
-    const { data } = await axios.get(`${API_URL}/get_state`)
-    return data;
-});
+  const {data} = await axios.get(`${API_URL}/get_state`)
+  return data
+})
 
 const planSlice = createSlice({
   name: 'Account',
@@ -26,10 +25,10 @@ const planSlice = createSlice({
     // [getStates.fulfilled]: (state, action) => action.payload,
     // [updateUserShortcuts.fulfilled]: (state, action) => action.payload,
     builder.addCase(getStates.fulfilled, (state, action) => {
-      return {...state,state:[...action.payload]};
-    });
+      return {...state, state: [...action.payload]}
+    })
   },
-});
+})
 
 // export const { userLoggedOut } = userSlice.actions;
 
@@ -37,4 +36,4 @@ const planSlice = createSlice({
 
 // export const selectUserShortcuts = ({ user }: RootState) => user.data?.shortcuts;
 
-export default planSlice.reducer;
+export default planSlice.reducer
