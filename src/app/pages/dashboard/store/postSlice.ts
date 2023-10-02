@@ -90,7 +90,7 @@ export const deletePost = createAsyncThunk(
       await axios.delete(`${API_URL}/post/delete/${id}`)
       const {post} = getState() as any
 
-      dispatch(getPosts(post?.filter?.filter))
+      dispatch(getPosts({filter: post?.filter?.filter}))
       dispatch(showMessage({message: 'Successfully deleted', variant: 'success'}))
       // return data;
     } catch (error: any) {
@@ -532,11 +532,12 @@ const postSlice = createSlice({
     // [updateUserShortcuts.fulfilled]: (state, action) => action.payload,
     builder
       .addCase(getPosts.fulfilled, (state: any, action) => {
+        console.log('action===', action.payload, state.data)
         let data
         if (state.current_page < 1) {
           data = action.payload.posts.data
         } else {
-          data = [...state.data, ...action.payload.posts.data]
+          data = [...action.payload.posts.data]
         }
         state.data = _.unionBy(data, 'id')
 
