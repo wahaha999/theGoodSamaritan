@@ -89,8 +89,9 @@ export const deletePost = createAsyncThunk(
     try {
       await axios.delete(`${API_URL}/post/delete/${id}`)
       const {post} = getState() as any
+      dispatch(initialPage(1))
 
-      dispatch(getPosts({filter: post?.filter?.filter}))
+      dispatch(getPosts({filter: post?.filter?.filter, next: 1}))
       dispatch(showMessage({message: 'Successfully deleted', variant: 'success'}))
       // return data;
     } catch (error: any) {
@@ -537,7 +538,7 @@ const postSlice = createSlice({
         if (state.current_page < 1) {
           data = action.payload.posts.data
         } else {
-          data = [...action.payload.posts.data]
+          data = [...state.data, ...action.payload.posts.data]
         }
         state.data = _.unionBy(data, 'id')
 
