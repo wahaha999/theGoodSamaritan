@@ -347,13 +347,14 @@ function Chat(props) {
         }
 
         const handleRemove = (index) => {
+          filePreviews.splice(index, 1)
           setFilePreviews([...filePreviews])
         }
 
         return (
           <>
             {/* {chat && ( */}
-            <form onSubmit={onMessageSubmit} className='pb-6 px-8 absolute bottom-0 left-0 right-0'>
+            <form onSubmit={onMessageSubmit} className='pb-3 px-4 absolute bottom-0 left-0 right-0'>
               {/* <Typography variant='caption' textAlign="center">Typing</Typography> */}
               {typeEvent ? (
                 <div className='typing-container'>
@@ -374,7 +375,7 @@ function Chat(props) {
               ) : null}
 
               {/* {typingArrayReady()} */}
-              <Paper className='relative shadow' sx={{borderRadius: '2.4rem'}}>
+              <Paper className='relative shadow' sx={{borderRadius: '1.2rem'}}>
                 <Grid
                   container
                   direction={'row'}
@@ -416,79 +417,89 @@ function Chat(props) {
                     </div>
                   ))}
                 </Grid>
-                <Grid container direction='row' alignItems={'center'}>
-                  <input
-                    // autoFocus
-                    type='text'
-                    ref={inputRef}
-                    disabled={selectedChatRoom === null}
-                    id='message-input'
-                    className='mx-6 focus:outline-none my-6'
-                    // className='flex flex-1 grow shrink-0 mx-16 ltr:mr-48 rtl:ml-48 my-6 border-x-0'
-                    placeholder='Type your message'
-                    onChange={(e) => onInputChange(e, selectedChatRoom)}
-                    value={messageText}
-                  />
-                  <IconButton
-                    className='absolute ltr:right-0 rtl:left-0 top-0'
-                    type='submit'
-                    size='large'
-                    disabled={selectedChatRoom === null}
-                  >
-                    <FuseSvgIcon className='rotate-90' color='action'>
-                      heroicons-outline:paper-airplane
-                    </FuseSvgIcon>
-                  </IconButton>
-                  <IconButton
-                    className='absolute ltr:right-0 rtl:left-0 top-0'
-                    size='large'
-                    component='label'
-                    disabled={selectedChatRoom === null}
-                  >
-                    <input
-                      id='chat-attachment'
-                      hidden
-                      accept='.doc, .docx, .pdf, .exe'
-                      type='file'
-                      onChange={async (e) => {
-                        const files = Array.from(e.target.files)
-                        if (files.length > 5) {
-                          dispatch(
-                            showMessage({
-                              message: 'Only allow up to 5 attachments per chat.',
-                              variant: 'error',
-                            })
-                          )
-                        } else {
-                          const filePreviewsPromises = files.map(async (file) => {
-                            const fileDataUrl = await readFileAsync(file)
-                            return {file, fileDataUrl}
-                          })
-
-                          const newFilePreviews = await Promise.all(filePreviewsPromises)
-                          let canUpload = true
-                          newFilePreviews.forEach((item) => {
-                            if (item.file.size > 10485760) {
-                              canUpload = false
-                              return
-                            }
-                          })
-                          if (canUpload) {
-                            setFilePreviews([...filePreviews, ...newFilePreviews])
-                          } else {
+                <Grid container direction='row' alignItems='center' justifyContent='flex-end'>
+                  <Grid item flexGrow={1}>
+                    <textarea
+                      multiple
+                      rows={3}
+                      // autoFocus
+                      type='text'
+                      ref={inputRef}
+                      disabled={selectedChatRoom === null}
+                      id='message-input'
+                      className='mx-4 focus:outline-none my-6  flex w-full'
+                      // className='flex flex-1 grow shrink-0 mx-16 ltr:mr-48 rtl:ml-48 my-6 border-x-0'
+                      placeholder='Type your message'
+                      onChange={(e) => onInputChange(e, selectedChatRoom)}
+                      value={messageText}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <IconButton
+                      className='absolute ltr:right-0 rtl:left-0 top-0'
+                      type='submit'
+                      size='small'
+                      disabled={selectedChatRoom === null}
+                    >
+                      <FuseSvgIcon className='rotate-90' size={16} color='action'>
+                        heroicons-outline:paper-airplane
+                      </FuseSvgIcon>
+                    </IconButton>
+                  </Grid>
+                  <Grid item>
+                    <IconButton
+                      className='absolute ltr:right-0 rtl:left-0 top-0'
+                      size='small'
+                      component='label'
+                      disabled={selectedChatRoom === null}
+                    >
+                      <input
+                        id='chat-attachment'
+                        hidden
+                        accept='.doc, .docx, .pdf, .exe'
+                        type='file'
+                        onChange={async (e) => {
+                          const files = Array.from(e.target.files)
+                          if (files.length > 5) {
                             dispatch(
                               showMessage({
-                                message: 'Only allow sizes up to 10 MB.',
+                                message: 'Only allow up to 5 attachments per chat.',
                                 variant: 'error',
                               })
                             )
+                          } else {
+                            const filePreviewsPromises = files.map(async (file) => {
+                              const fileDataUrl = await readFileAsync(file)
+                              return {file, fileDataUrl}
+                            })
+
+                            const newFilePreviews = await Promise.all(filePreviewsPromises)
+                            let canUpload = true
+                            newFilePreviews.forEach((item) => {
+                              if (item.file.size > 10485760) {
+                                canUpload = false
+                                return
+                              }
+                            })
+                            if (canUpload) {
+                              setFilePreviews([...filePreviews, ...newFilePreviews])
+                            } else {
+                              dispatch(
+                                showMessage({
+                                  message: 'Only allow sizes up to 10 MB.',
+                                  variant: 'error',
+                                })
+                              )
+                            }
                           }
-                        }
-                      }}
-                      multiple
-                    />
-                    <FuseSvgIcon color='action'>heroicons-outline:paper-clip</FuseSvgIcon>
-                  </IconButton>
+                        }}
+                        multiple
+                      />
+                      <FuseSvgIcon color='action' size={16}>
+                        heroicons-outline:paper-clip
+                      </FuseSvgIcon>
+                    </IconButton>
+                  </Grid>
                 </Grid>
               </Paper>
             </form>
