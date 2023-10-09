@@ -126,6 +126,7 @@ const messageSlice = createSlice({
       return {
         ...state,
         messages: sortedMessages,
+        loading_messages: false,
         current_page: action.payload.current_page,
       }
     },
