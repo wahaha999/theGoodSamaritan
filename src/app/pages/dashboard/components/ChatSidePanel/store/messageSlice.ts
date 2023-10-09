@@ -30,10 +30,12 @@ export const getPageMessages = createAsyncThunk(
     dispatch(setLoading(true))
     const {chat} = getState() as any
     const {current_page} = chat.messages
-    const res = await axios.get(`${API_URL}/getMessages/${channel_id}?page=${current_page + 1}`)
-    dispatch(setLoading(false))
+    if (channel_id) {
+      const res = await axios.get(`${API_URL}/getMessages/${channel_id}?page=${current_page + 1}`)
+      dispatch(setLoading(false))
 
-    dispatch(getMessages(res.data))
+      dispatch(getMessages(res.data))
+    } 
   }
 )
 
