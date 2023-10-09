@@ -23,7 +23,10 @@ import ChatSidePanel from 'src/app/pages/dashboard/components/ChatSidePanel'
 import GlobalStyles from '@mui/material/GlobalStyles'
 import {alpha} from '@mui/material/styles'
 import {deselectChatRoom} from 'src/app/pages/dashboard/components/ChatSidePanel/store/chatRoomSlice'
-import {removeMessages} from 'src/app/pages/dashboard/components/ChatSidePanel/store/messageSlice'
+import {
+  removeMessages,
+  setLoading,
+} from 'src/app/pages/dashboard/components/ChatSidePanel/store/messageSlice'
 
 interface Props {
   /**
@@ -495,6 +498,7 @@ export default function AppLayout(props: Props) {
             setChatOpen(false)
             dispatch(deselectChatRoom())
             dispatch(removeMessages())
+            dispatch(setLoading(false))
           }}
         >
           <ChatSidePanel
