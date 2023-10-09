@@ -533,7 +533,6 @@ const postSlice = createSlice({
     // [updateUserShortcuts.fulfilled]: (state, action) => action.payload,
     builder
       .addCase(getPosts.fulfilled, (state: any, action) => {
-        console.log('action===', action.payload, state.data)
         let data
         if (state.current_page < 1) {
           data = action.payload.posts.data
