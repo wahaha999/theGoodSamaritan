@@ -300,212 +300,222 @@ function Chat(props) {
       </FuseScrollbars>
 
       {useMemo(() => {
-        const onMessageSubmit = (ev) => {
-          ev.preventDefault()
-          if (messageText === '' && filePreviews.length === 0) {
-            return
-          }
-          if (filePreviews.length === 0) {
-            dispatch(
-              sendMessage({
-                message: messageText,
-                channel_id: selectedChatRoom,
-                channel_type: 'dm',
-                receiver_id: chatRoomInfo.id,
-              })
-            )
-          } else {
-            dispatch(
-              addMessage({
-                id: new Date().getTime(),
-                type: 'temp',
-                message: messageText,
-                channel_id: selectedChatRoom,
-                user_id: user.id,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-                attachments: filePreviews,
-              })
-            )
-          }
-          setMessageText('')
-          setFilePreviews([])
-        }
 
-        const onInputChange = (ev, selectedChatRoom) => {
-          setMessageText(ev.target.value)
-          let channel = window.Echo.join(`chat.dm.${selectedChatRoom}`)
-          setTimeout(() => {
-            // console.log('win0==',window.Echo)
-            channel.whisper('typing', {
-              name: user.last_name,
-              avatar: user.avatar,
-            })
+         const handleKeyDown = (event) => {
+           if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+             onMessageSubmit(event)
+           }
+         }
+         const onMessageSubmit = (ev) => {
+           ev.preventDefault()
+           if (messageText === '' && filePreviews.length === 0) {
+             return
+           }
+           if (filePreviews.length === 0) {
+             dispatch(
+               sendMessage({
+                 message: messageText,
+                 channel_id: selectedChatRoom,
+                 channel_type: 'dm',
+                 receiver_id: chatRoomInfo.id,
+               })
+             )
+           } else {
+             dispatch(
+               addMessage({
+                 id: new Date().getTime(),
+                 type: 'temp',
+                 message: messageText,
+                 channel_id: selectedChatRoom,
+                 user_id: user.id,
+                 created_at: new Date().toISOString(),
+                 updated_at: new Date().toISOString(),
+                 attachments: filePreviews,
+               })
+             )
+           }
+           setMessageText('')
+           setFilePreviews([])
+         }
 
-            // console.log('win1==',window.Echo)
-          }, 300)
-        }
+         const onInputChange = (ev, selectedChatRoom) => {
+           setMessageText(ev.target.value)
+           let channel = window.Echo.join(`chat.dm.${selectedChatRoom}`)
+           setTimeout(() => {
+             // console.log('win0==',window.Echo)
+             channel.whisper('typing', {
+               name: user.last_name,
+               avatar: user.avatar,
+             })
 
-        const handleRemove = (index) => {
-          filePreviews.splice(index, 1)
-          setFilePreviews([...filePreviews])
-        }
+             // console.log('win1==',window.Echo)
+           }, 300)
+         }
 
-        return (
-          <>
-            {/* {chat && ( */}
-            <form onSubmit={onMessageSubmit} className='pb-3 px-4 absolute bottom-0 left-0 right-0'>
-              {/* <Typography variant='caption' textAlign="center">Typing</Typography> */}
-              {typeEvent ? (
-                <div className='typing-container'>
-                  <Avatar
-                    sx={{width: 30, height: 30}}
-                    src={toServerUrl('/media/user/avatar/' + typeEvent?.avatar)}
-                  />
+         const handleRemove = (index) => {
+           filePreviews.splice(index, 1)
+           setFilePreviews([...filePreviews])
+         }
 
-                  <div>
-                    <div className='typingBubble'>
-                      <div className='dot'></div>
-                      <div className='dot'></div>
-                      <div className='dot'></div>
-                    </div>
-                    <span>{typeEvent?.name} is typing... </span>
-                  </div>
-                </div>
-              ) : null}
+         return (
+           <>
+             {/* {chat && ( */}
+             <form
+               onSubmit={onMessageSubmit}
+               className='pb-3 px-4 absolute bottom-0 left-0 right-0'
+             >
+               {/* <Typography variant='caption' textAlign="center">Typing</Typography> */}
+               {typeEvent ? (
+                 <div className='typing-container'>
+                   <Avatar
+                     sx={{width: 30, height: 30}}
+                     src={toServerUrl('/media/user/avatar/' + typeEvent?.avatar)}
+                   />
 
-              {/* {typingArrayReady()} */}
-              <Paper className='relative shadow' sx={{borderRadius: '1.2rem'}}>
-                <Grid
-                  container
-                  direction={'row'}
-                  gap={1}
-                  sx={{paddingTop: filePreviews.length > 0 ? '12px' : '0px'}}
-                >
-                  {filePreviews?.map((item, index) => (
-                    <div
-                      onClick={() => handleRemove(index)}
-                      role='button'
-                      tabIndex={0}
-                      className='w-120 h-120 rounded-8 mx-2 mb-2 pt-1 px-2 pb-3 overflow-hidden cursor-pointer outline-none shadow hover:shadow-lg'
-                      key={index}
-                    >
-                      <div className='flex justify-content-end'>
-                        <FuseSvgIcon>heroicons-outline:x-circle</FuseSvgIcon>
-                      </div>
-                      <FuseSvgIcon size={30}>heroicons-outline:document-text</FuseSvgIcon>
-                      <Typography
-                        variant='h6'
-                        color='text.secondary'
-                        sx={{
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          paddingTop: '15px',
-                          paddingBottom: '20px',
-                        }}
-                      >
-                        {typeof item === 'string' ? item : item.file.name}
-                      </Typography>
-                      <Typography
-                        variant='caption'
-                        color='text.secondary'
-                        sx={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}
-                      >
-                        {typeof item === 'string' ? item : formatBytes(item.file.size)}
-                      </Typography>
-                    </div>
-                  ))}
-                </Grid>
-                <Grid container direction='row' alignItems='center' justifyContent='flex-end'>
-                  <Grid item flexGrow={1}>
-                    <textarea
-                      multiple
-                      rows={3}
-                      // autoFocus
-                      type='text'
-                      ref={inputRef}
-                      disabled={selectedChatRoom === null}
-                      id='message-input'
-                      className='mx-4 focus:outline-none my-6  flex w-full'
-                      // className='flex flex-1 grow shrink-0 mx-16 ltr:mr-48 rtl:ml-48 my-6 border-x-0'
-                      placeholder='Type your message'
-                      onChange={(e) => onInputChange(e, selectedChatRoom)}
-                      value={messageText}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <IconButton
-                      className='absolute ltr:right-0 rtl:left-0 top-0'
-                      type='submit'
-                      size='small'
-                      disabled={selectedChatRoom === null}
-                    >
-                      <FuseSvgIcon className='rotate-90' size={16} color='action'>
-                        heroicons-outline:paper-airplane
-                      </FuseSvgIcon>
-                    </IconButton>
-                  </Grid>
-                  <Grid item>
-                    <IconButton
-                      className='absolute ltr:right-0 rtl:left-0 top-0'
-                      size='small'
-                      component='label'
-                      disabled={selectedChatRoom === null}
-                    >
-                      <input
-                        id='chat-attachment'
-                        hidden
-                        accept='.doc, .docx, .pdf, .exe'
-                        type='file'
-                        onChange={async (e) => {
-                          const files = Array.from(e.target.files)
-                          if (files.length > 5) {
-                            dispatch(
-                              showMessage({
-                                message: 'Only allow up to 5 attachments per chat.',
-                                variant: 'error',
-                              })
-                            )
-                          } else {
-                            const filePreviewsPromises = files.map(async (file) => {
-                              const fileDataUrl = await readFileAsync(file)
-                              return {file, fileDataUrl}
-                            })
+                   <div>
+                     <div className='typingBubble'>
+                       <div className='dot'></div>
+                       <div className='dot'></div>
+                       <div className='dot'></div>
+                     </div>
+                     <span>{typeEvent?.name} is typing... </span>
+                   </div>
+                 </div>
+               ) : null}
 
-                            const newFilePreviews = await Promise.all(filePreviewsPromises)
-                            let canUpload = true
-                            newFilePreviews.forEach((item) => {
-                              if (item.file.size > 10485760) {
-                                canUpload = false
-                                return
-                              }
-                            })
-                            if (canUpload) {
-                              setFilePreviews([...filePreviews, ...newFilePreviews])
-                            } else {
-                              dispatch(
-                                showMessage({
-                                  message: 'Only allow sizes up to 10 MB.',
-                                  variant: 'error',
-                                })
-                              )
-                            }
-                          }
-                        }}
-                        multiple
-                      />
-                      <FuseSvgIcon color='action' size={16}>
-                        heroicons-outline:paper-clip
-                      </FuseSvgIcon>
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </Paper>
-            </form>
-            {/* )} */}
-          </>
-        )
+               {/* {typingArrayReady()} */}
+               <Paper className='relative shadow' sx={{borderRadius: '1.2rem'}}>
+                 <Grid
+                   container
+                   direction={'row'}
+                   gap={1}
+                   sx={{paddingTop: filePreviews.length > 0 ? '12px' : '0px'}}
+                 >
+                   {filePreviews?.map((item, index) => (
+                     <div
+                       onClick={() => handleRemove(index)}
+                       role='button'
+                       tabIndex={0}
+                       className='w-120 h-120 rounded-8 mx-2 mb-2 pt-1 px-2 pb-3 overflow-hidden cursor-pointer outline-none shadow hover:shadow-lg'
+                       key={index}
+                     >
+                       <div className='flex justify-content-end'>
+                         <FuseSvgIcon>heroicons-outline:x-circle</FuseSvgIcon>
+                       </div>
+                       <FuseSvgIcon size={30}>heroicons-outline:document-text</FuseSvgIcon>
+                       <Typography
+                         variant='h6'
+                         color='text.secondary'
+                         sx={{
+                           overflow: 'hidden',
+                           textOverflow: 'ellipsis',
+                           whiteSpace: 'nowrap',
+                           paddingTop: '15px',
+                           paddingBottom: '20px',
+                         }}
+                       >
+                         {typeof item === 'string' ? item : item.file.name}
+                       </Typography>
+                       <Typography
+                         variant='caption'
+                         color='text.secondary'
+                         sx={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}
+                       >
+                         {typeof item === 'string' ? item : formatBytes(item.file.size)}
+                       </Typography>
+                     </div>
+                   ))}
+                 </Grid>
+                 <Grid container direction='row' alignItems='center' justifyContent='flex-end'>
+                   <Grid item flexGrow={1}>
+                     <textarea
+                       multiple
+                       rows={3}
+                       // autoFocus
+                       type='text'
+                       ref={inputRef}
+                       onKeyDown={handleKeyDown}
+                       disabled={selectedChatRoom === null}
+                       id='message-input'
+                       className='mx-4 focus:outline-none my-6  flex w-full'
+                       // className='flex flex-1 grow shrink-0 mx-16 ltr:mr-48 rtl:ml-48 my-6 border-x-0'
+                       placeholder='Type your message'
+                       onChange={(e) => onInputChange(e, selectedChatRoom)}
+                       value={messageText}
+                     />
+                   </Grid>
+                   <Grid item>
+                     <IconButton
+                       className='absolute ltr:right-0 rtl:left-0 top-0'
+                       type='submit'
+                       size='small'
+                       disabled={selectedChatRoom === null}
+                     >
+                       <FuseSvgIcon className='rotate-90' size={16} color='action'>
+                         heroicons-outline:paper-airplane
+                       </FuseSvgIcon>
+                     </IconButton>
+                   </Grid>
+                   <Grid item>
+                     <IconButton
+                       className='absolute ltr:right-0 rtl:left-0 top-0'
+                       size='small'
+                       component='label'
+                       disabled={selectedChatRoom === null}
+                     >
+                       <input
+                         id='chat-attachment'
+                         hidden
+                         accept='.doc, .docx, .pdf, .exe'
+                         type='file'
+                         onChange={async (e) => {
+                           const files = Array.from(e.target.files)
+                           if (files.length > 5) {
+                             dispatch(
+                               showMessage({
+                                 message: 'Only allow up to 5 attachments per chat.',
+                                 variant: 'error',
+                               })
+                             )
+                           } else {
+                             const filePreviewsPromises = files.map(async (file) => {
+                               const fileDataUrl = await readFileAsync(file)
+                               return {file, fileDataUrl}
+                             })
+
+                             const newFilePreviews = await Promise.all(filePreviewsPromises)
+                             let canUpload = true
+                             newFilePreviews.forEach((item) => {
+                               if (item.file.size > 10485760) {
+                                 canUpload = false
+                                 return
+                               }
+                             })
+                             if (canUpload) {
+                               setFilePreviews([...filePreviews, ...newFilePreviews])
+                             } else {
+                               dispatch(
+                                 showMessage({
+                                   message: 'Only allow sizes up to 10 MB.',
+                                   variant: 'error',
+                                 })
+                               )
+                             }
+                           }
+                         }}
+                         multiple
+                       />
+                       <FuseSvgIcon color='action' size={16}>
+                         heroicons-outline:paper-clip
+                       </FuseSvgIcon>
+                     </IconButton>
+                   </Grid>
+                 </Grid>
+               </Paper>
+             </form>
+             {/* )} */}
+           </>
+         )
       }, [
         dispatch,
         messageText,
