@@ -4,13 +4,12 @@ import {Manager, Popper, Reference} from 'react-popper'
 import {useDebounce} from 'src/app/modules/hooks'
 import * as ReactDOM from 'react-dom'
 import {motion, AnimatePresence} from 'framer-motion'
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
 import {createLike} from 'src/app/pages/dashboard/store/postSlice'
 import {emoji} from 'src/app/constants/emoji'
 import _ from 'src/app/modules/@lodash/@lodash'
-import FavoriteIcon from '@mui/icons-material/Favorite'
-
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt'
+import ThumbUpOffAltOutlinedIcon from '@mui/icons-material/ThumbUpOffAltOutlined'
 const LikeHover = (props) => {
   const {id} = useAppSelector(({user}) => user.user)
   const {post, type} = props
@@ -28,7 +27,11 @@ const LikeHover = (props) => {
             <Button
               ref={ref}
               startIcon={
-                _.find(post?.likes, {user_id: id}) ? <FavoriteIcon /> : <FavoriteBorderIcon />
+                _.find(post?.likes, {user_id: id}) ? (
+                  <ThumbUpAltIcon />
+                ) : (
+                  <ThumbUpOffAltOutlinedIcon />
+                )
               }
               sx={{mr: 2}}
               onMouseEnter={() => handleToggle(true)}

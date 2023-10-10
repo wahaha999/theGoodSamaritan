@@ -32,9 +32,13 @@ export const getChatRooms = createAsyncThunk(
   'dashboard/chat/getChatRooms',
   async (id: number, {getState, dispatch}) => {
     const res = await axios.get(`${API_URL}/getChatRooms/${id}`)
-    // console.log('message===', res)
-
-    return res.data
+    let temp = res.data.map((item: any, index: number) => {
+      if (item.sender_id === id) {
+        item.unread_count = 0
+      }
+      return item
+    })
+    return temp
   }
 )
 
