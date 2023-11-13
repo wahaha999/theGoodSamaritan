@@ -1,4 +1,4 @@
-import {orange} from '@mui/material/colors'
+import {orange, purple} from '@mui/material/colors'
 import {lighten, styled} from '@mui/material/styles'
 import clsx from 'clsx'
 // import FuseUtils from '@fuse/utils'
@@ -6,12 +6,15 @@ import {Controller, useFormContext} from 'react-hook-form'
 import Box from '@mui/material/Box'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 import {generateGUID} from 'src/app/helpers/generate_id'
-import {Typography} from '@mui/material'
+import {Tooltip, Typography} from '@mui/material'
 import {useEffect, useState} from 'react'
 import {toServerUrl} from 'src/_metronic/helpers'
 import {IPostDialog} from '../../store/postDialogSlice'
 import {useAppSelector} from 'src/app/store/hook'
 import DuoRoundedIcon from '@mui/icons-material/DuoRounded'
+import CameraAltRoundedIcon from '@mui/icons-material/CameraAltRounded'
+import VideocamRoundedIcon from '@mui/icons-material/VideocamRounded'
+
 const Root = styled('div')(({theme}) => ({
   margin: 4,
   '& .productImageFeaturedStar': {
@@ -25,7 +28,7 @@ const Root = styled('div')(({theme}) => ({
     position: 'absolute',
     top: 6,
     left: 8,
-    color: orange[400],
+    color: purple['A700'],
     opacity: 0.8,
   },
 
@@ -67,7 +70,6 @@ function TopImage() {
   )
   const images = watch('images')
 
-  console.log('images = ', images)
   useEffect(() => {
     if (images.length > 0 && !isPreviewSet) {
       if (typeof images == 'string') {
@@ -227,7 +229,15 @@ function TopImage() {
                     <FuseSvgIcon className='productImageFeaturedStar'>
                       heroicons-solid:trash
                     </FuseSvgIcon>
-                    <DuoRoundedIcon fontSize='large' className='videoIcon' />
+                    {media.type === 'image' ? (
+                      <Tooltip title='Image'>
+                        <CameraAltRoundedIcon fontSize='large' className='videoIcon' />
+                      </Tooltip>
+                    ) : (
+                      <Tooltip title='Video'>
+                        <VideocamRoundedIcon fontSize='large' className='videoIcon' />
+                      </Tooltip>
+                    )}
                     <img
                       className='max-w-none w-auto h-full'
                       src={
