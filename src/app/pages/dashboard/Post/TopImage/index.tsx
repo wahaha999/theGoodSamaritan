@@ -11,15 +11,22 @@ import {useEffect, useState} from 'react'
 import {toServerUrl} from 'src/_metronic/helpers'
 import {IPostDialog} from '../../store/postDialogSlice'
 import {useAppSelector} from 'src/app/store/hook'
-
+import DuoRoundedIcon from '@mui/icons-material/DuoRounded'
 const Root = styled('div')(({theme}) => ({
   margin: 4,
   '& .productImageFeaturedStar': {
     position: 'absolute',
-    top: 4,
-    right: 4,
+    top: 6,
+    right: 8,
     color: orange[400],
     opacity: 0,
+  },
+  '& .videoIcon': {
+    position: 'absolute',
+    top: 6,
+    left: 8,
+    color: orange[400],
+    opacity: 0.8,
   },
 
   '& .productImageUpload': {
@@ -59,6 +66,8 @@ function TopImage() {
     ({post}) => post.postDialog
   )
   const images = watch('images')
+
+  console.log('images = ', images)
   useEffect(() => {
     if (images.length > 0 && !isPreviewSet) {
       if (typeof images == 'string') {
@@ -72,6 +81,68 @@ function TopImage() {
       }
     }
   }, [images, isPreviewSet, postType])
+
+  const readFileAsync = (file: any) => {
+    return new Promise((resolve, reject) => {
+      if (!file) {
+        return
+      }
+
+      const fileType = file.type.split('/')[0] // 'image' or 'video'
+
+      // Handle image files
+      if (fileType === 'image') {
+        const reader = new FileReader()
+        reader.onload = () => {
+          resolve({
+            id: generateGUID(),
+            url: `data:${file.type};base64,${btoa(reader.result as string)}`,
+            type: 'image',
+          })
+        }
+        reader.onerror = reject
+        reader.readAsBinaryString(file)
+      }
+
+      // Handle video files
+      else if (fileType === 'video') {
+        const video = document.createElement('video')
+        const canvas = document.createElement('canvas')
+        const context = canvas.getContext('2d') as any
+
+        video.src = URL.createObjectURL(file)
+
+        // Load metadata of the video to ensure video dimensions are set
+        video.addEventListener('loadedmetadata', () => {
+          // Optionally, seek to a certain time of the video
+          video.currentTime = 1 // Seek to 1 second (adjust as needed)
+        })
+
+        video.addEventListener('seeked', () => {
+          // Set the canvas size to the video size
+          canvas.width = video.videoWidth
+          canvas.height = video.videoHeight
+
+          // Draw the video frame to the canvas
+          context.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+          // Convert the canvas to a data URL
+          canvas.toBlob((blob: any) => {
+            const thumbnailUrl = URL.createObjectURL(blob)
+            resolve({
+              id: generateGUID(),
+              url: thumbnailUrl,
+              type: 'video',
+            })
+          }, 'image/jpeg')
+        })
+
+        video.onerror = () => {
+          reject('Error loading video')
+        }
+      }
+    })
+  }
 
   return (
     <>
@@ -97,30 +168,30 @@ function TopImage() {
                   className='productImageUpload flex items-center justify-center relative w-128 h-128 rounded-16 mx-12 mb-24 overflow-hidden cursor-pointer shadow hover:shadow-lg'
                 >
                   <input
-                    accept='image/*'
+                    accept='image/*,video/*'
                     className='hidden'
                     id='button-file'
                     type='file'
                     onChange={async (e: any) => {
-                      function readFileAsync() {
-                        return new Promise((resolve, reject) => {
-                          const file = e.target.files[0]
-                          if (!file) {
-                            return
-                          }
-                          const reader = new FileReader()
-                          reader.onload = () => {
-                            resolve({
-                              id: generateGUID(),
-                              url: `data:${file.type};base64,${btoa(reader.result as string)}`,
-                              type: 'image',
-                            })
-                          }
-                          reader.onerror = reject
-                          reader.readAsBinaryString(file)
-                        })
-                      }
-                      const newImage = await readFileAsync()
+                      // function readFileAsync() {
+                      //   return new Promise((resolve, reject) => {
+                      //     const file = e.target.files[0]
+                      //     if (!file) {
+                      //       return
+                      //     }
+                      //     const reader = new FileReader()
+                      //     reader.onload = () => {
+                      //       resolve({
+                      //         id: generateGUID(),
+                      //         url: `data:${file.type};base64,${btoa(reader.result as string)}`,
+                      //         type: 'image',
+                      //       })
+                      //     }
+                      //     reader.onerror = reject
+                      //     reader.readAsBinaryString(file)
+                      //   })
+                      // }
+                      const newImage = await readFileAsync(e.target.files[0])
                       setPreview([newImage, ...preview])
                       onChange([
                         e.target.files[0],
@@ -156,6 +227,7 @@ function TopImage() {
                     <FuseSvgIcon className='productImageFeaturedStar'>
                       heroicons-solid:trash
                     </FuseSvgIcon>
+                    <DuoRoundedIcon fontSize='large' className='videoIcon' />
                     <img
                       className='max-w-none w-auto h-full'
                       src={
