@@ -125,9 +125,7 @@ const ImageSlider = ({slides}: IImageSlider) => {
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
-          >
-            {/* <img src={item.original} style={{height: '400px', width: '100%', borderRadius: '10px'}} /> */}
-          </div>
+          ></div>
         ) : (
           <div style={{width: '100%', height: '400px'}}>
             <video
