@@ -101,6 +101,11 @@ const ImageSlider = ({slides}: IImageSlider) => {
   //   return () => clearTimeout(timerRef.current);
   // }, [goToNext]);
 
+  const isVideo = (url: any) => {
+    const videoExtensions = ['.mp4', '.webm', '.ogg'] // Add more extensions as needed
+    return videoExtensions.some((extension) => url.original.endsWith(extension))
+  }
+
   return (
     <ImageGallery
       items={slides}
@@ -108,21 +113,36 @@ const ImageSlider = ({slides}: IImageSlider) => {
       showPlayButton={false}
       showBullets={true}
       showFullscreenButton={false}
-      autoPlay={true}
-      renderItem={(item: any) => (
-        <div
-          style={{
-            backgroundImage: `url(${item.original})`,
-            width: '100%',
-            height: '400px',
-            borderRadius: '10px',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        >
-          {/* <img src={item.original} style={{height: '400px', width: '100%', borderRadius: '10px'}} /> */}
-        </div>
-      )}
+      autoPlay={false}
+      renderItem={(item: any) => {
+        return !isVideo(item) ? (
+          <div
+            style={{
+              backgroundImage: `url(${item.original})`,
+              width: '100%',
+              height: '400px',
+              borderRadius: '10px',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            {/* <img src={item.original} style={{height: '400px', width: '100%', borderRadius: '10px'}} /> */}
+          </div>
+        ) : (
+          <div style={{width: '100%', height: '400px'}}>
+            <video
+              controls
+              style={{
+                width: '100%',
+                height: '100%',
+                borderRadius: '10px',
+                backgroundColor: 'antiquewhite',
+              }}
+              src={item.original}
+            />
+          </div>
+        )
+      }}
     />
   )
 }

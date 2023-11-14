@@ -149,7 +149,7 @@ function TopImage() {
   return (
     <>
       <Typography sx={{m: 4}} variant='caption'>
-        Attach an image to display at the top of your post
+        Attach an image or video to display at the top of your post
       </Typography>
       <Root>
         <div className='flex justify-center sm:justify-start flex-wrap -mx-16'>
@@ -175,24 +175,6 @@ function TopImage() {
                     id='button-file'
                     type='file'
                     onChange={async (e: any) => {
-                      // function readFileAsync() {
-                      //   return new Promise((resolve, reject) => {
-                      //     const file = e.target.files[0]
-                      //     if (!file) {
-                      //       return
-                      //     }
-                      //     const reader = new FileReader()
-                      //     reader.onload = () => {
-                      //       resolve({
-                      //         id: generateGUID(),
-                      //         url: `data:${file.type};base64,${btoa(reader.result as string)}`,
-                      //         type: 'image',
-                      //       })
-                      //     }
-                      //     reader.onerror = reject
-                      //     reader.readAsBinaryString(file)
-                      //   })
-                      // }
                       const newImage = await readFileAsync(e.target.files[0])
                       setPreview([newImage, ...preview])
                       onChange([
