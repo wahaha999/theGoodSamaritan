@@ -4,6 +4,7 @@ import {API_URL} from 'src/app/modules/auth/core/_requests'
 import {showMessage} from 'src/app/store/fuse/messageSlice'
 import {setLoading} from './filterSlice'
 import _ from 'src/app/modules/@lodash/@lodash'
+import {initialUploadDialog, updateUploadProgress} from './uploadDialogSlice'
 
 export interface IPostData {
   title: string
@@ -53,7 +54,14 @@ export const createPost = createAsyncThunk(
           }
         }
       })
-      await axios.post(`${API_URL}/post/create`, formData)
+      await axios.post(`${API_URL}/post/create`, formData, {
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          // Dispatch an action or update state with the progress percentage
+          dispatch(updateUploadProgress(percentCompleted))
+        },
+      })
+      dispatch(initialUploadDialog())
       const state = getState() as any
       dispatch(initialPage(1))
       dispatch(getPosts({filter: state?.post?.filter?.filter, next: 1}))
@@ -76,7 +84,11 @@ export const getPosts = createAsyncThunk(
         params: {...searchFilter.filter},
       })
       dispatch(setLoading(false))
-      return data
+      if (data.posts) {
+        return data
+      } else {
+        return {posts: {current_page: 0, data: []}, unread: 0}
+      }
     } catch (error: any) {
       dispatch(showMessage({message: JSON.stringify(error.message), variant: 'error'}))
       dispatch(setLoading(false))
