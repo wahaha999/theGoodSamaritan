@@ -146,98 +146,131 @@ function TopImage() {
     })
   }
 
-  return (
-    <>
-      <Typography sx={{m: 4}} variant='caption'>
-        Attach an image or video to display at the top of your post
-      </Typography>
-      <Root>
-        <div className='flex justify-center sm:justify-start flex-wrap -mx-16'>
-          <Controller
-            name='images'
-            control={control}
-            render={({field: {onChange, value}}) => (
-              <>
-                <Box
-                  sx={{
-                    backgroundColor: (theme) =>
-                      theme.palette.mode === 'light'
-                        ? lighten(theme.palette.background.default, 0.4)
-                        : lighten(theme.palette.background.default, 0.02),
-                  }}
-                  component='label'
-                  htmlFor='button-file'
-                  className='productImageUpload flex items-center justify-center relative w-128 h-128 rounded-16 mx-12 mb-24 overflow-hidden cursor-pointer shadow hover:shadow-lg'
-                >
-                  <input
-                    accept='image/*,video/*'
-                    className='hidden'
-                    id='button-file'
-                    type='file'
-                    onChange={async (e: any) => {
-                      const newImage = await readFileAsync(e.target.files[0])
-                      setPreview([newImage, ...preview])
-                      onChange([
-                        e.target.files[0],
-                        ...(typeof value == 'string' ? JSON.parse(value) : value),
-                      ])
-                    }}
-                  />
-                  <FuseSvgIcon size={32} color='action'>
-                    heroicons-outline:upload
-                  </FuseSvgIcon>
-                </Box>
-                {preview?.map((media: any, index: number) => (
-                  <div
-                    onClick={() => {
-                      preview.splice(index, 1)
-                      let temp
-                      if (typeof value == 'string') {
-                        temp = JSON.parse(value)
-                        temp.splice(index, 1)
-                        onChange(temp)
-                      } else {
-                        value.splice(index, 1)
-                        onChange(value)
-                      }
-                      setPreview(preview)
-                    }}
-                    // onKeyDown={() => onChange(media.id)}
-                    role='button'
-                    tabIndex={0}
-                    className='productImageItem flex items-center justify-center relative w-128 h-128 rounded-16 mx-12 mb-24 overflow-hidden cursor-pointer outline-none shadow hover:shadow-lg'
-                    key={index}
-                  >
-                    <FuseSvgIcon className='productImageFeaturedStar'>
-                      heroicons-solid:trash
-                    </FuseSvgIcon>
-                    {media.type === 'image' ? (
-                      <Tooltip title='Image'>
-                        <CameraAltRoundedIcon fontSize='large' className='videoIcon' />
-                      </Tooltip>
-                    ) : (
-                      <Tooltip title='Video'>
-                        <VideocamRoundedIcon fontSize='large' className='videoIcon' />
-                      </Tooltip>
-                    )}
-                    <img
-                      className='max-w-none w-auto h-full'
-                      src={
-                        typeof media == 'string'
-                          ? toServerUrl('/media/post/image/' + media)
-                          : media.url
-                      }
-                      alt='product'
-                    />
-                  </div>
-                ))}
-              </>
-            )}
-          />
-        </div>
-      </Root>
-    </>
-  )
+   const isVideo = (url: any) => {
+     const videoExtensions = ['.mp4', '.webm', '.ogg'] // Add more extensions as needed
+     return videoExtensions.some((extension) => url.endsWith(extension))
+   }
+
+   return (
+     <>
+       <Typography sx={{m: 4}} variant='caption'>
+         Attach an image or video to display at the top of your post
+       </Typography>
+       <Root>
+         <div className='flex justify-center sm:justify-start flex-wrap -mx-16'>
+           <Controller
+             name='images'
+             control={control}
+             render={({field: {onChange, value}}) => (
+               <>
+                 <Box
+                   sx={{
+                     backgroundColor: (theme) =>
+                       theme.palette.mode === 'light'
+                         ? lighten(theme.palette.background.default, 0.4)
+                         : lighten(theme.palette.background.default, 0.02),
+                   }}
+                   component='label'
+                   htmlFor='button-file'
+                   className='productImageUpload flex items-center justify-center relative w-128 h-128 rounded-16 mx-12 mb-24 overflow-hidden cursor-pointer shadow hover:shadow-lg'
+                 >
+                   <input
+                     accept='image/*,video/*'
+                     className='hidden'
+                     id='button-file'
+                     type='file'
+                     onChange={async (e: any) => {
+                       const newImage = await readFileAsync(e.target.files[0])
+                       setPreview([newImage, ...preview])
+                       onChange([
+                         e.target.files[0],
+                         ...(typeof value == 'string' ? JSON.parse(value) : value),
+                       ])
+                     }}
+                   />
+                   <FuseSvgIcon size={32} color='action'>
+                     heroicons-outline:upload
+                   </FuseSvgIcon>
+                 </Box>
+                 {preview?.map((media: any, index: number) => (
+                   <div
+                     onClick={() => {
+                       preview.splice(index, 1)
+                       let temp
+                       if (typeof value == 'string') {
+                         temp = JSON.parse(value)
+                         temp.splice(index, 1)
+                         onChange(temp)
+                       } else {
+                         value.splice(index, 1)
+                         onChange(value)
+                       }
+                       setPreview(preview)
+                     }}
+                     // onKeyDown={() => onChange(media.id)}
+                     role='button'
+                     tabIndex={0}
+                     className='productImageItem flex items-center justify-center relative w-128 h-128 rounded-16 mx-12 mb-24 overflow-hidden cursor-pointer outline-none shadow hover:shadow-lg'
+                     key={index}
+                   >
+                     <FuseSvgIcon className='productImageFeaturedStar'>
+                       heroicons-solid:trash
+                     </FuseSvgIcon>
+                     {typeof media === 'string' && !isVideo(media) ? (
+                       <Tooltip title='Image'>
+                         <CameraAltRoundedIcon fontSize='large' className='videoIcon' />
+                       </Tooltip>
+                     ) : (
+                       <Tooltip title='Video'>
+                         <VideocamRoundedIcon fontSize='large' className='videoIcon' />
+                       </Tooltip>
+                     )}
+                     {typeof media !== 'string' && media.type === 'image' ? (
+                       <Tooltip title='Image'>
+                         <CameraAltRoundedIcon fontSize='large' className='videoIcon' />
+                       </Tooltip>
+                     ) : (
+                       <Tooltip title='Video'>
+                         <VideocamRoundedIcon fontSize='large' className='videoIcon' />
+                       </Tooltip>
+                     )}
+                     {typeof media === 'string' && isVideo(media) ? (
+                       <video
+                         className='max-w-none w-auto h-full'
+                         src={toServerUrl('/media/post/image/' + media)}
+                         //  alt='product'
+                       />
+                     ) : (
+                       <img
+                         className='max-w-none w-auto h-full'
+                         src={
+                           typeof media == 'string'
+                             ? toServerUrl('/media/post/image/' + media)
+                             : media.url
+                         }
+                         alt='product'
+                       />
+                     )}
+                     {typeof media !== 'string' && (
+                       <img
+                         className='max-w-none w-auto h-full'
+                         src={
+                           typeof media == 'string'
+                             ? toServerUrl('/media/post/image/' + media)
+                             : media.url
+                         }
+                         alt='product'
+                       />
+                     )}
+                   </div>
+                 ))}
+               </>
+             )}
+           />
+         </div>
+       </Root>
+     </>
+   )
 }
 
 export default TopImage
