@@ -3,11 +3,13 @@ import {createSlice} from '@reduxjs/toolkit'
 export interface IUploadDialog {
   progress: number
   open: boolean
+  fileSize: number
 }
 
 const initialState: IUploadDialog = {
   progress: 0,
   open: false,
+  fileSize: 0,
 }
 
 const uploadDialogSlice = createSlice({
@@ -19,8 +21,11 @@ const uploadDialogSlice = createSlice({
       state.open = true
     },
     initialUploadDialog: (state) => initialState,
+    changeFileSize: (state, action) => {
+      state.fileSize += action.payload
+    },
   },
 })
 
-export const {updateUploadProgress, initialUploadDialog} = uploadDialogSlice.actions
+export const {updateUploadProgress, initialUploadDialog, changeFileSize} = uploadDialogSlice.actions
 export default uploadDialogSlice.reducer

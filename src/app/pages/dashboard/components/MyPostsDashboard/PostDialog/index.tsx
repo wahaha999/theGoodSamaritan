@@ -23,7 +23,7 @@ import {showMessage} from 'src/app/store/fuse/messageSlice'
 import {POST_DIALOG_TITLE} from 'src/app/constants/post'
 import _ from 'src/app/modules/@lodash/@lodash'
 import {usePrevious} from 'src/app/modules/hooks'
-import {IUploadDialog} from '../../../store/uploadDialogSlice'
+import {IUploadDialog, initialUploadDialog} from '../../../store/uploadDialogSlice'
 import CircularWithValueLabel from './LoadingProgress'
 
 type Props = {}
@@ -88,9 +88,11 @@ const PostDialog = (props: Props) => {
   const {open, postType, postOption, postId}: IPostDialog = useAppSelector(
     ({post}) => post.postDialog
   )
-  const {open: openProgress, progress}: IUploadDialog = useAppSelector(
-    ({post}) => post.uploadDialog
-  )
+  const {
+    open: openProgress,
+    progress,
+    fileSize,
+  }: IUploadDialog = useAppSelector(({post}) => post.uploadDialog)
 
   const methods = useForm({
     mode: 'onChange',
@@ -100,7 +102,7 @@ const PostDialog = (props: Props) => {
 
   const {
     reset,
-    formState: {isValid},
+    formState: {isValid, errors},
     watch,
   } = methods
   const data = watch()
@@ -134,6 +136,10 @@ const PostDialog = (props: Props) => {
   }, [user, open, reset, postType, postOption])
 
   const onSubmit = (data: any) => {
+    if (fileSize > 100 * 1024 * 1024) {
+      dispatch(showMessage({message: 'The total file size exceeds 100 MBytes.', variant: 'error'}))
+      return
+    }
     if (postType.includes('post')) {
       dispatch(createPost(data))
         .then(() => {
@@ -147,6 +153,7 @@ const PostDialog = (props: Props) => {
         .catch(() => {})
         .finally(() => {
           dispatch(closePostDialog())
+          dispatch(initialUploadDialog())
         })
     } else if (postType.includes('comment')) {
       let comment_data = {post_id: postId, ...data}
@@ -162,6 +169,7 @@ const PostDialog = (props: Props) => {
         .catch(() => {})
         .finally(() => {
           dispatch(closePostDialog())
+          dispatch(initialUploadDialog())
         })
     } else if (postType.includes('reply')) {
       let reply_data = {comment_id: postId, ...data}
@@ -177,6 +185,7 @@ const PostDialog = (props: Props) => {
         .catch(() => {})
         .finally(() => {
           dispatch(closePostDialog())
+          dispatch(initialUploadDialog())
         })
     }
   }
@@ -253,6 +262,7 @@ const PostDialog = (props: Props) => {
                   }}
                   onClick={() => {
                     dispatch(closePostDialog())
+                    dispatch(initialUploadDialog())
                   }}
                 >
                   <CloseIcon />

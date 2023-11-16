@@ -130,7 +130,15 @@ export const createComment = createAsyncThunk(
           formData.append(item, comment[item])
         }
       })
-      const {data} = await axios.post(`${API_URL}/comments/create`, formData)
+      const {data} = await axios.post(`${API_URL}/comments/create`, formData, {
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          // Dispatch an action or update state with the progress percentage
+          dispatch(updateUploadProgress(percentCompleted))
+        },
+      })
+      dispatch(initialUploadDialog())
+
       const comm = data.comment
       const {post} = getState() as any
       // dispatch(getPosts(state?.post?.filter?.filter));
@@ -183,7 +191,15 @@ export const createReply = createAsyncThunk(
           formData.append(item, reply[item])
         }
       })
-      const {data} = await axios.post(`${API_URL}/replies/create`, formData)
+      const {data} = await axios.post(`${API_URL}/replies/create`, formData, {
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          // Dispatch an action or update state with the progress percentage
+          dispatch(updateUploadProgress(percentCompleted))
+        },
+      })
+      dispatch(initialUploadDialog())
+
       const rep = data.reply
       const {post} = getState() as any
 
