@@ -1,4 +1,4 @@
-import {orange} from '@mui/material/colors'
+import {orange, purple} from '@mui/material/colors'
 import {lighten, styled} from '@mui/material/styles'
 import clsx from 'clsx'
 // import FuseUtils from '@fuse/utils'
@@ -6,20 +6,31 @@ import {Controller, useFormContext} from 'react-hook-form'
 import Box from '@mui/material/Box'
 import FuseSvgIcon from 'src/app/modules/core/FuseSvgIcon/FuseSvgIcon'
 import {generateGUID} from 'src/app/helpers/generate_id'
-import {Typography} from '@mui/material'
+import {Tooltip, Typography} from '@mui/material'
 import {useEffect, useState} from 'react'
 import {toServerUrl} from 'src/_metronic/helpers'
 import {IPostDialog} from '../../store/postDialogSlice'
-import {useAppSelector} from 'src/app/store/hook'
+import {useAppDispatch, useAppSelector} from 'src/app/store/hook'
+import DuoRoundedIcon from '@mui/icons-material/DuoRounded'
+import CameraAltRoundedIcon from '@mui/icons-material/CameraAltRounded'
+import VideocamRoundedIcon from '@mui/icons-material/VideocamRounded'
+import {changeFileSize} from '../../store/uploadDialogSlice'
 
 const Root = styled('div')(({theme}) => ({
   margin: 4,
   '& .productImageFeaturedStar': {
     position: 'absolute',
-    top: 4,
-    right: 4,
+    top: 6,
+    right: 8,
     color: orange[400],
     opacity: 0,
+  },
+  '& .videoIcon': {
+    position: 'absolute',
+    top: 6,
+    left: 8,
+    color: purple['A700'],
+    opacity: 0.8,
   },
 
   '& .productImageUpload': {
@@ -54,11 +65,14 @@ function TopImage() {
   const methods = useFormContext()
   const [preview, setPreview] = useState<any>([])
   const [isPreviewSet, setIsPreviewSet] = useState<boolean>(false)
-  const {control, watch, setValue} = methods
+  const {control, watch, setValue, setError} = methods
   const {open, postType, postOption, postId}: IPostDialog = useAppSelector(
     ({post}) => post.postDialog
   )
+  const {fileSize} = useAppSelector(({post}) => post.uploadDialog)
   const images = watch('images')
+  const dispatch = useAppDispatch()
+
   useEffect(() => {
     if (images.length > 0 && !isPreviewSet) {
       if (typeof images == 'string') {
@@ -73,10 +87,94 @@ function TopImage() {
     }
   }, [images, isPreviewSet, postType])
 
+  useEffect(() => {
+    if (fileSize > 100 * 1024 * 1024) {
+      setError('images', {message: 'File is too large'})
+    }
+  }, [fileSize])
+  const readFileAsync = (file: any) => {
+    dispatch(changeFileSize(file.size))
+    return new Promise((resolve, reject) => {
+      if (!file) {
+        return
+      }
+
+      // console.log('size==', file.size)
+
+      const fileType = file.type.split('/')[0] // 'image' or 'video'
+
+      // Handle image files
+      if (fileType === 'image') {
+        const reader = new FileReader()
+        reader.onload = () => {
+          resolve({
+            id: generateGUID(),
+            url: `data:${file.type};base64,${btoa(reader.result as string)}`,
+            type: 'image',
+          })
+        }
+        reader.onerror = reject
+        reader.readAsBinaryString(file)
+      }
+
+      // Handle video files
+      else if (fileType === 'video') {
+        const video = document.createElement('video')
+        const canvas = document.createElement('canvas')
+        const context = canvas.getContext('2d') as any
+
+        video.src = URL.createObjectURL(file)
+
+        // Load metadata of the video to ensure video dimensions are set
+        video.addEventListener('loadedmetadata', () => {
+          // Optionally, seek to a certain time of the video
+          video.currentTime = 1 // Seek to 1 second (adjust as needed)
+        })
+
+        video.addEventListener('seeked', () => {
+          // Set the canvas size to the video size
+          canvas.width = video.videoWidth
+          canvas.height = video.videoHeight
+
+          // Draw the video frame to the canvas
+          context.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+          // Convert the canvas to a data URL
+          canvas.toBlob((blob: any) => {
+            const thumbnailUrl = URL.createObjectURL(blob)
+            resolve({
+              id: generateGUID(),
+              url: thumbnailUrl,
+              type: 'video',
+            })
+          }, 'image/jpeg')
+        })
+
+        video.onerror = () => {
+          reject('Error loading video')
+        }
+      }
+    })
+  }
+
+  const isVideo = (url: any) => {
+    const videoExtensions = ['.mp4', '.webm', '.ogg'] // Add more extensions as needed
+    return videoExtensions.some((extension) => url.endsWith(extension))
+  }
+
   return (
     <>
       <Typography sx={{m: 4}} variant='caption'>
-        Attach an image to display at the top of your post
+        Attach an image or video to display at the top of your post (file size:{' '}
+        {Number((fileSize / (1024 * 1024)).toFixed(2)) > 100 ? (
+          <span style={{color: 'red'}}>{(fileSize / (1024 * 1024)).toFixed(2)}</span>
+        ) : (
+          (fileSize / (1024 * 1024)).toFixed(2)
+        )}{' '}
+        Mbyte)
+      </Typography>
+      <Typography variant='caption' color='red'>
+        {fileSize > 100 * 1024 * 1024 && 'The total file size exceeds 100 MBytes. '}
       </Typography>
       <Root>
         <div className='flex justify-center sm:justify-start flex-wrap -mx-16'>
@@ -97,30 +195,12 @@ function TopImage() {
                   className='productImageUpload flex items-center justify-center relative w-128 h-128 rounded-16 mx-12 mb-24 overflow-hidden cursor-pointer shadow hover:shadow-lg'
                 >
                   <input
-                    accept='image/*'
+                    accept='image/*,video/*'
                     className='hidden'
                     id='button-file'
                     type='file'
                     onChange={async (e: any) => {
-                      function readFileAsync() {
-                        return new Promise((resolve, reject) => {
-                          const file = e.target.files[0]
-                          if (!file) {
-                            return
-                          }
-                          const reader = new FileReader()
-                          reader.onload = () => {
-                            resolve({
-                              id: generateGUID(),
-                              url: `data:${file.type};base64,${btoa(reader.result as string)}`,
-                              type: 'image',
-                            })
-                          }
-                          reader.onerror = reject
-                          reader.readAsBinaryString(file)
-                        })
-                      }
-                      const newImage = await readFileAsync()
+                      const newImage = await readFileAsync(e.target.files[0])
                       setPreview([newImage, ...preview])
                       onChange([
                         e.target.files[0],
@@ -142,6 +222,7 @@ function TopImage() {
                         temp.splice(index, 1)
                         onChange(temp)
                       } else {
+                        dispatch(changeFileSize(-value[index].size))
                         value.splice(index, 1)
                         onChange(value)
                       }
@@ -156,15 +237,52 @@ function TopImage() {
                     <FuseSvgIcon className='productImageFeaturedStar'>
                       heroicons-solid:trash
                     </FuseSvgIcon>
-                    <img
-                      className='max-w-none w-auto h-full'
-                      src={
-                        typeof media == 'string'
-                          ? toServerUrl('/media/post/image/' + media)
-                          : media.url
-                      }
-                      alt='product'
-                    />
+                    {typeof media === 'string' && !isVideo(media) ? (
+                      <Tooltip title='Image'>
+                        <CameraAltRoundedIcon fontSize='large' className='videoIcon' />
+                      </Tooltip>
+                    ) : (
+                      <Tooltip title='Video'>
+                        <VideocamRoundedIcon fontSize='large' className='videoIcon' />
+                      </Tooltip>
+                    )}
+                    {typeof media !== 'string' && media.type === 'image' ? (
+                      <Tooltip title='Image'>
+                        <CameraAltRoundedIcon fontSize='large' className='videoIcon' />
+                      </Tooltip>
+                    ) : (
+                      <Tooltip title='Video'>
+                        <VideocamRoundedIcon fontSize='large' className='videoIcon' />
+                      </Tooltip>
+                    )}
+                    {typeof media === 'string' && isVideo(media) ? (
+                      <video
+                        className='max-w-none w-auto h-full'
+                        src={toServerUrl('/media/post/image/' + media)}
+                        //  alt='product'
+                      />
+                    ) : (
+                      <img
+                        className='max-w-none w-auto h-full'
+                        src={
+                          typeof media == 'string'
+                            ? toServerUrl('/media/post/image/' + media)
+                            : media.url
+                        }
+                        alt='product'
+                      />
+                    )}
+                    {typeof media !== 'string' && (
+                      <img
+                        className='max-w-none w-auto h-full'
+                        src={
+                          typeof media == 'string'
+                            ? toServerUrl('/media/post/image/' + media)
+                            : media.url
+                        }
+                        alt='product'
+                      />
+                    )}
                   </div>
                 ))}
               </>

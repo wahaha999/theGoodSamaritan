@@ -7,6 +7,7 @@ import {
   IconButton,
   DialogContent,
   Button,
+  styled,
 } from '@mui/material'
 import {AnimatePresence, motion} from 'framer-motion'
 import React, {useMemo} from 'react'
@@ -22,6 +23,8 @@ import {showMessage} from 'src/app/store/fuse/messageSlice'
 import {POST_DIALOG_TITLE} from 'src/app/constants/post'
 import _ from 'src/app/modules/@lodash/@lodash'
 import {usePrevious} from 'src/app/modules/hooks'
+import {IUploadDialog, initialUploadDialog} from '../../../store/uploadDialogSlice'
+import CircularWithValueLabel from './LoadingProgress'
 
 type Props = {}
 
@@ -48,6 +51,13 @@ export const AnimatedDialog: React.FC<AnimatedDialogProps> = ({
     </AnimatePresence>
   )
 }
+
+const ProgressDialog = styled(Dialog)(({theme}) => ({
+  '& .MuiPaper-root': {
+    backgroundColor: 'transparent',
+    boxShadow: 'none',
+  },
+}))
 
 const post_schema: any = yup.object().shape({
   purpose: yup.number().required('Purpose is required'),
@@ -78,6 +88,11 @@ const PostDialog = (props: Props) => {
   const {open, postType, postOption, postId}: IPostDialog = useAppSelector(
     ({post}) => post.postDialog
   )
+  const {
+    open: openProgress,
+    progress,
+    fileSize,
+  }: IUploadDialog = useAppSelector(({post}) => post.uploadDialog)
 
   const methods = useForm({
     mode: 'onChange',
@@ -87,7 +102,7 @@ const PostDialog = (props: Props) => {
 
   const {
     reset,
-    formState: {isValid},
+    formState: {isValid, errors},
     watch,
   } = methods
   const data = watch()
@@ -121,6 +136,10 @@ const PostDialog = (props: Props) => {
   }, [user, open, reset, postType, postOption])
 
   const onSubmit = (data: any) => {
+    if (fileSize > 100 * 1024 * 1024) {
+      dispatch(showMessage({message: 'The total file size exceeds 100 MBytes.', variant: 'error'}))
+      return
+    }
     if (postType.includes('post')) {
       dispatch(createPost(data))
         .then(() => {
@@ -134,6 +153,7 @@ const PostDialog = (props: Props) => {
         .catch(() => {})
         .finally(() => {
           dispatch(closePostDialog())
+          dispatch(initialUploadDialog())
         })
     } else if (postType.includes('comment')) {
       let comment_data = {post_id: postId, ...data}
@@ -149,6 +169,7 @@ const PostDialog = (props: Props) => {
         .catch(() => {})
         .finally(() => {
           dispatch(closePostDialog())
+          dispatch(initialUploadDialog())
         })
     } else if (postType.includes('reply')) {
       let reply_data = {comment_id: postId, ...data}
@@ -164,6 +185,7 @@ const PostDialog = (props: Props) => {
         .catch(() => {})
         .finally(() => {
           dispatch(closePostDialog())
+          dispatch(initialUploadDialog())
         })
     }
   }
@@ -180,77 +202,83 @@ const PostDialog = (props: Props) => {
 
   //TODO: edit valid feature
   return (
-    <AnimatedDialog
-      open={open}
-      scroll='paper'
-      maxWidth='md'
-      fullWidth
-      disableEnforceFocus
-      disableRestoreFocus
-      disablePortal
-    >
-      <FormProvider {...methods}>
-        {/* <DialogTitle> */}
-        <AppBar position='static' color='default'>
-          <Toolbar>
-            <Typography component='div' sx={{flexGrow: 1}}>
-              {POST_DIALOG_TITLE[postType]}
-            </Typography>
-            <motion.div
-              initial={{x: 30}}
-              animate={{x: 0}}
-              exit={{opacity: 0}}
-              transition={{duration: 1}}
-            >
-              {/* <Grid container direction='row-reverse'> */}
-              <Button
-                variant='contained'
-                color='success'
-                sx={{
-                  mx: 2,
-                  borderRadius: 12,
-                  '&.Mui-disabled': {
-                    backgroundColor: '#a7dda7',
-                    // color: 'white',
-                  },
-                }}
-                disabled={
-                  postType.includes('edit') ? (editIsValid ? !isValid : !editIsValid) : !isValid
-                }
-                onClick={() => handleSubmit(onSubmit)()}
+    <>
+      <AnimatedDialog
+        open={open}
+        scroll='paper'
+        maxWidth='md'
+        fullWidth
+        disableEnforceFocus
+        disableRestoreFocus
+        disablePortal
+      >
+        <FormProvider {...methods}>
+          {/* <DialogTitle> */}
+          <AppBar position='static' color='default'>
+            <Toolbar>
+              <Typography component='div' sx={{flexGrow: 1}}>
+                {POST_DIALOG_TITLE[postType]}
+              </Typography>
+              <motion.div
+                initial={{x: 30}}
+                animate={{x: 0}}
+                exit={{opacity: 0}}
+                transition={{duration: 1}}
               >
-                {postType.includes('post')
-                  ? 'Post'
-                  : postType.includes('comment')
-                  ? 'Comment'
-                  : 'Reply'}
-              </Button>
-            </motion.div>
-            <motion.div
-              initial={{x: -30}}
-              animate={{x: 0}}
-              exit={{opacity: 0}}
-              transition={{duration: 1}}
-            >
-              <IconButton
-                size='small'
-                sx={{
-                  backgroundColor: 'white',
-                }}
-                onClick={() => {
-                  dispatch(closePostDialog())
-                }}
+                {/* <Grid container direction='row-reverse'> */}
+                <Button
+                  variant='contained'
+                  color='success'
+                  sx={{
+                    mx: 2,
+                    borderRadius: 12,
+                    '&.Mui-disabled': {
+                      backgroundColor: '#a7dda7',
+                      // color: 'white',
+                    },
+                  }}
+                  disabled={
+                    postType.includes('edit') ? (editIsValid ? !isValid : !editIsValid) : !isValid
+                  }
+                  onClick={() => handleSubmit(onSubmit)()}
+                >
+                  {postType.includes('post')
+                    ? 'Post'
+                    : postType.includes('comment')
+                    ? 'Comment'
+                    : 'Reply'}
+                </Button>
+              </motion.div>
+              <motion.div
+                initial={{x: -30}}
+                animate={{x: 0}}
+                exit={{opacity: 0}}
+                transition={{duration: 1}}
               >
-                <CloseIcon />
-              </IconButton>
-            </motion.div>
-          </Toolbar>
-        </AppBar>
-        <DialogContent tabIndex={-1}>
-          <Post />
-        </DialogContent>
-      </FormProvider>
-    </AnimatedDialog>
+                <IconButton
+                  size='small'
+                  sx={{
+                    backgroundColor: 'white',
+                  }}
+                  onClick={() => {
+                    dispatch(closePostDialog())
+                    dispatch(initialUploadDialog())
+                  }}
+                >
+                  <CloseIcon />
+                </IconButton>
+              </motion.div>
+            </Toolbar>
+          </AppBar>
+          <DialogContent tabIndex={-1}>
+            <Post />
+          </DialogContent>
+        </FormProvider>
+      </AnimatedDialog>
+      <ProgressDialog open={openProgress}>
+        <CircularWithValueLabel progress={progress} />
+      </ProgressDialog>
+    </>
   )
 }
 

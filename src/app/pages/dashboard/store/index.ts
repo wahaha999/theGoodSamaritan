@@ -8,6 +8,7 @@ import checkDialog from './checkDialog'
 import connDialog from './connectDialogSlice'
 import connections from './connectionSlice'
 import reportDialog from './reportDialogSlice'
+import uploadDialog from './uploadDialogSlice'
 
 const reducer = combineReducers({
   plan,
@@ -19,6 +20,7 @@ const reducer = combineReducers({
   connDialog,
   connections,
   reportDialog,
+  uploadDialog,
 })
 
 export default reducer
