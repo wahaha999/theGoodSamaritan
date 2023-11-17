@@ -97,7 +97,6 @@ const ChatSidePanel = (props: Props) => {
   const {onClose} = props
   const ref = useRef(null)
   useEffect(() => {
-    console.log('hello')
     dispatch(echoInit(access_token))
   }, [dispatch, access_token])
 

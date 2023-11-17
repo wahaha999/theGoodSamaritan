@@ -499,8 +499,7 @@ function Chat(props) {
                               //  }
                               fileSize += item.file.size
                             })
-                            console.log('filesize===', fileSize)
-                            if (fileSize > 100 * 1024 * 1024) {
+                            if (fileSize > 150 * 1024 * 1024) {
                               canUpload = false
                             }
                             if (canUpload) {
@@ -508,7 +507,7 @@ function Chat(props) {
                             } else {
                               dispatch(
                                 showMessage({
-                                  message: 'Only allow sizes up to 100 MB.',
+                                  message: 'Only allow sizes up to 150 MB.',
                                   variant: 'error',
                                 })
                               )
