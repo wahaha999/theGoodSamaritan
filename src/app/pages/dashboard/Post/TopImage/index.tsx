@@ -88,7 +88,7 @@ function TopImage() {
   }, [images, isPreviewSet, postType])
 
   useEffect(() => {
-    if (fileSize > 100 * 1024 * 1024) {
+    if (fileSize > 150 * 1024 * 1024) {
       setError('images', {message: 'File is too large'})
     }
   }, [fileSize])
@@ -166,7 +166,7 @@ function TopImage() {
     <>
       <Typography sx={{m: 4}} variant='caption'>
         Attach an image or video to display at the top of your post (file size:{' '}
-        {Number((fileSize / (1024 * 1024)).toFixed(2)) > 100 ? (
+        {Number((fileSize / (1024 * 1024)).toFixed(2)) > 150 ? (
           <span style={{color: 'red'}}>{(fileSize / (1024 * 1024)).toFixed(2)}</span>
         ) : (
           (fileSize / (1024 * 1024)).toFixed(2)
@@ -174,7 +174,7 @@ function TopImage() {
         Mbyte)
       </Typography>
       <Typography variant='caption' color='red'>
-        {fileSize > 100 * 1024 * 1024 && 'The total file size exceeds 100 MBytes. '}
+        {fileSize > 150 * 1024 * 1024 && 'The total file size exceeds 150 MBytes. '}
       </Typography>
       <Root>
         <div className='flex justify-center sm:justify-start flex-wrap -mx-16'>

@@ -136,8 +136,8 @@ const PostDialog = (props: Props) => {
   }, [user, open, reset, postType, postOption])
 
   const onSubmit = (data: any) => {
-    if (fileSize > 100 * 1024 * 1024) {
-      dispatch(showMessage({message: 'The total file size exceeds 100 MBytes.', variant: 'error'}))
+    if (fileSize > 150 * 1024 * 1024) {
+      dispatch(showMessage({message: 'The total file size exceeds 150 MBytes.', variant: 'error'}))
       return
     }
     if (postType.includes('post')) {

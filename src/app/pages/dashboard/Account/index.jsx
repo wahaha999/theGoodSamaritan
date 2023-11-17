@@ -246,7 +246,6 @@ export default function Account() {
 
   const handleNext = () => {
     if (isLastStep() && isValid) {
-      console.log('hello')
       dispatch(updateProfile(getValues()))
         .then(() => {
           setFilled(true)
@@ -290,7 +289,6 @@ export default function Account() {
       newCompleted[activeStep] = true
       setCompleted(newCompleted)
       if (isLastStep() && isValid) {
-        console.log('hello1')
         dispatch(updateProfile(getValues()))
           .then(() => {
             setActiveStep(4)

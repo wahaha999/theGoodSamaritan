@@ -12,7 +12,6 @@ const Wants = (props: Props) => {
     formState: {errors},
   } = methods
   const want = watch('want', [false, false, false])
-  console.log('want==', want)
   return (
     <Controller
       name='want'
